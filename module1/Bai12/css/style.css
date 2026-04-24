@@ -1,0 +1,15 @@
+main{
+    width: 1000px
+}
+
+th{
+    background-color: #d6eeee;
+}
+table, th, td {
+    border: 4px solid blue;
+    border-collapse: collapse;
+    
+}
+td{
+    border-bottom-color: black;
+}

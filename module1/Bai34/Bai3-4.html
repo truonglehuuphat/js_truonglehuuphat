@@ -1,0 +1,129 @@
+<html>
+<head>
+    <title>Đại Học Khoa Học Tự Nhiên</title>
+    <style>
+        .main-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            min-height: 100vh;
+            /* box-sizing: border-box;             */
+        }
+       #form-wrapper{
+        width: 100%;
+        max-width: 42rem; /* max-w-2xl */
+        border-radius: 0.5rem; /* rounded-lg */
+        background-color: white;
+        padding: 2.5rem; /* p-10 */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+            0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        /* box-sizing: border-box; */
+        }
+       #form-group{
+        margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        div#fullname, div#employeeid{ 
+            width: 100%;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem; /* p-3 */
+            font-size: 0.875rem; /* text-sm */
+            color: #1f2937; /* text-gray-800 */
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem; /* mb-2 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #4b5563; /* text-gray-600 */
+        }
+        img{
+            align-items: center;
+        }
+        textarea{   
+            border-color: #6366f1; /* focus:border-indigo-500 */
+            box-shadow: 0 0 0 1px #6366f1; /* focus:ring-1 focus:ring-indigo-500 */
+            outline: none;
+        }
+        /* Consent Checkbox Group */
+        .consent-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .consent-label {
+            margin-left: 0.5rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-wrapper">
+            <img src="https://ucarecdn.com/364ed385-e3d2-4955-9133-8aea1bd11b16/reimbursementform.png" alt="img" width="200px" height="100px"/>
+            <p>Reimbursement Request Form</p>    
+        
+            <div class="form-group">
+                <label for="fullname" class="form-label"><b>Full Name *</b><br>
+                    <input type="text" id="fullname" class="from_input"/>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="employeeid" class="form-label"><b>Employee ID</b><br>
+                    <input type="text" id="employeeid" class="from_input"/>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="emailaddress" class="form-label"><b>Email Address *</b><br>
+                    <input type="text" id="emailaddress" class="from_input"/>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentmethodused" class="form-label"><b>Payment Method Used*</b><br>
+                    <select name="payment" id="payment">
+                        <option value="cash">Cash</option>
+                        <option value="cash">Credit card</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="Purpose of Expense" class="form-label"><b>Purpose of Expense *</b><br>
+                    <textarea name="PurposeofExpense" id="purpose" rows="2" class="form-textarea"></textarea>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="Upload Receipt / Invoice" class="form-label"><b>Upload Receipt / Invoice *</b><br>
+                    <input type="file">
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="Additional Notes (Optional)" class="form-label"><b>Additional Notes (Optional)*</b><br>
+                    <textarea name="textarea" id="additional-notes" rows="2" class="form-textarea"></textarea>
+                </label>
+            </div>
+
+            <div class="consent-group">
+                <input  type="checkbox" /><label for="" class="form-label"> I confirm that above information is accurate </label>
+            </div>
+
+            <div>
+                <button>Submit Reimbursement Request</button>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
