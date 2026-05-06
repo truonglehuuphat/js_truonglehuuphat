@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Javascript</title>
+        <script src="C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\Bai6\script.js"></script>
+    </head>
+    <body>
+        <p id="giaTriA">2</p>
+        <p id="giaTriB">3</p>
+        <p id="ketqua"></p>
+        <input type="number" id="giaTriA" value = "2"/>
+        <input type="number" id="giaTriB" value = "3"/>
+
+        <button onclick="hello('Van tinh')">Thực hiện event onclick</button>
+        <button onclick="phepNhan()">Thực hiện phep nhan </button>
+        <script>
+            // alert("")
+            // varname= prompt("Nhap ten cua ban ")
+            // alert("Xin Chao " + varname);
+            var case1 = 1 + 2 + 'a';
+            var case2 = 1 + 2 + 'a' + 3 + 4 + 'b';
+            var case3 = 1 + 'a' + 2 + 3;
+            console.log("case1 là " + case1);
+            console.log("case2 là " + case2);
+            console.log("case3 là " + case3);
+            
+            if(1=='1'){console.log(true);}
+            else {console.log(false);}
+            if(1==='1'){console.log(true);}
+            else {console.log(false);}
+            var n = 5;
+            var sum = 0;
+            for(let i = 1; i <=n;i++){
+                sum += i;
+            }
+            var i=1;
+            console.log("Tong = " + sum);
+            while(i<=n){
+                sum += i;
+                i++;
+            }
+            console.log("Tong = " + sum);
+            let cars = [];
+            cars[0] = "saab";
+            cars[1] = "Volvo";
+            cars[2] = "BMW";
+            // cau hoi phong van gameloft
+            // cho 1 mang  hay cho ke qua tu cuoi len dau
+            // for(let = cars.length - 1; i >= 0; i--){
+            //     console.log(cars[i]);
+            // }
+            console.log(cars);
+            console.log(cars.reverse());
+        </script> 
+    </body>
+</html>

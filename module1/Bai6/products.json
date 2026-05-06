@@ -1,0 +1,17 @@
+[
+    {
+        "name": "iphone 15",
+        "price": 25000,
+        "img": "img/iphone15.jpg"
+    },
+    {
+        "name": "Samsung S24",
+        "price": 24000,
+        "img": "img/samsungs24.jpg"
+    },
+    {        
+        "name": "Xiaomi 24",
+        "price": 15000,
+        "img": "img/xiaomi14.png"
+    }
+]

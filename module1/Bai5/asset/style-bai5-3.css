@@ -1,0 +1,110 @@
+body{margin-top:20px;}
+
+#pricing-tables{
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+.pricing-table-one{
+    margin-top: 85px;
+}
+.single-table{
+    background-color: #fafafa;
+}
+
+.single-table h2{
+    background-color: #f2f2f2;
+    padding: 23px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.price{
+    font-size: 14px;
+    background-color: #dedede;
+    padding: 9px 23px;
+    margin-bottom: 0;
+}
+.price span{
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.price span.dollar-icon{
+    font-size: 16px;
+    font-weight: 400;
+    position: relative;
+    top: -5px;
+}
+.single-table ul{
+    padding: 5px 23px;
+}
+.single-table ul il{
+    margin-top: 15px;
+}
+.single-table .btn.btn-primary{
+    background-color: #dedede;
+    border: none;
+    border-radius: 0;
+    color: #454545;
+    display: block;
+    margin-bottom: 0;
+    font-weight: 700;
+    padding: 10px 0;
+    margin-top: 40px;
+}
+
+.single-table.featured-table {
+    background-color: #f2f2f2;
+}
+
+.single-table.featured-table h2{
+    color: #fff;
+}
+
+.single-table.featured-table .price{
+    color: #fff;
+}
+
+.single-table.featured-table h2 {
+    background-color: #e07894;
+}
+
+.single-table .btn.btn-primary:hover,
+.single-table.featured-table .btn.btn-primary:hover {
+    color: #020202;
+}
+
+.single-table .btn.btn-primary:hover:after,
+.single-table .btn.btn-primary:hover:before{
+    background-color: #f4c216;
+}
+
+.single-table.featured-table h2, .single-table.featured-table {
+    background-color: #e07894;
+}
+
+.single-table.featured-table .price{
+    background-color: #ce5a78;
+}
+
+.single-table.featured-table {
+    background-color: #f2f2f2;
+}
+
+.single-table.featured-table .btn.btn-primary {
+    background-color: #e07894;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.single-table ul li {
+    margin-top: 15px;
+}
+
+.single-table.featured-table {
+    background-color: #f2f2f2;
+}

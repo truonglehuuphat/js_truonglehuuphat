@@ -1,0 +1,33 @@
+.gallery{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+}
+.box-grid{
+    background: green;
+    color: white;
+    padding: 40px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.otherElement{
+    height: 500px;
+}
+.bgElement{
+    height: 500px;
+    background-image: url("https://webcode.tools/img/ottawa.jpg") !important;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.bgElement h3{
+    color: white;
+    font-size: 100px;
+    font-family:Arial, Helvetica, sans-serif;
+     /* border width and color */
+    -webkit-text-stroke: 5px black;
+    text-align: center;
+    padding: 200px;
+}
