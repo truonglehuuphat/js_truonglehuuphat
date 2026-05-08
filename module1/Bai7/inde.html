@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // console.log("Task 1");
+        // setTimeout(function(){
+        //     console.log("Task 2");
+
+        // },2000);
+        // console.log("Task 2");
+        // console.log("Task 3");
+        function nganHang(callback){
+            console.log("Lấy số thứ tự...");
+            setTimeout(function(){
+                console.log("Đến lượt bạn!");
+                callback("Phát");
+            }, 5000);
+        }
+
+        function khachHang(name){
+            console.log("Khách hàng " + name + " vào giao dịch ");
+        }
+        function khachHangKhac(){
+            console.log("Khách hàng khác vào giao dịch");
+        }
+
+        nganHang(khachHang);
+        nganHang(khachHangKhac);
+
+    </script>
+</body>
+</html>

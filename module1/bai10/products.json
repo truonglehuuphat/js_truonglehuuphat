@@ -1,0 +1,42 @@
+[
+    {
+        name:"Samsung Galaxy A57",
+        price:40,
+        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\samsung_galaxy_a57.jpg",
+        category:"Điện thoại Samsung Galaxy A57 nổi bật với màn hình Super AMOLED Plus 6.7 inch FHD+ tần số quét 120Hz, mang đến trải nghiệm hiển thị mượt mà, sống động. Thiết bị sở hữu camera chính 50MP tích hợp OIS, giúp hình ảnh thu được ổn định. Điểm cộng lớn trên A57 chính là viên pin 5000mAh đảm bảo thời lượng sử dụng bền bỉ."
+    },
+    {   
+        name:"iphone 15",
+        price:40,
+        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\iphone15.jpg",
+        category:"Những điểm nổi bật trên iPhone 15 đánh để trải nghiệm như:
+                    Màn hình Dynamic Island thay thế cho màn hình tai thỏ
+                    Cổng sạc mới USB-C
+                    Camera nâng cấp lên 48MP, hỗ trợ zoom quang 2x
+                    Mặt lưng kính nhám mờ sang trọng, nhiều màu sắc mới (Hồng,vàng, xanh lá, xanh lam và đen)"
+    },
+    {
+        name:"Oppo reno 15",
+        price:40,
+        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\oppo_reno15.jpg",
+        category:"OPPO Reno 15 là mẫu smartphone cận cao cấp mới ra mắt tại Việt Nam tháng 1/2026, nổi bật với thiết kế hiện đại và cấu hình mạnh trong phân khúc. Máy sở hữu màn hình AMOLED 6.59 inch, độ phân giải 1.5K, tần số quét 120Hz, độ sáng 1200nits cho trải nghiệm hiển thị sắc nét, mượt mà."
+    },
+    {        
+        name:"Samsung Galaxy A37",
+        price: 40,
+        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\samsung_galaxy_a37.jpg",
+        category:"Điện thoại Samsung Galaxy A37 là mẫu máy tầm trung thế hệ mới hứa hẹn phục vụ tốt các nhu cầu sử dụng khi được trang bị bộ vi xử lý Exynos 1480 tiên tiến. Thiết bị sở hữu màn hình 6.7 inch sắc nét. Ngoài ra, model này còn ghi điểm với viên pin 5000mAh, hỗ trợ người dùng xử lý công việc, giải trí liền mạch suốt nhiều giờ."
+    },
+    {
+        name:"iPhone 17 Pro Max",
+        price:40,
+        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\iphone-17-pro-max-600x600.jpg",
+        category:"iPhone 17 Pro Max là phiên bản cao cấp nhất trong dòng sản phẩm iPhone 17 series, được định vị là thiết bị tập trung vào công nghệ màn hình, hiệu năng xử lý và khả năng nhiếp ảnh. Phiên bản này giới thiệu một loạt nâng cấp về phần cứng và các tính năng đi kèm, hướng đến việc cung cấp một công cụ có cấu hình mạnh mẽ cho các nhu cầu sử dụng từ cơ bản đến chuyên sâu."
+    },
+    {
+        name:"iPhone 16 Pro Max",
+        price:25,
+        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\iphone-16-pro-max-titan-sa-mac-1-750x500.jpg",
+        category:"iPhone 16 Pro Max là phiên bản cao cấp nhất trong dòng sản phẩm iPhone 16 series, được định vị là thiết bị tập trung vào công nghệ màn hình, hiệu năng xử lý và khả năng nhiếp ảnh. Phiên bản này giới thiệu một loạt nâng cấp về phần cứng và các tính năng đi kèm, hướng đến việc cung cấp một công cụ có cấu hình mạnh mẽ cho các nhu cầu sử dụng từ cơ bản đến chuyên sâu."
+    }
+]
