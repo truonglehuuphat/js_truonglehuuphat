@@ -1,42 +1,58 @@
 [
     {
-        name:"Samsung Galaxy A57",
-        price:40,
-        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\samsung_galaxy_a57.jpg",
-        category:"Điện thoại Samsung Galaxy A57 nổi bật với màn hình Super AMOLED Plus 6.7 inch FHD+ tần số quét 120Hz, mang đến trải nghiệm hiển thị mượt mà, sống động. Thiết bị sở hữu camera chính 50MP tích hợp OIS, giúp hình ảnh thu được ổn định. Điểm cộng lớn trên A57 chính là viên pin 5000mAh đảm bảo thời lượng sử dụng bền bỉ."
-    },
-    {   
-        name:"iphone 15",
-        price:40,
-        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\iphone15.jpg",
-        category:"Những điểm nổi bật trên iPhone 15 đánh để trải nghiệm như:
-                    Màn hình Dynamic Island thay thế cho màn hình tai thỏ
-                    Cổng sạc mới USB-C
-                    Camera nâng cấp lên 48MP, hỗ trợ zoom quang 2x
-                    Mặt lưng kính nhám mờ sang trọng, nhiều màu sắc mới (Hồng,vàng, xanh lá, xanh lam và đen)"
+        "id": 1,
+        "name": "Iphone 13",
+        "description": "Mô tả",
+        "brand": "apple",
+        "price": 9000,
+        "thumbnail": "asset/img/products/iphone-13-1.jpg"
     },
     {
-        name:"Oppo reno 15",
-        price:40,
-        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\oppo_reno15.jpg",
-        category:"OPPO Reno 15 là mẫu smartphone cận cao cấp mới ra mắt tại Việt Nam tháng 1/2026, nổi bật với thiết kế hiện đại và cấu hình mạnh trong phân khúc. Máy sở hữu màn hình AMOLED 6.59 inch, độ phân giải 1.5K, tần số quét 120Hz, độ sáng 1200nits cho trải nghiệm hiển thị sắc nét, mượt mà."
-    },
-    {        
-        name:"Samsung Galaxy A37",
-        price: 40,
-        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\samsung_galaxy_a37.jpg",
-        category:"Điện thoại Samsung Galaxy A37 là mẫu máy tầm trung thế hệ mới hứa hẹn phục vụ tốt các nhu cầu sử dụng khi được trang bị bộ vi xử lý Exynos 1480 tiên tiến. Thiết bị sở hữu màn hình 6.7 inch sắc nét. Ngoài ra, model này còn ghi điểm với viên pin 5000mAh, hỗ trợ người dùng xử lý công việc, giải trí liền mạch suốt nhiều giờ."
+        "id": 2,
+        "name": "Iphone 15",
+        "description": "<strong>Iphone </strong> là mẫu smartphone tầm trung nổi bật với sức mạnh từ",
+        "brand": "apple",
+        "price": 9000,
+        "thumbnail": "asset/img/products/iphone15-1.jpg"
     },
     {
-        name:"iPhone 17 Pro Max",
-        price:40,
-        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\iphone-17-pro-max-600x600.jpg",
-        category:"iPhone 17 Pro Max là phiên bản cao cấp nhất trong dòng sản phẩm iPhone 17 series, được định vị là thiết bị tập trung vào công nghệ màn hình, hiệu năng xử lý và khả năng nhiếp ảnh. Phiên bản này giới thiệu một loạt nâng cấp về phần cứng và các tính năng đi kèm, hướng đến việc cung cấp một công cụ có cấu hình mạnh mẽ cho các nhu cầu sử dụng từ cơ bản đến chuyên sâu."
+        "id": 3,
+        "name": "Samsung S24",
+        "description": "<strong>Samsung S24</strong> là mẫu smartphone tầm trung nổi bật với sức mạnh từ chipset Exynos 1330 cùng công nghệ chống rung OIS trên camera chính 50MP, giúp tối ưu hiệu năng và chất lượng ảnh chụp. Thiết bị sở hữu viên pin 5.000mAh bền bỉ kèm sạc nhanh 25W, đáp ứng trọn vẹn nhu cầu sử dụng cả ngày dài. Với thiết kế tinh tế gồm 3 gam màu thời thượng, A17 5G hứa hẹn là lựa chọn hàng đầu trong phân khúc năm 2026.",
+        "brand": "Samsung",
+        "price": 6000,
+        "thumbnail": "asset/img/products/samsung-s24-1.png"
     },
     {
-        name:"iPhone 16 Pro Max",
-        price:25,
-        img:"C:\Users\Admin\Documents\GitHub\js_truonglehuuphat\module1\bai10\img\iphone-16-pro-max-titan-sa-mac-1-750x500.jpg",
-        category:"iPhone 16 Pro Max là phiên bản cao cấp nhất trong dòng sản phẩm iPhone 16 series, được định vị là thiết bị tập trung vào công nghệ màn hình, hiệu năng xử lý và khả năng nhiếp ảnh. Phiên bản này giới thiệu một loạt nâng cấp về phần cứng và các tính năng đi kèm, hướng đến việc cung cấp một công cụ có cấu hình mạnh mẽ cho các nhu cầu sử dụng từ cơ bản đến chuyên sâu."
+        "id": 4,
+        "name": "Xiaomi 14",
+        "description": "Mô tả",
+        "brand": "Xiaomi",
+        "price": 5000,
+        "thumbnail": "asset/img/products/xiaomi14-1.png"
+    },
+    {
+        "id": 5,
+        "name": "Xiaomi 15",
+        "description": "<strong>Iphone </strong> là mẫu smartphone tầm trung nổi bật với sức mạnh từ",
+        "brand": "Xiaomi",
+        "price": 9000,
+        "thumbnail": "asset/img/products/xiaomi-15-1.jpg"
+    },  
+    {
+        "id": 6,
+        "name": "Xiaomi 15 ultra",
+        "description": "Mô tả",
+        "brand": "Xiaomi",
+        "price": 11000,
+        "thumbnail": "asset/img/products/xiaomi-15-ultra-1.jpg"
+    },
+    {
+        "id": 7,
+        "name": "Oppo Find X",
+        "description": "Mô tả",
+        "brand": "Oppo",
+        "price": 9000,
+        "thumbnail": "asset/img/products/oppo-find-x-1.png"
     }
 ]
