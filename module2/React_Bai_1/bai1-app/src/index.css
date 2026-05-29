@@ -1,0 +1,61 @@
+.red {
+  color : red;
+}
+.map-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column; /* Bắt các phần tử bên trong xếp thành hàng dọc */
+  align-items: center;    /* Căn giữa tất cả các phần tử theo chiều ngang */
+  
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Giới hạn kích thước hình ảnh để không bị vỡ khung */
+.product-image-wrapper {
+  width: 100%;
+  height: 200px; /* Cố định chiều cao vùng chứa ảnh */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px; /* Khoảng cách từ ảnh xuống tên */
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Giúp ảnh không bị méo */
+}
+
+/* CSS cho tên sản phẩm nằm dưới ảnh */
+.product-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 10px 0; /* Khoảng cách từ tên xuống giá */
+  text-align: center;
+}
+
+/* CSS cho giá sản phẩm nằm dưới tên */
+.product-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ee4d2d; /* Màu cam đỏ nổi bật */
+  margin: 0 0 15px 0; /* Khoảng cách từ giá xuống nút bấm */
+}
