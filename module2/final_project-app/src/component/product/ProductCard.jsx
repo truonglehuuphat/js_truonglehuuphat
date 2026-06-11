@@ -1,5 +1,5 @@
 import {FaHeart, FaRegHeart } from 'react-icons/fa'
-
+import { Link } from 'react-router-dom';
 const ProductCard = ({product, isFavorite, onToggleFavorite}) => {
 
     return( <div className = "product-card"> 
@@ -9,12 +9,12 @@ const ProductCard = ({product, isFavorite, onToggleFavorite}) => {
             padding: '10px',
             borderRadius: '8px'
         }}>
-            <div>
-                <img src={product.image} alt={product.name} width={200} />
-            </div> 
-            
-            <h3>{product.name}</h3>
-            <p>{product.price.toLocaleString()}đ</p>
+            <Link to={`/product/${product.id}`} style={{textDecoration: "none", color: "inherit"}} >
+                <img src={product.image} alt={product.name} width={200} style={{borderRadius: 4}}/>
+                <h3>{product.name}</h3>
+                <p>{product.price.toLocaleString()}đ</p>
+            </Link>
+  
             <button onClick={()=> onToggleFavorite(product.id)}>{isFavorite ? <FaHeart color="red"/>: <FaRegHeart/>}</button>
         </div>
     </div>
