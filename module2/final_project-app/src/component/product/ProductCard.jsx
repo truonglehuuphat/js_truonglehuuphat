@@ -1,23 +1,36 @@
-import {FaHeart, FaRegHeart } from 'react-icons/fa'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
-const ProductCard = ({product, isFavorite, onToggleFavorite}) => {
+import { Card, CardMedia, CardContent, Button, IconButton } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import CardActions from '@mui/material/CardActions';
 
-    return( <div className = "product-card"> 
-        <div style={{
-            border: '1px solid #ccc',
-            margin: '10px',
-            padding: '10px',
-            borderRadius: '8px'
-        }}>
-            <Link to={`/product/${product.id}`} style={{textDecoration: "none", color: "inherit"}} >
-                <img src={product.image} alt={product.name} width={200} style={{borderRadius: 4}}/>
-                <h3>{product.name}</h3>
-                <p>{product.price.toLocaleString()}đ</p>
+const ProductCard = ({ product, isFavorite, onToggleFavorite }) => {
+
+    return (
+        <Card sx={{ maxWidth: 350 }}>
+            <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }} >
+                <CardMedia 
+                    component="img"
+                    sx={{  objectFit: 'contain'  }}
+                    image={product.image}
+                    title={product.name}
+                    height="250"
+                />
+                <CardContent>
+                    <Typography>
+                        {product.name}
+                    </Typography>
+                    <Typography>
+                        {product.price}
+                    </Typography>
+                </CardContent>
             </Link>
-  
-            <button onClick={()=> onToggleFavorite(product.id)}>{isFavorite ? <FaHeart color="red"/>: <FaRegHeart/>}</button>
-        </div>
-    </div>
+
+            <CardActions>
+                <Button onClick={() => onToggleFavorite(product.id)} >Add to cart</Button>
+                <Button onClick={() => onToggleFavorite(product.id)} >{isFavorite ? <FaHeart color="red" /> : <FaRegHeart />}</Button>
+            </CardActions>
+        </Card>
     )
 };
 
