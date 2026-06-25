@@ -45,7 +45,7 @@ const HomePage = () => {
                 setProducts(response.data);
             } catch {
                 setError("Khong the tai san pham, vui long thu lai");
-                console.log(error)
+                console.log(Error)
                 alert("Khong the tai san pham, vui long thu lai")
             } finally {
                 setLoading(false);
@@ -75,7 +75,7 @@ const HomePage = () => {
                     ...(priceMap[priceRange] ?? {}),
                     ...(sortMap[sort] ?? {}),
                 });
-                console.log("78 data: " + response.data);
+                // console.log("78 data: " + response.data);
                 setProducts(response.data)
             } catch {
                 setError("Khong the tai san pham. Vui long thu lai");
@@ -149,7 +149,7 @@ const HomePage = () => {
             </Box>
 
             <Box>
-                <Typography>Yêu thích: {favoriteIds.length} | san  dang co {products.length}
+                <Typography>Yêu thích: {favoriteIds.length} | san dang co {products.length}
                 </Typography>
             </Box>
 
