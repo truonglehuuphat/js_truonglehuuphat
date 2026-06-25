@@ -1,0 +1,357 @@
+<html>
+<head>
+    <title>JS</title>
+    <link rel="stylesheet" type="text/css" href="asset/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="asset/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">Cell Phones</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="category.html" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Brand
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- <li><a class="dropdown-item" href="category.html">All Products</a></li>
+                            <li><hr class="dropdown-divider"></li> -->
+                            <li><a class="dropdown-item" href="category.html?brand=apple">Apple</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Oppo">Oppo</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Samsung">Samsung</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Xiaomi">Xiaomi</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Huawei">Huawei</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Sony">Sony</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-outline-dark" type="button" onclick="window.location.href='cart.html'">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 id="detail-product-name" class="fw-bolder mb-1">iPhone 17 Pro Max</h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">Posted on January 1, 2025</div>
+                        <!-- Post categories-->
+                        <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
+                        <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+                    </header>
+                    <!-- Preview image figure-->
+                    
+                    <figure class="mb-4"><img class="img-fluid rounded" src="asset/img/products/iPhone-17-Pro-Max-1.jpg" alt="image-iphone-17-pro-max"></figure>
+                    
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <p id="detail-product-desc" class="fs-5 mb-4"></p>
+
+                        <h2 class="fw-bolder mb-4 mt-5">Thông số kỹ thuật</h2>
+                        
+                        <table class="table table-striped-columns">
+                            <tr>
+                                <td>Camera sau</td>
+                                <td>
+                                    Chính: 48MP khẩu độ ƒ/1.6 OIS hỗ trợ chụp 24MP hoặc 48MP<br>
+                                    Góc Siêu Rộng: 48MP khẩu độ ƒ/2.2 góc nhìn 120°<br>
+                                    Telephoto: 48MP khẩu độ ƒ/2.8 OIS zoom quang học lên đến 8x<br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Camera trước</td>
+                                <td>Camera 18MP Center Stage Khẩu độ ƒ/1.9</td>
+                            </tr>
+                            <tr>
+                                <td>Chipset</td>
+                                <td>A19</td>
+                            </tr>
+                            <tr>
+                                <td>Công nghệ NFC</td>
+                                <td>Có</td>
+                            </tr>
+                            <tr>
+                                <td>Dung lượng RAM</td>
+                                <td>8 GB</td>
+                            </tr>
+                            <tr>
+                                <td>Bộ nhớ trong</td>
+                                <td>256 GB</td>
+                            </tr>
+                            <tr>
+                                <td>Pin</td>
+                                <td>Li-Ion 5000 mAh</td>
+                            </tr>
+                            <tr>
+                                <td>Thẻ SIM</td>
+                                <td>Sim kép (nano-Sim và e-Sim) - Hỗ trợ 2 e-Sim</td>
+                            </tr>
+                            <tr>
+                                <td>Hệ điều hành</td>
+                                <td>iOS 26</td>
+                            </tr>
+                            <tr>
+                                <td>Độ phân giải màn hình</td>
+                                <td>2868 x 1320 pixels</td>
+                            </tr>
+                            <tr>
+                                <td>Tính năng màn hình</td>
+                                <td>
+                                    Màn hình Luôn Bật, ProMotion 120Hz, HDR, True Tone, Dải màu rộng (P3), Haptic Touch, Tỷ lệ tương phản 2.000.000:1, Độ sáng 1000 nit (tiêu chuẩn), 1600 nit (HDR), 3000 nit (ngoài trời) / tối thiểu 1 nit, Lớp phủ kháng dầu, Chống phản chiếu, Hỗ trợ đa ngôn
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Loại CPU</td>
+                                <td>CPU 6 lõi với 2 lõi hiệu năng và 4 lõi tiết kiệm điện</td>
+                            </tr>
+                        </table>
+                    </section>
+                </article>
+                <!-- Comments section-->
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
+                            <!-- Comment with nested comments-->
+                            <div class="d-flex mb-4">
+                                <!-- Parent comment-->
+                                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">Lisa</div>
+                                    Sản phẩm chất lượng tốt
+                                    <!-- Child comment 1-->
+                                    <div class="d-flex mt-4">
+                                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                                        <div class="ms-3">
+                                            <div class="fw-bold">CSKH</div>
+                                            Xin chào Lisa. Cảm ơn Chị đã quan tâm đến CellphoneS.
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Single comment-->
+                            <div class="d-flex">
+                                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">Ronaldo</div>
+                                    Còn hàng không shop
+                                    <!-- Child comment 1-->
+                                    <div class="d-flex mt-4">
+                                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                                        <div class="ms-3">
+                                            <div class="fw-bold">CSKH</div>
+                                            Xin chào Ronaldo
+                                                Dạ APPLE IPHONE 17 PRO MAX 256GB CAM CHÍNH HÃNG (MFYN4) giá thời điểm hiện tại là 36.990.000đ ( HCM )
+                                                Không biết mình ở khu vực tỉnh thành nào, em tìm shop gần nhất còn hàng và giữ hàng và giá cho mình trong 24h ạ.
+                                                Cảm ơn Chị đã quan tâm đến CellphoneS.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Side widgets-->
+            <div class="col-lg-4">
+                <!-- Side widget-->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <img class="img-fluid rounded mb-2" src="asset/img/giam-gia-10.png" alt="...">
+                        <img class="img-fluid rounded" src="asset/img/vong-quay-may-man.png" alt="...">
+                    </div>
+                </div>
+                <!-- Search widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Khuyến mãi<br> Giá và khuyến mãi có thể kết thúc sớm hơn dự kiến</div>
+                    <div class="card-body">
+                        <ol>
+                            <li>Tặng Phiếu mua hàng mua Pin tiểu (đơn hàng từ 80.000đ trở lên) trị giá 20.000đ</li>
+                            <li>Đặc biệt giảm đến 10% tối đa 5 triệu khi thanh toán qua Kredivo (chỉ áp dụng đơn hàng có lãi suất) (Xem chi tiết tại đây)</li>
+                            <li>Nhập mã VNPAYTGDD2 giảm tối đa 80,000đ (áp dụng tùy giá trị đơn hàng) khi thanh toán qua VNPAY-QR (Xem chi tiết tại đây)</li>
+                            <li>NHẬN HOÀN NGAY ĐẾN 800.000đ khi mở thẻ tín dụng VPBANK MWG (Xem chi tiết tại đây)</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- Categories widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Hãng sản xuất</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="category.html?brand=apple">Apple</a></li>
+                                    <li><a href="category.html?brand=samsung">Samsung</a></li>
+                                    <li><a href="category.html?brand=oppo">OPPO</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="category.html?brand=realme">Realme</a></li>
+                                    <li><a href="category.html?brand=vivo">Vivo</a></li>
+                                    <li><a href="category.html?brand=xiaomi">Xiaomi</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3>Đề xuất</h3>
+
+        <div id="product-list" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+        </div>
+    </div>
+
+    <footer class="py-5 bg-dark">
+        <div class="container px-4 px-lg-5">
+            <div class="row" style="color:white !important"> 
+                <div class="col-6 col-md-2 mb-3"> 
+                    <h5>Sản phẩm</h5> 
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">iPhone</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Samsung</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Xiaomi</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Oppo</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-2 mb-3">
+                    <h5>CHÍNH SÁCH</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách bảo mật </a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách đổi trả sản phẩm</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách bảo hành</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách giao nhận</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách bảo mật dữ liệu khách hàng</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-2 mb-3">
+                    <h5>Về chúng tôi</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Home</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">About</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Shop</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Contract</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-5 offset-md-1 mb-3">
+                    <form>
+                        <h5>Đăng ký nhận thông tin quảng cáo</h5>
+                        <p>Hàng tháng chúng tôi có quảng cáo sản phẩm mới và giảm giá mặt hàng củ.</p>
+                        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                            <label for="newsletter1" class="visually-hidden">Email address</label>
+                            <input id="newsletter1" type="email" class="form-control" placeholder="Email address">
+                            <button class="btn btn-primary" type="button">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="asset\bootstrap\js\bootstrap.bundle.min.js"></script>
+    <script src="asset/js/script.js"></script>
+    <script src="asset/js/cart.js"></script>
+
+    <script>
+        var products = [];
+        var detailProduct = null;
+        var currentIndex = 0;
+        var step = 4; // so luong item
+        var html = "";
+        
+        let params = new URLSearchParams(document.location.search); // lấy tham số từ URL
+        let idProduct = params.get("id"); // lấy tham số id
+
+        window.onload = function() {
+            loadProduct();
+            updateCartCount();
+        }
+
+        function loadProduct() {
+            let xhr = new XMLHttpRequest;
+            xhr.open("GET", "products.json", true);
+
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    products = JSON.parse(xhr.responseText);
+
+                    products.forEach(item => {
+                        if (item.id == idProduct) {
+                            detailProduct = item
+                        }
+                    });
+                    renderDetailProduct();
+                    renderProductTable();
+                }
+            }
+            xhr.send();
+        }
+
+        function renderDetailProduct() {
+            document.getElementById("detail-product-name").innerText = detailProduct.name;
+            document.getElementById("detail-product-desc").innerHTML = detailProduct.description;
+        }
+
+        function renderProductTable() {
+            let nextIndex = currentIndex + step;
+
+            let list = products.slice(currentIndex, nextIndex);
+
+            list.forEach((product, index) => {
+                html += `
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                            <img class="card-img-top" src="${product.thumbnail}" alt="...">
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <h5 class="fw-bolder text-hover">${product.name}</h5>
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+                                    <span class="text-muted text-decoration-line-through">$20.00</span>${product.price}
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" onclick="addToCart(${index}, 1)">Add to cart</a></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            })
+
+            document.getElementById("product-list").innerHTML = html;
+            currentIndex = nextIndex;
+        }
+    </script>
+</body>
+</html>

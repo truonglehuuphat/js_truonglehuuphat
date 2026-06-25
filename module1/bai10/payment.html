@@ -1,0 +1,165 @@
+<html>
+<head>
+    <title>JS</title>
+    <link rel="stylesheet" type="text/css" href="asset/bootstrap/css/bootstrap.min.css">
+    
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">Cell Phones</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="category.html" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Brand
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- <li><a class="dropdown-item" href="category.html">All Products</a></li>
+                            <li><hr class="dropdown-divider"></li> -->
+                            <li><a class="dropdown-item" href="category.html?brand=apple">Apple</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Oppo">Oppo</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Samsung">Samsung</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Xiaomi">Xiaomi</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Huawei">Huawei</a></li>
+                            <li><a class="dropdown-item" href="category.html?brand=Sony">Sony</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-outline-dark" type="button" onclick="window.location.href='cart.html'">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-xl-8">
+                <!-- Account details card-->
+                <div class="card mb-5">
+                    <div class="card-header">Account Payment</div>
+                    <div class="card-body p-5">
+                        <div class="card-subtitle mb-4">Review and update your account information below.</div>
+                        <form id="formPayment">
+                            <div class="input-group mb-3">
+                                <input type="text" id ='fisrtName' name="firstName" class="form-control" placeholder="Tên" aria-label="Tên" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" id ='lastName' name="lastName"  class="form-control" placeholder="Họ" aria-label="Họ" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" id ='Phone' name="phone" class="form-control" placeholder="Số điện thoại" aria-label="Số điện thoại" aria-describedby="basic-addon1">
+                            </div>                            
+                            <div class="input-group mb-3">
+                                <input type="text" id ='Email' name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon2">
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" id="Address" name="address" class="form-control" placeholder="Địa chỉ" aria-label="Địa chỉ" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="form-group">
+                                <label for="note">Ghi chú</label>
+                                <textarea class="form-control" id="note"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="py-5 bg-dark">
+        <div class="container px-4 px-lg-5">
+            <div class="row" style="color:white !important"> 
+                <div class="col-6 col-md-2 mb-3"> 
+                    <h5>Sản phẩm</h5> 
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">iPhone</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Samsung</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Xiaomi</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Oppo</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-2 mb-3">
+                    <h5>CHÍNH SÁCH</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách bảo mật </a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách đổi trả sản phẩm</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách bảo hành</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách giao nhận</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Chính sách bảo mật dữ liệu khách hàng</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-2 mb-3">
+                    <h5>Về chúng tôi</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Home</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">About</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Shop</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Contract</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-white">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-5 offset-md-1 mb-3">
+                    <form>
+                        <h5>Đăng ký nhận thông tin quảng cáo</h5>
+                        <p>Hàng tháng chúng tôi có quảng cáo sản phẩm mới và giảm giá mặt hàng củ.</p>
+                        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                            <label for="newsletter1" class="visually-hidden">Email address</label>
+                            <input id="newsletter1" type="email" class="form-control" placeholder="Email address">
+                            <button class="btn btn-primary" type="button">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="asset\bootstrap\js\bootstrap.bundle.min.js"></script>
+    <script src="asset/js/script.js"></script>
+
+    <script>
+        const formElement= document.querySelector('#formPayment')
+
+        formElement.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let data = new FormData(formElement);
+            let fisrtname = data.get('firstName');
+            let lastname = data.get('lastName');
+            let phone = data.get('phone');
+            let address = data.get('address');
+            let email = data.get('email');
+            let note = data.get('note');
+            // console.log(fisrtname);
+            console.log(lastname);
+            console.log(phone);
+            console.log(address);
+            console.log(email);
+            console.log(note);
+            window.localStorage.setItem('fisrtname', fisrtName);
+            window.localStorage.setItem('lastname', lastName);
+            window.localStorage.setItem('phone', Phone);
+            window.localStorage.setItem('address',Address);
+            window.localStorage.setItem('email', Email);
+            window.localStorage.setItem('note', note);
+
+            window.location.href = "payment-success.html";
+        });
+
+
+
+    </script>
+</body>
+</html>

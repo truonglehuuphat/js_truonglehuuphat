@@ -1,0 +1,74 @@
+/* Căn giữa toàn bộ form ra giữa màn hình giống nền mẫu */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f7fe; /* Màu nền nhẹ phía sau */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Bo góc và đổ bóng cho khung màu trắng */
+.login-card {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-title {
+  font-size: 24px;
+  color: #000000;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Kiểu dáng cho các ô Input bám sát hình mẫu */
+.login-input {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.login-input:focus {
+  border-color: #a3a3a3;
+}
+
+/* Màu chữ thông báo lỗi màu đỏ */
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin: 6px 0 0 4px;
+}
+
+/* Nút bấm màu tím nhạt bo góc */
+.login-button {
+  width: 100%;
+  padding: 16px;
+  background-color: #9fa8da; /* Màu tím pastel giống trong ảnh */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background-color: #7986cb; /* Đậm hơn một chút khi hover */
+}
