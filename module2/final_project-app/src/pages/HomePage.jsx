@@ -1,12 +1,11 @@
 // import { products } from "../data/products.js"
 import ProductCard from "../component/product/ProductCard.jsx"
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import SearchBar from "../component/SearchBar.jsx";
 import FilterBar from "../component/FilterBar.jsx";
 import {ProductService , getProducts , getProductById}  from "../sevices/productService.js"
 import { Container, Grid, TextField, FormControl, Typography, Box } from "@mui/material";
-
-
+import { CartContext } from "../context/CartContext";
 
 export const fetchProducts = () => {
     console.log(" fetchProducts function ");
@@ -29,10 +28,11 @@ const HomePage = () => {
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState([]);
     
+    const {dispatch, cartItems} = useContext(CartContext);
+    console.log("cartItems: ",cartItems );
     const handleToggleFavorite = (id) => {
         setFavoriteIds((prev) => prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]);
     };
-
 
     useEffect(() => {
         const loadProduct = async () => {
@@ -73,10 +73,11 @@ const HomePage = () => {
                     search,
                     category,
                     ...(priceMap[priceRange] ?? {}),
-                    ...(sortMap[sort] ?? {}),
+                    ...(sortMap[sortType] ?? {}),
                 });
                 // console.log("78 data: " + response.data);
-                setProducts(response.data)
+                const data = response?.data ? response.data : response;
+                setProducts(data)
             } catch {
                 setError("Khong the tai san pham. Vui long thu lai");
             } finally {
@@ -149,7 +150,7 @@ const HomePage = () => {
             </Box>
 
             <Box>
-                <Typography>Yêu thích: {favoriteIds.length} | san dang co {products.length}
+                <Typography>Yêu thích: {favoriteIds.length} | sản phẩm đang có {products.length}
                 </Typography>
             </Box>
 

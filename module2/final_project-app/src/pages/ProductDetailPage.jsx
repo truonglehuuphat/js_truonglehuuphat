@@ -2,7 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 // import { products } from "../data/products";
 import { Container, Box, Grid, Typography, Button, Rating } from "@mui/material";
 import { getProductById } from "../sevices/productService";
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext} from 'react'
+import { CartContext } from '../context/CartContext';
 
 const ProductDetailPage = () => {
     const { id } = useParams();
@@ -10,9 +11,15 @@ const ProductDetailPage = () => {
     const [Error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [productCurrent, setProductCurrent] = useState([]);
-    // const productCurrent = products.find((item) => Number(item.id) === Number(id));
-    // console.log("productCurrent " + productCurrent);
+    const {dispatch} = useContext(CartContext);
 
+    const handleAddToCart = () => {
+        dispatch({
+            type: "ADD_TO_CART",
+            payload: productCurrent
+        });
+    };
+    console.log(productCurrent);
     useEffect(() => {
         const fetchProduct = async () =>{
             try{
@@ -58,7 +65,7 @@ const ProductDetailPage = () => {
                     <Box>
                         <Typography variant="h4" style={{color:'red', textAlign:'left'}}>${productCurrent.price}</Typography >
                         <Typography  style={{ textAlign:'left'}}>{productCurrent.description}</Typography >
-                        <Button variant= "contained">Add to cart</Button>
+                        <Button variant= "contained" onClick={handleAddToCart}>Add to cart</Button>
                     </Box>
                 </Grid>
             </Grid>

@@ -52,8 +52,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function SearchAppBar() {
-
-
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -70,11 +68,10 @@ function SearchAppBar() {
                         </SearchIconWrapper>
                         <StyledInputBase placeholder="Search products, brands..." inputProps={{ 'aria-label': 'search' }} />
                     </Search>
-                    <Box style={{ marginLeft: "auto" }}>
-                        {/* <IconButton > */}
+                    <Box style={{ color: "#fff", textDecoration: "none", marginLeft: "auto" }}>
                         <ModeNightIcon />
-                        {/* </IconButton> */}
                     </Box>
+                    
                     <Link to="/cart" style={{ color: "#fff", textDecoration: "none", marginLeft: "auto" }}>
                         {/* <IconButton> */}
                         <ShoppingCartIcon />

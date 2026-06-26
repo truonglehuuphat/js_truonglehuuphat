@@ -7,7 +7,7 @@ import {ThemeProvider, CssBaseline} from '@mui/material'
 import { RouterProvider } from 'react-router-dom'
 import {router} from './router/index.jsx'
 import { ThemeContextProvider, useThemeContext } from './theme/theme'
-
+import {  CartProvide } from "./context/cartContext.jsx";
 
 
 const Providers = () => {
@@ -15,8 +15,11 @@ const Providers = () => {
   return(
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* <App /> */}
+      <CartProvide>
       <RouterProvider router={router} />
+      </CartProvide>
+      {/* <App /> */}
+      
     </ThemeProvider>
   )
 }
@@ -24,7 +27,7 @@ const Providers = () => {
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
       <ThemeContextProvider>
-        <Providers />
+          <Providers />
       </ThemeContextProvider>
     </React.StrictMode>
 )
