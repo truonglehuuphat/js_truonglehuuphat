@@ -3,31 +3,29 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import './index.css'
 import App from './App.jsx'
-import {ThemeProvider, CssBaseline} from '@mui/material'
+import { ThemeProvider, CssBaseline } from '@mui/material'
 import { RouterProvider } from 'react-router-dom'
-import {router} from './router/index.jsx'
+import { router } from './router/index.jsx'
 import { ThemeContextProvider, useThemeContext } from './theme/theme'
-import {  CartProvide } from "./context/cartContext.jsx";
+import { CartProvide } from "./context/cartContext.jsx";
 
 
 const Providers = () => {
   const { theme } = useThemeContext();
-  return(
+  return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <CartProvide>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </CartProvide>
-      {/* <App /> */}
-      
     </ThemeProvider>
   )
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
-      <ThemeContextProvider>
-          <Providers />
-      </ThemeContextProvider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <ThemeContextProvider>
+      <Providers />
+    </ThemeContextProvider>
+  </React.StrictMode>
 )

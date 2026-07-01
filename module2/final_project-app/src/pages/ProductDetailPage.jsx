@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-// import { products } from "../data/products";
 import { Container, Box, Grid, Typography, Button, Rating } from "@mui/material";
 import { getProductById } from "../sevices/productService";
 import { useEffect, useState, useContext} from 'react'
