@@ -18,3 +18,14 @@ export const priceMap = {
     over500: {minPrice:500, maxPrice: ""}
 } as const; 
 
+
+export type PriceRange = keyof typeof priceMap;
+
+export const sortMap = {
+  default: {},
+  priceAsc: { sortBy: "price", order: "asc" },
+  priceDesc: { sortBy: "price", order: "desc" },
+  ratingDesc: { sortBy: "rating", order: "desc" },
+} as const;
+
+export type SortOption = keyof typeof sortMap;
