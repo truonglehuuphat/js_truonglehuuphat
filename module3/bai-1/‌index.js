@@ -1,6 +1,6 @@
 const http = require("http")
 
-const products = [
+products = [
     {
         id: 1,
         name: "Laptop",
@@ -13,35 +13,75 @@ const products = [
     }
 ]
 
-
-const users = [
-    {
-        id: 1,
-        name: "John",
-        age: 10
-    },
-    {
-        id: 2,
-        name: "Honda",
-        age: 11
+const server = http.createServer((request, response) => {
+    console.log(request.method)
+    //GET /product -> Lay toan bo san pham
+    if (request.url === "/products" && request.method === "GET") {
+        response.end(JSON.stringify(products))
+        return;
     }
-]
-
-const server = http.createServer((req, res) => {
-    try {
-        if (req.url === "/products") {
-            res.end(JSON.stringify(products))
+    //POST /product -> tao san pham moi
+    if (request.url === "/products" && request.method === "POST") {
+        let body = "";
+        request.on("data", chunk => body += chunk);
+        request.on("end", () => {
+            try {
+                const newProduct = JSON.parse(body);
+                products.push({
+                    ...newProduct,
+                    id: products.length + 1
+                })
+                response.end("Succesfully create");
+            }
+            catch (e) {
+                response.end("Something went wrong");
+            }
+        })
+        return;
+    }
+    //PUT /product -> tao san pham moi
+    if (request.url.startsWith("/products") && request.method === "PUT") {
+        const id = parseInt(request.url.split("/")[2])
+        let body = "";
+        if (!products.find((item) => item.id === id)) {
+            response.end("Can not found the target product");
             return;
         }
-        if (req.url === "/users") {
-            res.end(JSON.stringify(users))
-            return;
-        }
-        res.end("Not found")
-    } catch (error) {
-         res.end(error)
+        request.on("data", chunk => body += chunk);
+        request.on("end", () => {
+            try {
+                const parseBody = JSON.parse(body);
+                products = products.map((item) => {
+                    if (item.id === id) {
+                        return {
+                            ...parseBody,
+                            id: id
+                        }
+                    }
+                    return item
+                })
+                response.end("Succesfully update");
+            }
+            catch (e) {
+                response.end("Something went wrong");
+            }
+        })
+        return;
     }
 
+    //DELETE /product -> tao san pham moi
+    if (request.url.startsWith("/products") && request.method === "DELETE") {
+        const id = parseInt(request.url.split("/")[2])
+        if (!products.find((item) => item.id === id)) {
+            response.end("Can not found the target product");
+            return;
+        }
+        products = products.filter((item) => {
+            return item.id !== id
+        })
+        response.end("Succesfully delete");
+        return;
+    }
 })
 
 server.listen(3001)

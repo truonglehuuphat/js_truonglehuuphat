@@ -13,7 +13,6 @@ const Providers = () => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <RouterProvider router={router} />
       </LocalizationProvider>
-      
     </ThemeProvider>
   )
 
