@@ -1,7 +1,7 @@
 import { AppBar, Badge, Box, Container, IconButton, Toolbar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import SearchBar from "../../common/SearchBar";
-import ThemeToggle from "../../common/ThemeToggle";
+import SearchBar from "../common/SearchBar";
+import ThemeToggle from "../common/ThemeToggle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 type Props = {

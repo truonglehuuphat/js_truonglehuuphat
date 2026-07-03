@@ -20,12 +20,10 @@ const Footer = () => {
             },
         }}>
             <Container sx={{ py: 4 }}>
-                <Typography textAlign="center">
-                    © 2026 Tech Shop. A marketplace demo powered by Fake Store API.
-                </Typography>
+                <Typography sx={{textAlign:"center"}}>© 2026 CSC Shop. A marketplace demo powered by Fake Store API.</Typography>
             </Container>
         </Box>
-    )
-}
+    );
+};
 
 export default Footer;

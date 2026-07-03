@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node", /* Hoặc "nodenext" / "bundler" tùy dự án */
+    "types": ["node"]
+  }
+}
