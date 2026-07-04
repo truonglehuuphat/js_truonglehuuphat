@@ -27,7 +27,6 @@ const ProductDetailPage = () => {
                 setProduct(data);
             }
             catch (e) {
-                setLoading(true);
                 console.log(e);
                 setError("Khong ket noi duoc server");
             }
@@ -36,7 +35,7 @@ const ProductDetailPage = () => {
             }
         }
         fetchProduct();
-    }, [])
+    }, [id])
     if (loading) {
         return <Loading />;
     }

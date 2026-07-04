@@ -7,8 +7,8 @@ type Props = {
 }
 
 const ProductInfo = ({ product }: Props) => {
-    const {dispatch} = useCart();
-    
+    const { dispatch } = useCart();
+
     return (
         <Box>
             <Typography variant="h4">

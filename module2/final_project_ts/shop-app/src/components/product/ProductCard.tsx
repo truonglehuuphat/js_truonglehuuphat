@@ -41,7 +41,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             }}
             >
                 <Box component={Link} to={`/product/${product.id}`} sx={{ display: "block" }}>
-                    <CardMedia component="img" image={product.thumbnail} sx={{ height: 200, objectfit: "contain", p: 2 }} />
+                    <CardMedia component="img" image={product.thumbnail} sx={{ height: 200, objectFit: "contain", p: 2 }} />
                 </Box>
                 <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
                     {/* Thông tin sản phẩm */}
@@ -68,7 +68,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                         </Typography>
                     </Stack>
                     {/* Price */}
-                    <Typography sx={{ variant: "h6", color: "secondary.main", fontWeight: 800, mt: 1 }}>
+                    <Typography sx={{ variant: "h6", color: "secondary.main", fontWeight:800, mt:1 }}>
                         ${Number(product.price).toLocaleString()}
                     </Typography>
                     {/* ACTION */}
