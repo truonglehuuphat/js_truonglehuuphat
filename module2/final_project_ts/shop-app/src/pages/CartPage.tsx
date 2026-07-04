@@ -5,7 +5,7 @@ import BackButton from "../components/common/BackButton";
 
 const CartPage = () => {
     return (
-        <Container>
+        <Container maxWidth="lg" sx={{ py: { xs: 2.5, md: 4 } }}>
             <Box sx={{ md: 2.5 }}>
                 <BackButton />
             </Box>

@@ -24,7 +24,7 @@ const ProductInfo = ({ product }: Props) => {
             <Typography sx={{ mt: 3 }}>
                 {product.description}
             </Typography>
-            <Button variant="contained" onClick={() => dispatch({ type: "ADD_TO_CART", payload: product })}>
+            <Button variant="contained" sx={{py: {xs:1.5 , md :2 }, mt:2 }}onClick={() => dispatch({ type: "ADD_TO_CART", payload: product })} >
                 Add to Cart
             </Button>
         </Box>

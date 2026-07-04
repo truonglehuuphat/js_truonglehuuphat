@@ -105,7 +105,7 @@ const HomePage = () => {
 
         return () => controller.abort();
     }, [debouncedSearch, category, priceRange, sort]);
-
+    
     const visibleProducts = useMemo(() => {
 
         if (collectionType === "wishlist") {
@@ -131,22 +131,22 @@ const HomePage = () => {
                     "&::before": {
                         content: '""',
                         position: "absolute",
-                        width: 180,
-                        height: 180,
-                        borderRadius: "50%",
-                        background: "rgba(255,255,255,0.16)",
-                        top: -70,
-                        right: -35,
-                    },
-                    "&::after": {
-                        content: '""',
-                        position: "absolute",
-                        width: 130,
-                        height: 130,
+                        width: 120,
+                        height: 120,
                         borderRadius: "50%",
                         background: "rgba(255,255,255,0.14)",
                         bottom: -50,
                         left: "35%",
+                    },
+                    "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        width: 180,
+                        height: 180,
+                        borderRadius: "50%",
+                        background: "rgba(255,255,255,0.20)",
+                        top: -70,
+                        right: -35,
                     },
                 }}
             >
