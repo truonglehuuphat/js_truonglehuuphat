@@ -40,6 +40,7 @@ server.put("/products/:id", (request, response) => {
                 id: item.id
             }
         }
+        return item;
     })
     response.json({
         message: "Successfully put"
