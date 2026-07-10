@@ -3,8 +3,8 @@ import { Stack, ToggleButton, ToggleButtonGroup, Typography } from "@mui/materia
 
 export default function TaskFilter({ filter, setFilter, priorityFilter, setPriorityFilter }) {
     return (
-        <Stack>
-            <Typography sx={{ mb: 1, fontWeight: 'bold' }}>Status:</Typography>
+        <Stack  spacing={2} sx={{ mb: 3 }}>
+            <Typography  variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>Status:</Typography>
             <ToggleButtonGroup
                 color="primary"
                 value={filter}
@@ -21,11 +21,10 @@ export default function TaskFilter({ filter, setFilter, priorityFilter, setPrior
                     Done
                 </ToggleButton>
             </ToggleButtonGroup>
-            <Typography sx={{ mb: 1, fontWeight: 'bold' }}>Priority:</Typography>
+            <Typography  variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>Priority:</Typography>
             <ToggleButtonGroup
-                color="primary"
+                size="small"
                 value={priorityFilter}
-                exclusive
                 onChange={(e, val) => val !== null && setPriorityFilter(val)}
             >
                 <ToggleButton value="Urgent">

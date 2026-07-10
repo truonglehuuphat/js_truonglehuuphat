@@ -1,87 +1,61 @@
-import { useState } from 'react';
-import { Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import './App.css'
+import { useContext, useState, useMemo } from 'react';
+import { Box, Container, Divider, Typography } from "@mui/material";
+import { TaskContext, TaskProvider } from './contexts/TaskContext';
+import TaskInput from './components/TaskInput';
+import TaskFilter from './components/TaskFilter';
+import TaskItem from './components/TaskItem';
 
-function App() {
-  const [search, SetSearch] = useState("");
-  const [levelPriority, SetLevelPriority] = useState("");
-  const handleChangeSearch = (e) => {
-    SetSearch(e.target.value)
-  }
+function TaskApp() {
+  const { tasks, toggleTask, deleteTask } = useContext(TaskContext);
 
-  const handleChange = (e) => {
-    SetLevelPriority(e.target.value);
-  }
+  const [filter, setFilter] = useState("");
+  const [priorityFilter, setPriority] = useState("Medium");
+  const filteredTasks = useMemo(() => {
+     const safeTasks = Array.isArray(tasks) ? tasks : [];
+    return safeTasks.filter((task) => {
+     
+        const matchStatus = filter === "all"? true: filter === "completed"? task.completed : !task.completed;
+        const matchPriorityFilter = priorityFilter.length === 0? true : priorityFilter.includes(task.priority);
+        return matchStatus && matchPriorityFilter; 
+    })
+  }, [tasks, toggleTask, deleteTask])
   return (
     <>
-      <Container >
+      <Container maxWidth="md" sx={{ py: 5 }}>
+        <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 800, color: '#1976d2' }}>
+          TASK MASTER PRO
+        </Typography>
+
+        <TaskInput />
+
+        <TaskFilter filter={filter} setFilter={setFilter}
+          priorityFilter={priorityFilter} setPriorityFilter={setPriority} />
+
+        <Divider sx={{ md: 3 }} />
+        
         <Box>
-          <Typography variant="h2" color="primary" sx={{ fontWeight: 700 }} >
-            TASK MASTER PRO
+          <Typography variant="subtitle2" sx ={{ mb:2 , color: 'text.secondary'}}>
+            Danh sách: {filteredTasks.length} công việc
           </Typography>
-        </Box>
-        <Box sx={{m: 1.2, p: 1.2, alignItems:"center"}}  backGroundColor="primary.main" >
-          <Grid container spacing={2} >
-            <Grid size={8}>
-              <TextField label="Nội dung công việc" fullWidth onChange={handleChangeSearch} />
-            </Grid>
-            <Grid size={2}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                  <InputLabel variant="standard">
-                    Priority
-                  </InputLabel>
-                  <Select value={levelPriority} onChange={handleChange}>
-                    <MenuItem value={10}>Urgent</MenuItem>
-                    <MenuItem value={20}>High</MenuItem>
-                    <MenuItem value={30}>Medium</MenuItem>
-                    <MenuItem value={40}>Low</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-            </Grid>
-            <Grid>
-              <Button variant="contained" sx={{ minWidth: 100, minHeight: 54}}>
-                Add
-              </Button>
-            </Grid>
-          </Grid>
+          {
+            filteredTasks.length > 0 ? filteredTasks.map(task => (
+              <TaskItem key={task.id} task={task} toggle={toggleTask} onDelete={deleteTask}/>
+            )) :  (
+              <Typography align="center" sx={{mt:4 , color:"text.disable"}}>
+                Không tìm thấy công việc nào phù hợp
+              </Typography>
+            )
+          }
         </Box>
       </Container>
-        <Box>
-          <Typography fontWeight={700}>
-            Status:
-          </Typography>
-          <Button>
-            All
-          </Button>
-          <Button>
-            NOT YET
-          </Button>
-          <Button>
-            DONE
-          </Button>
-        </Box>
-        <Box>
-          <Typography fontWeight={700}>
-            Priority
-          </Typography>
-          <Button>
-            URGENT
-          </Button>
-          <Button>
-            HIGH
-          </Button>
-          <Button>
-            MEDIUM
-          </Button>
-          <Button>
-            LOW
-          </Button>          
-        </Box>        
-
     </>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <TaskProvider>
+      <TaskApp />
+    </TaskProvider>
+  )
+}

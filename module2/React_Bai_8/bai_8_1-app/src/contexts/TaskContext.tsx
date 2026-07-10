@@ -7,7 +7,7 @@ export const TaskProvider = ({ children }) => {
         const saved = localStorage.getItem("smart_tasks");
         return saved ? JSON.parse(saved) : [];
     });
-    
+
     useEffect(() => {
         localStorage.setItem("smart_tasks", JSON.stringify("smart_tasks"));
     }, [tasks]);
@@ -21,11 +21,11 @@ export const TaskProvider = ({ children }) => {
         setTasks((pre) => pre.filter((item) => item.id !== id));
     }, []);
 
-    const toggleTask = useCallback((id) => { 
-        setTasks((pre) => pre.map((t) =>(t.id === id ? { ...t, complete: !t.complete } : t)));
+    const toggleTask = useCallback((id) => {
+        setTasks((pre) => pre.map((t) => (t.id === id ? { ...t, complete: !t.complete } : t)));
     }, []);
 
-    const value = useMemo(()=>({tasks, addTask, deleteTask, toggleTask}),[tasks, addTask, deleteTask, toggleTask]);
+    const value = useMemo(() => ({ tasks, addTask, deleteTask, toggleTask }), [tasks, addTask, deleteTask, toggleTask]);
 
     return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>
 }
