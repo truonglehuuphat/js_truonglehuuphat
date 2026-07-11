@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction, Router, response } from 'express'
+import { Request, Response, NextFunction, Router } from 'express'
 import { ApiResponse, Product } from "../../types";
 import { fileURLToPath } from 'url';
+import { validate } from "../middleware/validate"
+import { createProductSchema } from "../schemas/productSchema"
 
 import fs from "fs";
 import path from "path";
 import { ServerResponse } from 'http';
+
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const DATA_FILE = path.join(__filename, "../../../data/products.json");
@@ -29,7 +32,7 @@ router.get("/", (request: Request, response: Response, next: NextFunction) => {
         }
         if (search) {
             products = products.filter((p) =>
-                p.name.toLocaleLowerCase().includes((search as string).toLowerCase())
+                p.title.toLocaleLowerCase().includes((search as string).toLowerCase())
             );
         }
         const total = products.length;
@@ -68,48 +71,10 @@ router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
     }
 })
 
-router.post("/", (req: Request, res: Response, next: NextFunction) => {
+router.post("/", validate(createProductSchema), (req: Request, res: Response, next: NextFunction) => {
     try {
         const products = readProducts()
-        const data = req.body;
-        if (!data.name) {
-
-            res.status(400).json({
-                message: "This product missing name"
-            })
-            return;
-        }
-        if (!data.price) {
-
-            res.status(400).json({
-                message: "This product missing price"
-            })
-            return;
-        }
-        const productEx = products.find((t) => t.name.toLocaleLowerCase().includes((data.name as string).toLowerCase()))
-        if (productEx) {
-
-            res.status(409).json({
-                message: "This product is Existed"
-            })
-            return;
-        }
-        if (data.price <= 5000) {
-
-            res.status(422).json({
-                message: "Product's price is over 5000"
-            })
-            return;
-        }
-        if (data.name.length <= 15) {
-
-            res.status(422).json({
-                message: "Product's name have over 15 character"
-            })
-            return;
-        }
-
-        const body = { id: products.length + 1, ...req.body };
+        const body = { id: products.length + 1, rating: 0, ratingCount: 0, ...req.body };
         products.push(body);
         fs.writeFileSync(DATA_FILE, JSON.stringify(products), { encoding: "utf-8" });
         res.status(201).json({ success: true, data: products });
