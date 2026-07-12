@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction, Router } from 'express'
-import { ApiResponse, Product } from "../../types";
-import { fileURLToPath } from 'url';
+import { ApiResponse, Product } from "../types/types";
+import { fileURLToPath } from 'url';    
 import { validate } from "../middleware/validate"
-import { createProductSchema } from "../schemas/productSchema"
+import { createProductSchema, updateProductSchema } from "../schemas/productSchema"
 
 import fs from "fs";
 import path from "path";
 import { ServerResponse } from 'http';
+import { AppError } from '../types/api';
+import { ok } from '../unitls/helper';
 
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -51,7 +53,8 @@ router.get("/categories", (req: Request, res: Response, next: NextFunction) => {
     try {
         const products = readProducts();
         const categories = [...new Set(products.map((p) => p.category))];
-        res.json({ success: true, data: categories });
+        // res.json({ success: true, data: categories });
+        ok(res, categories, 201);
     } catch (err) {
         next(err);
     }
@@ -62,9 +65,11 @@ router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
     try {
         const product = readProducts().find((p) => p.id === Number(req.params.id));
         if (!product) {
-            return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" })
+            // return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" })
+            return next(new AppError(404, "Sản phẩm không tồn tại"));
         }
-        res.json({ success: true, data: product });
+        // res.json({ success: true, data: product });
+        ok(res, product);
     }
     catch (err) {
         next(err);
@@ -74,21 +79,23 @@ router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
 router.post("/", validate(createProductSchema), (req: Request, res: Response, next: NextFunction) => {
     try {
         const products = readProducts()
-        const body = { id: products.length + 1, rating: 0, ratingCount: 0, ...req.body };
+        const body = { id: products.length + 1, ...req.body };
         products.push(body);
         fs.writeFileSync(DATA_FILE, JSON.stringify(products), { encoding: "utf-8" });
-        res.status(201).json({ success: true, data: products });
+        // res.status(201).json({ success: true, data: products });
+        ok(res, products, 201);
     }
     catch (err) {
         next(err);
     }
 })
 
-router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
+router.put("/:id", validate(updateProductSchema), (req: Request, res: Response, next: NextFunction) => {
     try {
         let product = readProducts().find((p) => p.id === Number(req.params.id));
         if (!product) {
-            return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" })
+            // return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" })
+            return next(new AppError(404, "Sản phẩm không tồn tại"));
         }
         let products = readProducts().map((item) => {
             if (item.id === Number(req.params.id)) {
@@ -101,7 +108,8 @@ router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
             return item;
         })
         fs.writeFileSync(DATA_FILE, JSON.stringify(products), { encoding: "utf-8" });
-        res.status(201).json({ success: true, data: products });
+        // res.status(201).json({ success: true, data: products });
+        ok(res, products, 201);
     }
     catch (err) {
         next(err);
@@ -112,14 +120,16 @@ router.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
     try {
         let product = readProducts().find((p) => p.id === Number(req.params.id));
         if (!product) {
-            return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" })
+            // return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" })
+            return next(new AppError(404, "Không tìm thấy sản phẩm"));
         }
         let products = readProducts().filter((item) => {
             return item.id !== Number(req.params.id)
         })
         JSON.stringify(products);
         fs.writeFileSync(DATA_FILE, JSON.stringify(products), { encoding: "utf-8" });
-        res.status(204).json({ success: true, data: products });
+        // res.status(204).json({ success: true, data: products });
+        ok(res, products, 204);
     }
     catch (err) {
         next(err);

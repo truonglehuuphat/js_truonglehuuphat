@@ -1,17 +1,10 @@
-import * as yup from "yup";
-import {Request, Response, NextFunction} from "express";
+import {AppError} from "../types/api"
+import { Request, Response, NextFunction } from "express"
 
-export const validate = (schema: yup.ObjectSchema<any>) => async (req:Request, res:Response, next:NextFunction) => {
-    try{
-        req.body = await schema.validate(req.body, {
-            abortEarly: false, stripUnknown: true
-        });
-        next();
-    }catch(err : any){
-        const errors = err.inner.map((e: yup.ValidationError)=>({
-            field: e.path,
-            message: e.message,
-        }));
-        res.status(400).json({success: false, message: "Dữ liệu không hợp lệ", errors});
+export const errorHandle = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    if(err instanceof AppError){
+        return res.status(err.statusCode).json({success: false, message: err.message});
+        console.log(err.message);
     }
+    res.status(500).json({success: false, message: "Lỗi server"});
 }
