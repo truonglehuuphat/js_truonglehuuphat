@@ -23,7 +23,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         });
         setToastOpen(true);
     }
-
+    console.log("isWishlisted " + isWishlisted);
     return (
         <>
             <Card sx={{
@@ -68,7 +68,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                         </Typography>
                     </Stack>
                     {/* Price */}
-                    <Typography sx={{ variant: "h6", color: "secondary.main", fontWeight:800, mt:1 }}>
+                    <Typography sx={{ variant: "h6", color: "secondary.main", fontWeight: 800, mt: 1 }}>
                         ${Number(product.price).toLocaleString()}
                     </Typography>
                     {/* ACTION */}
@@ -80,22 +80,24 @@ const ProductCard = ({ product }: { product: Product }) => {
                             pt: 2
                         }}
                     >
-                            <Button variant="contained" size="small" onClick={handleAddToCart}>
-                                {/* {currentQuantity > 0 ? `In Cart (${currentQuantity})` : "Add to Cart"} */}
-                                Add to Cart
-                            </Button>
-                        {/* <IconButton color={ isWishlisted ?"error" : "default"} onClick={() => toggleWishlist(product.id)} > */}
-                        <IconButton>
-                        {/* { isWishlisted ?  <FavoriteIcon /> : <FavoriteBorderIcon /> } */}
-                        <FavoriteIcon />
-                    </IconButton>
-                </Box>
-            </CardContent>
-        </Card >
-      {/* TOAST */}
-      <Snackbar open={toastOpen} autoHideDuration={1500} onClose={() => setToastOpen(false)}>
-        <Alert severity="success">Added to cart</Alert>
-      </Snackbar>        
+                        <Button variant="contained" size="small" onClick={handleAddToCart}>
+                            {currentQuantity > 0 ? `In Cart (${currentQuantity})` : "Add to Cart"}
+                        </Button>
+                        <IconButton color={isWishlisted ? "error" : "default"} onClick={() => toggleWishlist(product.id)} >
+                            {isWishlisted ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                            
+                        </IconButton>
+                        {/* <IconButton> */}
+                        {/* { isWishlisted ?  <FavoriteIcon /> : <FavoriteBorderIcon /> }
+                        <FavoriteIcon /> */}
+                        {/* </IconButton> */}
+                    </Box>
+                </CardContent>
+            </Card >
+            {/* TOAST */}
+            <Snackbar open={toastOpen} autoHideDuration={1500} onClose={() => setToastOpen(false)}>
+                <Alert severity="success">Added to cart</Alert>
+            </Snackbar>
         </>
     )
 }

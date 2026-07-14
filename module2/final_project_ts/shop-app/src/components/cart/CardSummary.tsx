@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 
-import { Link } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const CardSummary = ({ totalPrice }: { totalPrice: number }) => {
     return (

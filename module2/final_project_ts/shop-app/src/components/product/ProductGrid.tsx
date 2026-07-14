@@ -3,7 +3,7 @@ import ProductCard from "./ProductCard";
 import type { Product } from "../../types/product";
 
 type Props = {
-    products: Product
+    products: Product[]
 }
 
 const ProductGrid = ({ products }: Props) => {

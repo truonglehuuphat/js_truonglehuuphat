@@ -1,4 +1,4 @@
-import { CartAction, CartState } from "../types/cart";
+import type { CartAction, CartState } from "../types/cart";
 
 export const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
@@ -19,9 +19,9 @@ export const cartReducer = (state: CartState, action: CartAction): CartState => 
           cartItems: state.cartItems.map((item) =>
             item.id === action.payload.id
               ? {
-                  ...item,
-                  quantity: item.quantity + 1,
-                }
+                ...item,
+                quantity: item.quantity + 1,
+              }
               : item
           ),
         };
@@ -55,13 +55,13 @@ export const cartReducer = (state: CartState, action: CartAction): CartState => 
       return {
         ...state,
         cartItems: state.cartItems.map((item) =>
-          item.id === action.payload
-            ? {
+            item.id === action.payload
+              ? {
                 ...item,
-                quantity: Math.max(1, item.quantity - 1),
+                quantity: Math.max(0, item.quantity - 1),
               }
-            : item
-        ),
+              : item
+        ).filter((item) => item.quantity > 0),
       };
 
     case "CLEAR_CART":
@@ -76,6 +76,7 @@ export const cartReducer = (state: CartState, action: CartAction): CartState => 
       return {
         ...state,
         wishlistItems: exists ? state.wishlistItems.filter((id) => id !== action.payload) : [...state.wishlistItems, action.payload],
+
       };
     }
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import SearchBar from "../common/SearchBar";
 import ThemeToggle from "../common/ThemeToggle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCart } from "../../context/CartProvider";
 
 type Props = {
     search: string,
@@ -10,7 +11,7 @@ type Props = {
 }
 
 const Header = ({ search, setSearch }: Props) => {
-    // const { totalItems } = useCart();
+    const { totalItems } = useCart();
 
     return (
         <AppBar position="sticky" elevation={0}>
@@ -51,7 +52,7 @@ const Header = ({ search, setSearch }: Props) => {
                     >
                         <ThemeToggle />
                         <IconButton component={Link} to="/cart" color="inherit">
-                            <Badge badgeContent={0}  color="secondary">
+                            <Badge badgeContent={totalItems}  color="secondary">
                                 <ShoppingCartIcon />
                             </Badge>
                         </IconButton>

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode, type Dispatch } from "react";
 
-import type { cartReducer } from "./cartReducer";
-import type { CartAction, CartItem } from "../types";
+import { cartReducer } from "./cartReducer";
+import type { CartAction, CartItem } from "../types/cart";
 
 type CartState = {
   cartItems: CartItem[];

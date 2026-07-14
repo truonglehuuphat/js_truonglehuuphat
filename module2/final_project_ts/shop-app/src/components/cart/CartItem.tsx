@@ -20,13 +20,13 @@ const CartItem = ({ item }: { item: CartItemType }) => {
         >
             <CardMedia component="img" image={item?.thumbnail} sx={{ width: { xs: 104, md: 140 }, objectFit: "contain", p: 1.5 }} />
             <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                <Typography fontWeight={700}>
+                <Typography sx={{fontWeight:700}}>
                     {item?.title}
                 </Typography>
-                <Typography color="secondary" mt={1}>
+                <Typography sx={{color:"secondary", mt:1}}>
                     ${Number(item?.price).toLocaleString()}
                 </Typography>
-                <Stack direction="row" spacing={1} mt={1.5} sx={{alignItems:"center"}}  >
+                <Stack sx={{alignItems:"center", direction:"row", spacing:1, mt:1.5}}  >
                     <Button variant="outlined" size="small" sx={{ minWidth: 36 }}
                         onClick={() =>
                             dispatch({
@@ -50,7 +50,10 @@ const CartItem = ({ item }: { item: CartItemType }) => {
                     >
                         +
                     </Button>
-                    <IconButton>
+                    <IconButton size="small" sx={{minWidth:36}} onClick={()=> dispatch({
+                        type:"REMOVE_FROM_CART",
+                        payload: item.id
+                    })}>
                         <DeleteIcon />
                     </IconButton>
                     <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
