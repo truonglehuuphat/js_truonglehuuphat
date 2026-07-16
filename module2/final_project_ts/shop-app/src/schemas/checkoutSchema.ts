@@ -1,4 +1,4 @@
-import yup from 'yup';
+import * as yup from "yup";
 
 export const checkoutSchema = yup.object({
     name: yup.string().min(2, "Name must be at least 2 characters").required("Name is required"),
@@ -15,7 +15,7 @@ export const checkoutSchema = yup.object({
         tomorrow.setHours(0,0,0,0);
         return select >= tomorrow;
     }),
-    note: yup.string().max(300,"Not must be at most 300 character").optional().default("");
+    note: yup.string().max(300,"Not must be at most 300 character").optional().default("")
 });
 
 export type CheckoutFormData = yup.InferType<typeof checkoutSchema>;
