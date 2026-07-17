@@ -1,0 +1,84 @@
+[
+    {
+        "id": 1,
+        "title": "Laptop Lenovo Ideapad Slim 3",
+        "price": 14500000,
+        "thumbnail": "https://picsum.photos/id/1/300/200",
+        "category": "Laptop lenovo",
+        "description": "Laptop văn phòng mỏng nhẹ, chip Intel Core i5 thế hệ mới, RAM 16GB mượt mà.",
+        "rating": 5,
+        "ratingCount": 21,
+        "brand": "Lenovo",
+        "stock": 2
+    },
+    {
+        "id": 2,
+        "title": "Laptop Lenovo ThinkPad X1 Carbon",
+        "price": 35000000,
+        "thumbnail": "https://picsum.photos/id/2/300/200",
+        "category": "Laptop lenovo",
+        "description": "Dòng laptop doanh nhân cao cấp, vỏ sợi carbon siêu bền, bàn phím gõ cực êm.",
+        "rating": 4.8,
+        "ratingCount": 45,
+        "brand": "Lenovo",
+        "stock": 5
+    },
+    {
+        "id": 3,
+        "title": "Laptop Lenovo Legion 5 Gaming",
+        "price": 22900000,
+        "thumbnail": "https://picsum.photos/id/3/300/200",
+        "category": "Laptop lenovo",
+        "description": "Laptop gaming hiệu năng cao, card đồ họa RTX 4060, tản nhiệt Legion Coldfront đỉnh cao.",
+        "rating": 4.9,
+        "ratingCount": 88,
+        "brand": "Lenovo",
+        "stock": 12
+    },
+    {
+        "id": 4,
+        "title": "Laptop Lenovo Yoga 7 2-in-1",
+        "price": 22000000,
+        "thumbnail": "https://picsum.photos/id/4/300/200",
+        "category": "Laptop lenovo",
+        "description": "Màn hình cảm ứng xoay gập 360 độ, tấm nền OLED sắc nét, kèm bút cảm ứng tiện lợi.",
+        "rating": 4.6,
+        "ratingCount": 15,
+        "brand": "Lenovo",
+        "stock": 0
+    },
+    {
+        "id": 5,
+        "title": "Laptop Lenovo LOQ 15",
+        "price": 19500000,
+        "thumbnail": "https://picsum.photos/id/5/300/200",
+        "category": "Laptop lenovo",
+        "description": "Laptop gaming phân khúc tầm trung, cấu hình mạnh mẽ cân mọi tựa game phổ thông.",
+        "rating": 4.7,
+        "ratingCount": 32,
+        "brand": "Lenovo",
+        "stock": 8
+    },
+    {
+        "id": 6,
+        "rating": 0,
+        "ratingCount": 0,
+        "description": "Tai nghe chống ồn chủ động thế hệ mới nhất từ Sony, mang lại trải nghiệm âm thanh tuyệt đỉnh với thời lượng pin lên đến 30 giờ.",
+        "brand": "Sony",
+        "stock": 120,
+        "category": "audio",
+        "thumbnail": "https://dummyimage.com/400x400/000/fff&text=Sony+WH-1000XM5",
+        "price": 349,
+        "title": "Tai nghe Bluetooth Sony WH-1000XM5"
+    },
+    {
+        "id": 7,
+        "description": "Laptop mỏng nhẹ hiệu năng cao với chip Apple M3, màn hình Liquid Retina 13.6 inch siêu sắc nét.",
+        "brand": "Apple",
+        "stock": 45,
+        "category": "laptop",
+        "thumbnail": "https://dummyimage.com/400x400/000/fff&text=MacBook+Air+M3",
+        "price": 1099,
+        "title": "Apple MacBook Air M3 2024"
+    }
+]

@@ -1,4 +1,4 @@
-import { Box, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import BackButton from "../components/common/BackButton";
 import type { CheckoutFormData } from "../schemas/checkoutSchema";
 import { checkoutSchema } from "../schemas/checkoutSchema";
@@ -12,6 +12,8 @@ import { createOrder } from "../services/orderService";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import EmptyState from "../components/common/EmptyState";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const CheckoutPage = () => {
     const { register, control, handleSubmit, formState: { errors }, reset, resetField, watch } = useForm<CheckoutFormData>({
@@ -122,15 +124,19 @@ const CheckoutPage = () => {
                         </Typography>
                         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
                             <Grid container spacing={2}>
+                                {/* NAME */}
                                 <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField fullWidth label="Full name" {...register("name")} error={!!errors.name} helperText={errors.name?.message} />
                                 </Grid>
+                                {/* EMAIL */}
                                 <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField fullWidth label="Email" {...register("email")} error={!!errors.email} helperText={errors.email?.message} />
                                 </Grid>
+                                {/* PHONE */}
                                 <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField fullWidth label="Phone" {...register("phone")} error={!!errors.phone} helperText={errors.phone?.message} />
                                 </Grid>
+                                {/* PROVINCE */}
                                 <Grid size={{ xs: 12, md: 6 }}>
                                     <Controller
                                         control={control}
@@ -152,6 +158,8 @@ const CheckoutPage = () => {
                                             </FormControl>
                                         )} />
                                 </Grid>
+
+                                {/* WARD */}
                                 <Grid size={{ xs: 12, md: 6 }}>
                                     <Controller
                                         control={control}
@@ -173,13 +181,76 @@ const CheckoutPage = () => {
                                             </FormControl>
                                         )} />
                                 </Grid>
-
-
+                                {/* ADDRESS */}
+                                <Grid size={{ xs: 12 }}>
+                                    <TextField fullWidth label="Address" {...register("address")} error={!!errors.address} helperText={errors.address?.message} />
+                                </Grid>
+                                {/* DATE */}
+                                <Grid size={{ xs: 12, md: 6 }}>
+                                    <Controller name="deliveryDate"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                label="Delivery Date"
+                                                value={field.value ? dayjs(field.value) : null}
+                                                onChange={(date) => field.onChange(date ? date.format("YYYY-MM-DD") : "")}
+                                                slotProps={{
+                                                    textField: {
+                                                        fullWidth: true,
+                                                        error: !!errors.deliveryDate,
+                                                        helperText: errors.deliveryDate?.message,
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+                                {/* NOTE */}
+                                <Grid size={{ xs: 12, md: 6 }}>
+                                    <TextField fullWidth label="Order Note" {...register("note")} error={!!errors.note} helperText={errors.note?.message} />
+                                </Grid>
                             </Grid>
+
+                            {/* ERROR */}
+                            {submitError && (
+                                <Alert severity="error" sx={{ mt: 2 }}>
+                                    {submitError}
+                                </Alert>
+                            )}
+                            <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }} disable={submitting}>
+                                {submitting ? "Placing order..." : "Place Order"}
+                            </Button>
                         </Box>
                     </Paper>
                 </Grid>
+                {/* RIGHT SUMMARY */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <Paper sx={{ p: 3, borderRadius: 3 }} variant="outlined">
+                        <Typography variant="h6"> Order Summary</Typography>
+                        <Stack spacing={1.5} sx={{ mt: 2 }}>
+                            {cartItems.map((item) => (
+                                <Box key={item.id}
+                                    sx={{ display: "flex", justifyContent: "space-between" }}>
+                                    <Typography>
+                                        {item.title} x{item.quantity}
+                                    </Typography>
+                                    <Typography sx={{ fontWeight: 700 }}>
+                                        ${(item.price * item.quantity).toFixed(2)}
+                                    </Typography>
+                                </Box>
+                            ))}
+                        </Stack>
+                        <Typography sx={{ mt: 2, fontWeight: 700 }}>
+                            Total: ${Number(totalPrice).toFixed(2)}
+                        </Typography>
+                        {selectProvince && <Typography color="text.secondary">Province: {selectProvince.name}</Typography>}
+                        {selectWard && <Typography color="text.secondary">Ward: {selectWard.name}</Typography>}
+                    </Paper>
+                </Grid>
             </Grid>
+            <Snackbar open={success} autoHideDuration={3000} onClose={() => SetSuccess(false)}>
+                <Alert severity="success"> Order placed successfully</Alert>
+            </Snackbar>
         </Container>
     )
 }
