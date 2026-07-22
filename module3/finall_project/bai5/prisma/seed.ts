@@ -8,7 +8,7 @@ const prisma = new PrismaClient({
 
 async function main() {
 
-    await prisma.product.deleteMany();
+    await prisma.products.deleteMany();
     await prisma.category.deleteMay();
 
     const categories = await Promise.all([
@@ -19,11 +19,15 @@ async function main() {
         prisma.category.create({ date: { name: "Phụ kiện", slug: "accessory" } }),
     ])
 
-    await prisma.product.createMany({
+    await prisma.products.createMany({
         data: [
             { title: "iphone 15 Pro", price: 22990000, thumbnail: "...", brand: "Apple", stock: 10, categoryId: categories[0].id },
             { title: "Samsung Galaxy S24 Utral", price: 25290000, thumbnail: "...", brand: "Samsung", stock: 9, categoryId: categories[0].id },
         ],
         skipDuplicates: true, //tránh lỗi nếu chạy seed nhiều lần
     })
+
+    console.log(" Seed hoàn thành")
 }
+
+main().catch(console.error).finally(()=>prisma.$disconnect());
