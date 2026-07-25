@@ -21,8 +21,8 @@ async function main() {
 
     await prisma.products.createMany({
         data: [
-            { title: "iphone 15 Pro", price: 22990000, thumbnail: "...", brand: "Apple", stock: 10, category_id: categories[0].id },
-            { title: "Samsung Galaxy S24 Utral", price: 25290000, thumbnail: "...", brand: "Samsung", stock: 9, category_id: categories[0].id },
+            { title: "iphone 15 Pro", price: 22990000, thumbnail: "...", brand: "Apple", stock: 10, categoryId: categories[0].id },
+            { title: "Samsung Galaxy S24 Utral", price: 25290000, thumbnail: "...", brand: "Samsung", stock: 9, categoryId: categories[0].id },
         ],
         skipDuplicates: true, //tránh lỗi nếu chạy seed nhiều lần
     })
@@ -30,6 +30,4 @@ async function main() {
     console.log(" Seed hoàn thành")
 }
 
-main()
-    .catch(console.error)
-    .finally(() => prisma.$disconnect());
+main().catch(console.error).finally(()=>prisma.$disconnect());

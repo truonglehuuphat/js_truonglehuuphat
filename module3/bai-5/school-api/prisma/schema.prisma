@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+model Class {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  subject     String    @db.VarChar(50)
+  teacherName String    @map("teacher_name") @db.VarChar(100)
+  maxStudents Int       @default(30) @map("max_students")
+  schedule    String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  students    Student[]
+
+  @@map("classes")
+}
+
+enum StudentStatus {
+  active
+  inactive
+  graduated
+}
+
+model Student {
+  id         Int           @id @default(autoincrement())
+  fullname   String        @map("full_name") @db.VarChar(100)
+  email      String        @db.VarChar(200)
+  phone      String?       @db.VarChar(20)
+  classId    Int?          @map("class_id")
+  gpa        Decimal       @default(0) @db.Decimal(3, 1)
+  status     StudentStatus @default(active)
+  enrolledAt DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("update_at")
+  class      Class?        @relation(fields: [classId], references: [id])
+  grades     Grade[]
+
+  @@map("students")
+}
+
+enum LetterGrade {
+  A
+  B
+  C
+  D
+  E
+  F
+}
+
+model Grade {
+  id          Int         @id @default(autoincrement())
+  studentId   Int         @map("student_id")
+  subject     String      @db.VarChar(50)
+  midterm     Decimal     @db.Decimal(4, 1)
+  final       Decimal     @db.Decimal(4, 1)
+  average     Decimal     @db.Decimal(4, 2)
+  letterGrade LetterGrade @map("letter_grade")
+  recorderAt  DateTime    @default(now()) @map("recorder_at")
+  student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, subject])
+  @@map("grades")
+}

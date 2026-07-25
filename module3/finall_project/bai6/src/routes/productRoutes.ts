@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express'
 import { ApiResponse, Product } from "../types/types";
-import { fileURLToPath } from 'url';    
+import { fileURLToPath } from 'url';
 import { validate } from "../middleware/validate"
 import { createProductSchema, updateProductSchema } from "../schemas/productSchema"
 
@@ -9,6 +9,7 @@ import path from "path";
 import { ServerResponse } from 'http';
 import { AppError } from '../types/api';
 import { ok } from '../unitls/helper';
+import pool from '../db/pool';
 
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -23,30 +24,30 @@ function sendJSON<T>(res: ServerResponse, statusCode: number, body: ApiResponse<
     res.end(JSON.stringify(body));
 }
 
-router.get("/", (request: Request, response: Response, next: NextFunction) => {
+router.get("/", async (request: Request, response: Response, next: NextFunction) => {
     try {
-        let products = readProducts();
-        const { category, search } = request.query;
-        const page = Number(request.query.page) || 1;
-        const limit = Number(request.query.limit) || 10;
-        if (category) {
-            products = products.filter((product) => product.category === category)
-        }
-        if (search) {
-            products = products.filter((p) =>
-                p.title.toLocaleLowerCase().includes((search as string).toLowerCase())
-            );
-        }
-        const total = products.length;
-        const totalPages = Math.ceil(total / limit);
-        const data = products.slice((page - 1) * limit, page * limit);
-
-        response.json({ success: true, data, meta: { total, page, limit, totalPages } });
+        let products = await pool.query("Select * FROM products");
+        console.log(products.rows);
+        ok(response, products.rows);
+        // const { category, search } = request.query;
+        // const page = Number(request.query.page) || 1;
+        // const limit = Number(request.query.limit) || 10;
+        // if (category) {
+        //     products = products.filter((product) => product.category === category)
+        // }
+        // if (search) {
+        //     products = products.filter((p) =>
+        //         p.title.toLocaleLowerCase().includes((search as string).toLowerCase())
+        //     );
+        // }
+        // const total = products.length;
+        // const totalPages = Math.ceil(total / limit);
+        // const data = products.slice((page - 1) * limit, page * limit);
+        // response.json({ success: true, data, meta: { total, page, limit, totalPages } });
     }
     catch (err) {
         next(err);
     }
-
 })
 
 router.get("/categories", (req: Request, res: Response, next: NextFunction) => {
@@ -103,7 +104,7 @@ router.put("/:id", validate(updateProductSchema), (req: Request, res: Response, 
                     ...item,
                     ...req.body,
                     id: item.id
-                } 
+                }
             }
             return item;
         })

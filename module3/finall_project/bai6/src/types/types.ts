@@ -3,12 +3,12 @@ export interface Product {
     title: string;
     price: number;
     thumbnail: string;
+    category: string;
     description: string;
     rating: number;
     ratingCount: number;
     brand: string;
     stock: number;
-    categoryId: string;
 }
 
 export interface ApiResponse<T>{
