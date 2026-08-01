@@ -1,4 +1,8 @@
 import pool from "../db/pool";
+import prisma from "../db/prisma"
+import { Prisma } from "../generated/prisma/client";
+import { AppError } from "../types/api";
+import { buildSkip } from "../utils/pagination";
 
 export interface Student {
     id: number;
@@ -16,34 +20,138 @@ export async function findAll(filters: {
     classId: number;
     status?: string;
     search?: string;
+    sort?: string;
+    order?: string;
     page: number;
     limit: number;
-}): Promise<{ data: Student[]; total: number }> {
-    const { classId, status, search, page, limit } = filters;
-    const conditions: string[] = [];
-    const params: unknown[] = [];
-    let idx = 1;
+}) {
+    console.log("findAll student service");
+    const { classId, status, search, page = 1, limit = 10, sort = 'enrolledAt', order = 'desc' } = filters;
 
-    if (classId) { conditions.push(`class_id=$${idx++}`); params.push(classId); }
-    if (status) { conditions.push(`status=$${idx++}`); params.push(status); }
-    if (search) { conditions.push(`search=$${idx++}`); params.push(`%${search}%`); }
+    const where: Prisma.StudentWhereInput = {
+        ...(classId && { classId }),
+        ...(status && { status: status as any }),
+        ...(search && {
+            OR: [
+                { fullname: { contains: search, mode: "insensitive" } },
+                { email: { contains: search, mode: "insensitive" } }
+            ]
+        }),
+    };
 
-    const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-    const countRes = await pool.query(`SELECT * FROM students ${where}`, params);
-    const total = countRes.rows[0].count;
-
-    const dataRes = await pool.query(
-        `SELECT * FROM students ${where} GROUP BY full_name LIMIT $${idx++} OFFSET $${idx++}`
-        , [...params, limit, (page - 1) * limit]
-    );
-    return { data: dataRes.rows, total };
+    // transaction: chay 2 query cùng lúc - lấy data và đếm tổng
+    const [students, total] = await prisma.$transaction([
+        prisma.student.findMany({
+            where,
+            include: {
+                class: { select: { name: true } },
+                grades: { select: { id: true } }
+            },
+            orderBy: { [sort]: "asc" },
+            take: limit,
+            skip: buildSkip(page, limit),
+        }),
+        prisma.student.count({ where }),
+    ])
+    return { data: students, total };
 }
 
-export async function findById(id: number): Promise<Student | null> {
-    const result = await pool.query(
-        `SELECT s.* c.name as class_name, c.subject 
-        FROM Students s
-        LEFT JOIN classes c ON s.class_id = c.id
-        WHERE s.id = $1`, [id]);
-    return result.rows[0] ?? null;
+export async function findById(id: number) {
+    const students = await prisma.student.findUnique({ where: { id }, include: { class: true, grades: true } })
+    if (!students) {
+        throw new AppError(404, "Không tìm thấy học sinh");
+    }
+    return students;
+};
+
+export async function create(data: {
+    fullName: string;
+    email: string;
+    phone?: string;
+    classId?: number;
+    gpa?: number;
+    status?: string;
+}) {
+    return prisma.$transaction(async (tx) => {
+        if (data.classId) {
+            const classData = await tx.class.findUnique({
+                where: { id: data.classId },
+                include: { _count: { select: { students: true } } },
+            });
+            if (!classData) throw new AppError(404, "Lớp học đã tồn tại")
+            if (classData._count.students >= classData.maxStudents) {
+                throw new AppError(409, `Lớp ${classData.maxStudents} đã đủ học sinh`);
+            }
+        }
+        return tx.student.create({
+            data: {
+                fullname: data.fullName,
+                email: data.email,
+                phone: data.phone,
+                classId: data.classId,
+                gpa: data.gpa ? parseFloat(String(data.gpa)) : 0,
+                status: (data.status as any) || 'active'
+
+            }
+        })
+    })
+
 }
+
+export async function update(id: number,
+    data: {
+        fullName: string;
+        email: string;
+        phone: string;
+        classId: number;
+        gpa: number;
+        status: string;
+    }) {
+    return prisma.$transaction(async (tx) => {
+        if (data.classId !== undefined && data.classId !== null) {
+            const classData = await tx.class.findUnique({
+                where: { id: data.classId },
+                include: { _count: { select: { students: true } } }
+            })
+            if (!classData) { throw new AppError(404, "Lớp không tồn tại") };
+
+            const currentStudent = await tx.student.findUnique({
+                where: { id: id }
+            })
+            if (currentStudent?.classId != data.classId) {
+                if (classData._count.students >= classData.maxStudents) {
+                    throw new AppError(409, `Lớp học ${classData.subject} đã đầy học sinh`)
+                }
+            }
+        }
+
+        return tx.student.update({
+            where: { id },
+            data: {
+                fullname: data.fullName,
+                email: data.email,
+                phone: data.phone,
+                classId: data.classId,
+                gpa: data.gpa !== undefined ? parseFloat(string(data.gpa)) : undefined,
+                status: data.status as any,
+                include: { class: true }
+            }
+        })
+
+    })
+}
+
+export async function remove(id: number) {
+    return prisma.$transaction(async (tx) => {
+        const studentData = await tx.student.findUnique({ where: { id } });
+        if (!studentData) throw new AppError(404, "Không tìm thấy học sinh");
+        
+        if (studentData.status == "active") {
+            throw new AppError(409, "không thể xóa học sinh đang hoạt động");
+        }
+        await tx.grade.deleteMany({ where: { id: studentData.id } });
+        return tx.student.delete({ where: { id } });
+    });
+}
+
+

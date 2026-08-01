@@ -27,7 +27,8 @@
     "db": "file:generated/prisma",
     "express": "^5.2.1",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
