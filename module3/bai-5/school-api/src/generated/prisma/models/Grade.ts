@@ -50,7 +50,7 @@ export type GradeMinAggregateOutputType = {
   final: runtime.Decimal | null
   average: runtime.Decimal | null
   letterGrade: $Enums.LetterGrade | null
-  recorderAt: Date | null
+  recordedAt: Date | null
 }
 
 export type GradeMaxAggregateOutputType = {
@@ -61,7 +61,7 @@ export type GradeMaxAggregateOutputType = {
   final: runtime.Decimal | null
   average: runtime.Decimal | null
   letterGrade: $Enums.LetterGrade | null
-  recorderAt: Date | null
+  recordedAt: Date | null
 }
 
 export type GradeCountAggregateOutputType = {
@@ -72,7 +72,7 @@ export type GradeCountAggregateOutputType = {
   final: number
   average: number
   letterGrade: number
-  recorderAt: number
+  recordedAt: number
   _all: number
 }
 
@@ -101,7 +101,7 @@ export type GradeMinAggregateInputType = {
   final?: true
   average?: true
   letterGrade?: true
-  recorderAt?: true
+  recordedAt?: true
 }
 
 export type GradeMaxAggregateInputType = {
@@ -112,7 +112,7 @@ export type GradeMaxAggregateInputType = {
   final?: true
   average?: true
   letterGrade?: true
-  recorderAt?: true
+  recordedAt?: true
 }
 
 export type GradeCountAggregateInputType = {
@@ -123,7 +123,7 @@ export type GradeCountAggregateInputType = {
   final?: true
   average?: true
   letterGrade?: true
-  recorderAt?: true
+  recordedAt?: true
   _all?: true
 }
 
@@ -221,7 +221,7 @@ export type GradeGroupByOutputType = {
   final: runtime.Decimal
   average: runtime.Decimal
   letterGrade: $Enums.LetterGrade
-  recorderAt: Date
+  recordedAt: Date
   _count: GradeCountAggregateOutputType | null
   _avg: GradeAvgAggregateOutputType | null
   _sum: GradeSumAggregateOutputType | null
@@ -255,7 +255,7 @@ export type GradeWhereInput = {
   final?: Prisma.DecimalFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFilter<"Grade"> | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFilter<"Grade"> | Date | string
+  recordedAt?: Prisma.DateTimeFilter<"Grade"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
 }
 
@@ -267,7 +267,7 @@ export type GradeOrderByWithRelationInput = {
   final?: Prisma.SortOrder
   average?: Prisma.SortOrder
   letterGrade?: Prisma.SortOrder
-  recorderAt?: Prisma.SortOrder
+  recordedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
 }
 
@@ -283,7 +283,7 @@ export type GradeWhereUniqueInput = Prisma.AtLeast<{
   final?: Prisma.DecimalFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFilter<"Grade"> | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFilter<"Grade"> | Date | string
+  recordedAt?: Prisma.DateTimeFilter<"Grade"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
 }, "id" | "studentId_subject">
 
@@ -295,7 +295,7 @@ export type GradeOrderByWithAggregationInput = {
   final?: Prisma.SortOrder
   average?: Prisma.SortOrder
   letterGrade?: Prisma.SortOrder
-  recorderAt?: Prisma.SortOrder
+  recordedAt?: Prisma.SortOrder
   _count?: Prisma.GradeCountOrderByAggregateInput
   _avg?: Prisma.GradeAvgOrderByAggregateInput
   _max?: Prisma.GradeMaxOrderByAggregateInput
@@ -314,7 +314,7 @@ export type GradeScalarWhereWithAggregatesInput = {
   final?: Prisma.DecimalWithAggregatesFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalWithAggregatesFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeWithAggregatesFilter<"Grade"> | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeWithAggregatesFilter<"Grade"> | Date | string
+  recordedAt?: Prisma.DateTimeWithAggregatesFilter<"Grade"> | Date | string
 }
 
 export type GradeCreateInput = {
@@ -323,7 +323,7 @@ export type GradeCreateInput = {
   final: runtime.Decimal | runtime.DecimalJsLike | number | string
   average: runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade: $Enums.LetterGrade
-  recorderAt?: Date | string
+  recordedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutGradesInput
 }
 
@@ -335,7 +335,7 @@ export type GradeUncheckedCreateInput = {
   final: runtime.Decimal | runtime.DecimalJsLike | number | string
   average: runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade: $Enums.LetterGrade
-  recorderAt?: Date | string
+  recordedAt?: Date | string
 }
 
 export type GradeUpdateInput = {
@@ -344,7 +344,7 @@ export type GradeUpdateInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutGradesNestedInput
 }
 
@@ -356,7 +356,7 @@ export type GradeUncheckedUpdateInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type GradeCreateManyInput = {
@@ -367,7 +367,7 @@ export type GradeCreateManyInput = {
   final: runtime.Decimal | runtime.DecimalJsLike | number | string
   average: runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade: $Enums.LetterGrade
-  recorderAt?: Date | string
+  recordedAt?: Date | string
 }
 
 export type GradeUpdateManyMutationInput = {
@@ -376,7 +376,7 @@ export type GradeUpdateManyMutationInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type GradeUncheckedUpdateManyInput = {
@@ -387,7 +387,7 @@ export type GradeUncheckedUpdateManyInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type GradeListRelationFilter = {
@@ -413,7 +413,7 @@ export type GradeCountOrderByAggregateInput = {
   final?: Prisma.SortOrder
   average?: Prisma.SortOrder
   letterGrade?: Prisma.SortOrder
-  recorderAt?: Prisma.SortOrder
+  recordedAt?: Prisma.SortOrder
 }
 
 export type GradeAvgOrderByAggregateInput = {
@@ -432,7 +432,7 @@ export type GradeMaxOrderByAggregateInput = {
   final?: Prisma.SortOrder
   average?: Prisma.SortOrder
   letterGrade?: Prisma.SortOrder
-  recorderAt?: Prisma.SortOrder
+  recordedAt?: Prisma.SortOrder
 }
 
 export type GradeMinOrderByAggregateInput = {
@@ -443,7 +443,7 @@ export type GradeMinOrderByAggregateInput = {
   final?: Prisma.SortOrder
   average?: Prisma.SortOrder
   letterGrade?: Prisma.SortOrder
-  recorderAt?: Prisma.SortOrder
+  recordedAt?: Prisma.SortOrder
 }
 
 export type GradeSumOrderByAggregateInput = {
@@ -506,7 +506,7 @@ export type GradeCreateWithoutStudentInput = {
   final: runtime.Decimal | runtime.DecimalJsLike | number | string
   average: runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade: $Enums.LetterGrade
-  recorderAt?: Date | string
+  recordedAt?: Date | string
 }
 
 export type GradeUncheckedCreateWithoutStudentInput = {
@@ -516,7 +516,7 @@ export type GradeUncheckedCreateWithoutStudentInput = {
   final: runtime.Decimal | runtime.DecimalJsLike | number | string
   average: runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade: $Enums.LetterGrade
-  recorderAt?: Date | string
+  recordedAt?: Date | string
 }
 
 export type GradeCreateOrConnectWithoutStudentInput = {
@@ -556,7 +556,7 @@ export type GradeScalarWhereInput = {
   final?: Prisma.DecimalFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFilter<"Grade"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFilter<"Grade"> | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFilter<"Grade"> | Date | string
+  recordedAt?: Prisma.DateTimeFilter<"Grade"> | Date | string
 }
 
 export type GradeCreateManyStudentInput = {
@@ -566,7 +566,7 @@ export type GradeCreateManyStudentInput = {
   final: runtime.Decimal | runtime.DecimalJsLike | number | string
   average: runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade: $Enums.LetterGrade
-  recorderAt?: Date | string
+  recordedAt?: Date | string
 }
 
 export type GradeUpdateWithoutStudentInput = {
@@ -575,7 +575,7 @@ export type GradeUpdateWithoutStudentInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type GradeUncheckedUpdateWithoutStudentInput = {
@@ -585,7 +585,7 @@ export type GradeUncheckedUpdateWithoutStudentInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type GradeUncheckedUpdateManyWithoutStudentInput = {
@@ -595,7 +595,7 @@ export type GradeUncheckedUpdateManyWithoutStudentInput = {
   final?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   average?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   letterGrade?: Prisma.EnumLetterGradeFieldUpdateOperationsInput | $Enums.LetterGrade
-  recorderAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -608,7 +608,7 @@ export type GradeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   final?: boolean
   average?: boolean
   letterGrade?: boolean
-  recorderAt?: boolean
+  recordedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["grade"]>
 
@@ -620,7 +620,7 @@ export type GradeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   final?: boolean
   average?: boolean
   letterGrade?: boolean
-  recorderAt?: boolean
+  recordedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["grade"]>
 
@@ -632,7 +632,7 @@ export type GradeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   final?: boolean
   average?: boolean
   letterGrade?: boolean
-  recorderAt?: boolean
+  recordedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["grade"]>
 
@@ -644,10 +644,10 @@ export type GradeSelectScalar = {
   final?: boolean
   average?: boolean
   letterGrade?: boolean
-  recorderAt?: boolean
+  recordedAt?: boolean
 }
 
-export type GradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "subject" | "midterm" | "final" | "average" | "letterGrade" | "recorderAt", ExtArgs["result"]["grade"]>
+export type GradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "subject" | "midterm" | "final" | "average" | "letterGrade" | "recordedAt", ExtArgs["result"]["grade"]>
 export type GradeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }
@@ -671,7 +671,7 @@ export type $GradePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     final: runtime.Decimal
     average: runtime.Decimal
     letterGrade: $Enums.LetterGrade
-    recorderAt: Date
+    recordedAt: Date
   }, ExtArgs["result"]["grade"]>
   composites: {}
 }
@@ -1103,7 +1103,7 @@ export interface GradeFieldRefs {
   readonly final: Prisma.FieldRef<"Grade", 'Decimal'>
   readonly average: Prisma.FieldRef<"Grade", 'Decimal'>
   readonly letterGrade: Prisma.FieldRef<"Grade", 'LetterGrade'>
-  readonly recorderAt: Prisma.FieldRef<"Grade", 'DateTime'>
+  readonly recordedAt: Prisma.FieldRef<"Grade", 'DateTime'>
 }
     
 

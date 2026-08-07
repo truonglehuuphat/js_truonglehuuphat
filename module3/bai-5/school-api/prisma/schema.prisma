@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 datasource db {
   provider = "postgresql"
@@ -58,7 +58,7 @@ model Grade {
   final       Decimal     @db.Decimal(4, 1)
   average     Decimal     @db.Decimal(4, 2)
   letterGrade LetterGrade @map("letter_grade")
-  recorderAt  DateTime    @default(now()) @map("recorder_at")
+  recordedAt  DateTime    @default(now()) @map("recorded_at")
   student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, subject])

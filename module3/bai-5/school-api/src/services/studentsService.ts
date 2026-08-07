@@ -26,7 +26,7 @@ export async function findAll(filters: {
     limit: number;
 }) {
     console.log("findAll student service");
-    const { classId, status, search, page = 1, limit = 10, sort = 'enrolledAt', order = 'desc' } = filters;
+    const { classId, status, search, sort = 'enrolledAt', order = 'desc', page = 1, limit = 10 } = filters;
 
     const where: Prisma.StudentWhereInput = {
         ...(classId && { classId }),
@@ -57,7 +57,13 @@ export async function findAll(filters: {
 }
 
 export async function findById(id: number) {
-    const students = await prisma.student.findUnique({ where: { id }, include: { class: true, grades: true } })
+    const students = await prisma.student.findUnique({
+        where: { id },
+        include: {
+            class: true,
+            grades: { orderBy: { recordedAt: 'desc' }},
+        },
+    });
     if (!students) {
         throw new AppError(404, "Không tìm thấy học sinh");
     }
@@ -100,12 +106,12 @@ export async function create(data: {
 
 export async function update(id: number,
     data: {
-        fullName: string;
-        email: string;
-        phone: string;
-        classId: number;
-        gpa: number;
-        status: string;
+        fullName?: string;
+        email?: string;
+        phone?: string;
+        classId?: number;
+        gpa?: number;
+        status?: string;
     }) {
     return prisma.$transaction(async (tx) => {
         if (data.classId !== undefined && data.classId !== null) {
@@ -132,7 +138,7 @@ export async function update(id: number,
                 email: data.email,
                 phone: data.phone,
                 classId: data.classId,
-                gpa: data.gpa !== undefined ? parseFloat(string(data.gpa)) : undefined,
+                gpa: data.gpa !== undefined ? parseFloat(String(data.gpa)) : undefined,
                 status: data.status as any,
                 include: { class: true }
             }
@@ -145,7 +151,7 @@ export async function remove(id: number) {
     return prisma.$transaction(async (tx) => {
         const studentData = await tx.student.findUnique({ where: { id } });
         if (!studentData) throw new AppError(404, "Không tìm thấy học sinh");
-        
+
         if (studentData.status == "active") {
             throw new AppError(409, "không thể xóa học sinh đang hoạt động");
         }

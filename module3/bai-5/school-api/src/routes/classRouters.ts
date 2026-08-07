@@ -1,35 +1,17 @@
 
 import { Request, Response, NextFunction, Router } from "express";
-import pool from "../db/pool";
-import { Ok } from "../help/helper";
-import { prisma } from "../utils/prismaClient";
-// import { findAll, getAllClasses } from "../services/classService";
-import { classQuerySchema } from "../schemas/classSchema";
-import { validateQuery } from "./studentRoutes";
-import { getAllClasses } from "../controller/classController";
 import { findAll } from "../services/classService";
-
+import { validate, validateId, validateQuery } from "../middleware/validate";
+import prisma from "../db/prisma";
+import { classCreateSchema, classQuerySchema } from "../schemas";
+import * as classController from "../controller/classController";
 const classRouter = Router();
 
-classRouter.get("/", findAll);
-
-classRouter.post("/", async (request: Request, respone: Response, next: NextFunction) => {
-    try {
-        const body = request.body;
-        const result = await prisma.class.create({
-            data: {
-                name: body.name,
-                subject: body.name,
-                teacherName: body.teachName,
-                maxStudents: body.maxStudents,
-                schedule: body.schedule,
-                createdAt: body.createAt,
-            }
-        })
-    } catch (error) {
-        console.log(error)
-    }
-
-})
+classRouter.get("/", validateQuery(classQuerySchema), classController.getClasses);
+classRouter.get("/:id", validateId, classController.getClassDetail);
+classRouter.post("/", validate(classCreateSchema), classController.createClass);
+classRouter.patch("/:id", validateId, classController.updateClass);
+classRouter.delete("/:id", validateId, classController.deleteClass);
+classRouter.post("/:id/transfer-student", validateId, classController.transferStudent);
 
 export default classRouter;

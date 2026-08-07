@@ -1,19 +1,9 @@
 import { skip } from "node:test";
-import { Prisma, Student } from "../generated/prisma";
+import { Prisma } from "../generated/prisma";
 import { buildSkip } from "../utils/pagination";
 import prisma from "../db/prisma";
 import { AppError } from "../types/api";
 
-export interface Class {
-    id: number;
-    name: string;
-    subject: string;
-    teacherName: string;
-    maxStudents: number;
-    students?: Student[];
-    schedule: string;
-    creatAt: string
-}
 
 export async function findAll(filters: {
     subject?: string;
@@ -24,8 +14,7 @@ export async function findAll(filters: {
     limit: number;
 }) {
     const { subject, hasSlot, sort = 'name', order = 'asc', limit = 10, page = 1 } = filters;
-
-
+    console.log(process.env.DATABASE_URL)
     const classData = await prisma.class.findMany({
         where: {
             ...(subject && { subject: { contains: subject, mode: 'insensitive' } }),
@@ -43,7 +32,7 @@ export async function findAll(filters: {
             ...(subject && { subject: { constains: subject, mode: 'insensitive' } })
         }
     })
-    return { filter, total };
+    return { data: filter, total: total };
 }
 
 export async function findById(id: number) {
@@ -65,30 +54,56 @@ export async function findById(id: number) {
     return classData;
 }
 
-export async function create(data: {
-    subject?: string;
-    teacherName: string;
-    maxStudents: number;
-    schedule: string;
-    name: string;
-}) {
-    const {subject, teacherName, maxStudents, schedule, name } = data;
+export async function create(data: Prisma.ClassCreateInput) {
+    const { subject, teacherName, maxStudents, schedule, name } = data;
 
     const classData = await prisma.class.findMany({
         where: {
             ...(subject && { subject: { contains: subject, mode: 'insensitive' } }),
         },
     })
-    if(classData ){
-        throw new AppError(409, `Lớp học ${data.subject} đã tồn tại` );
+    if (classData) {
+        throw new AppError(409, `Lớp học ${data.subject} đã tồn tại`);
     }
     return await prisma.class.create({
-        data: {
-            subject: data.subject as string,
-            teacherName: data.teacherName,
-            name: data.name,
-            maxStudents: data.maxStudents,
-            schedule: data.schedule
+        data,
+        include: { _count: { select: { students: true } } }
+    });
+}
+
+export async function update(id: number, data: Prisma.ClassUpdateInput) {
+    return prisma.class.update({
+        where: { id: id },
+        data,
+        include: { _count: { select: { students: true } } }
+    });
+}
+
+export async function remove(id: number) {
+    return prisma.class.delete({ where: { id } });
+}
+
+export async function transferStudent(studentId: number, newClassId: number) {
+
+    return prisma.$transaction(async (tx) => {
+        // tim kiem hoc sinh ton tai khong
+        const student = await tx.student.findUnique({ where: { id: studentId } });
+        if (!student) throw new AppError(404, "Không tìm thấy học sinh");
+
+        // tim kiem lop hoc ton tai khong
+        const newClass = await tx.class.findUnique({
+            where: { id: newClassId },
+            include: { _count: { select: { students: true } } }
+        });
+        if (!newClass) throw new AppError(404, "Lớp học không tồn tại");
+        // ti so hs lon hon slg hs toi da khong
+        if (newClass._count.students >= newClass.maxStudents) {
+            throw new AppError(409, "Số học sinh tối đa");
         }
+        // cap nhat hoc sinh, lop hoc moi
+        return tx.student.update({
+            where: { id: studentId },
+            data: { classId: newClassId }
+        })
     })
 }

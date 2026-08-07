@@ -108,7 +108,7 @@ export const GradeScalarFieldEnum = {
   final: 'final',
   average: 'average',
   letterGrade: 'letterGrade',
-  recorderAt: 'recorderAt'
+  recordedAt: 'recordedAt'
 } as const
 
 export type GradeScalarFieldEnum = (typeof GradeScalarFieldEnum)[keyof typeof GradeScalarFieldEnum]

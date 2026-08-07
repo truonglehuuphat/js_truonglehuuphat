@@ -1,75 +1,27 @@
-import { Request, Response, NextFunction, Router } from "express";
-import pool from "../db/pool";
-import { Ok } from "../help/helper";
-import { prisma } from "../utils/prismaClient";
-import { ObjectSchema } from "yup";
-const studentrouter = Router();
+import { studentQuerySchema, studentCreateSchema, gradeCreateSchema, gradeUpdateSchema } from "../schemas/index";
+import * as studentController from "../controller/studentController"
+import * as gradeController from "../controller/gradeController"
+import { validate, validateId, validateQuery } from "../middleware/validate";
+import { Router } from 'express';
 
-export function validateQuery(schema: ObjectSchema<any>) {
-    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            await schema.validate(req.query, {
-                abortEarly: false,
-                stripUnknown: true,
-                strict: false,
-            },)
-            next();
-        } catch (e: any) {
-            res.status(400).json({
-                success: false,
-                message: "Query params không hợp lệ",
-                errors: e.inner?.map((e: any) => ({ field: e.path, message: e.message }))
-            })
-        }
-    }
-}
+const studentRouter = Router();
 
-studentrouter.get("/", async (request: Request, respone: Response, next: NextFunction) => {
-    const result = await prisma.student.findMany();
-    Ok(respone, result);
-})
+studentRouter.get("/", validateQuery(studentQuerySchema), studentController.getStudents);
 
-studentrouter.get("/", async (request: Request, respone: Response, next: NextFunction) => {
-    const id = request.query.id;
-    const queryId = !id || typeof id != "string" ? {} : {
-        id: parseInt(id)
-    }
-    const result = await prisma.student.findMany({
-        where: queryId
-    })
-    Ok(respone, result);
-})
+studentRouter.get("/:id", validateId, studentController.getStudentDetail);
 
-studentrouter.get("/:id/grades", (request: Request, respone: Response, next: NextFunction) => {
+studentRouter.post("/",validate(studentCreateSchema), studentController.createStudent);
 
-})
+studentRouter.patch("/:id", validateId, studentController.updateStudent);
 
-studentrouter.post("/", async (request: Request, respone: Response, next: NextFunction) => {
-    const body = request.body;
-    try {
-        const result = prisma.student.create({
-            data: {
-                fullname: body.full_name,
-                email: body.email,
-                phone: body.phone,
-                class_id: body.class_id,
-                gpa: body.gpa,
-                status: body.status,
+studentRouter.delete("/:id",validateId, studentController.deleteStudent);
 
-            }
-        })
-    } catch (error) {
+studentRouter.post("/:id/grades",validateId, validate(gradeCreateSchema), gradeController.addGrade);
 
-    }
+studentRouter.get("/:id/grades", validateId, gradeController.getStudentGrades);
 
-})
+studentRouter.patch("/:id/grades/:gradeId", validateId, validate(gradeUpdateSchema), gradeController.updateGrade);
 
-studentrouter.post("/:id/grades", (request: Request, respone: Response, next: NextFunction) => {
+studentRouter.delete("/:id/grades/:gradeId", validateId, gradeController.deleteGrade);
 
-})
-
-studentrouter.patch("/:id", (request: Request, respone: Response, next: NextFunction) => {
-
-})
-
-export default studentrouter;
+export default studentRouter;

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "StudentStatus" AS ENUM ('active', 'inactive');
+CREATE TYPE "StudentStatus" AS ENUM ('active', 'inactive', 'graduated');
 
 -- CreateEnum
 CREATE TYPE "LetterGrade" AS ENUM ('A', 'B', 'C', 'D', 'E', 'F');
@@ -41,7 +41,7 @@ CREATE TABLE "grades" (
     "final" DECIMAL(4,1) NOT NULL,
     "average" DECIMAL(4,2) NOT NULL,
     "letter_grade" "LetterGrade" NOT NULL,
-    "recorder_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "recorded_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "grades_pkey" PRIMARY KEY ("id")
 );

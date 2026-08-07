@@ -1,6 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '../src/generated/prisma/client'
-import { LetterGrade, StudentStatus } from '../src/generated/prisma';
+import { PrismaClient } from "../src/generated/prisma/client";
+import { LetterGrade, StudentStatus } from '../src/generated/prisma/enums';
 import "dotenv/config";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
