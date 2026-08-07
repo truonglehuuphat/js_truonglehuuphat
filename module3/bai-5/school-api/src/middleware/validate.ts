@@ -31,3 +31,12 @@ export const validateId = (req: Request, res: Response, next: NextFunction) => {
     res.locals.id = Number(id);
     next();
 }
+
+export const validateGradeId = (req: Request, res: Response, next: NextFunction) => {
+    const { gradeId } = req.params;
+    if (!gradeId || isNaN(Number(gradeId))) {
+        throw new AppError(400, "ID phải là số hợp lệ");
+    }
+    res.locals.id = Number(gradeId);
+    next();
+}

@@ -55,16 +55,6 @@ export async function findById(id: number) {
 }
 
 export async function create(data: Prisma.ClassCreateInput) {
-    const { subject, teacherName, maxStudents, schedule, name } = data;
-
-    const classData = await prisma.class.findMany({
-        where: {
-            ...(subject && { subject: { contains: subject, mode: 'insensitive' } }),
-        },
-    })
-    if (classData) {
-        throw new AppError(409, `Lớp học ${data.subject} đã tồn tại`);
-    }
     return await prisma.class.create({
         data,
         include: { _count: { select: { students: true } } }
@@ -89,7 +79,6 @@ export async function transferStudent(studentId: number, newClassId: number) {
         // tim kiem hoc sinh ton tai khong
         const student = await tx.student.findUnique({ where: { id: studentId } });
         if (!student) throw new AppError(404, "Không tìm thấy học sinh");
-
         // tim kiem lop hoc ton tai khong
         const newClass = await tx.class.findUnique({
             where: { id: newClassId },

@@ -90,11 +90,12 @@ export async function create(data: {
             }
         }
         return tx.student.create({
+            
             data: {
                 fullname: data.fullName,
                 email: data.email,
                 phone: data.phone,
-                classId: data.classId,
+                classId: Number(data.classId),
                 gpa: data.gpa ? parseFloat(String(data.gpa)) : 0,
                 status: (data.status as any) || 'active'
 
@@ -139,9 +140,9 @@ export async function update(id: number,
                 phone: data.phone,
                 classId: data.classId,
                 gpa: data.gpa !== undefined ? parseFloat(String(data.gpa)) : undefined,
-                status: data.status as any,
-                include: { class: true }
-            }
+                status: data.status as any
+            },
+            include: { class: true }
         })
 
     })

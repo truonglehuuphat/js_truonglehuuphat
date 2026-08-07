@@ -1,7 +1,7 @@
 import { studentQuerySchema, studentCreateSchema, gradeCreateSchema, gradeUpdateSchema } from "../schemas/index";
 import * as studentController from "../controller/studentController"
 import * as gradeController from "../controller/gradeController"
-import { validate, validateId, validateQuery } from "../middleware/validate";
+import { validate, validateGradeId, validateId, validateQuery } from "../middleware/validate";
 import { Router } from 'express';
 
 const studentRouter = Router();
@@ -20,8 +20,8 @@ studentRouter.post("/:id/grades",validateId, validate(gradeCreateSchema), gradeC
 
 studentRouter.get("/:id/grades", validateId, gradeController.getStudentGrades);
 
-studentRouter.patch("/:id/grades/:gradeId", validateId, validate(gradeUpdateSchema), gradeController.updateGrade);
+studentRouter.patch("/:id/grades/:gradeId", validateId, validateGradeId, validate(gradeUpdateSchema), gradeController.updateGrade);
 
-studentRouter.delete("/:id/grades/:gradeId", validateId, gradeController.deleteGrade);
+studentRouter.delete("/:id/grades/:gradeId", validateId, validateGradeId, gradeController.deleteGrade);
 
 export default studentRouter;

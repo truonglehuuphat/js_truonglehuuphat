@@ -22,7 +22,7 @@ export const classQuerySchema = yup.object().shape({
 //Student schemas
 
 export const studentCreateSchema = yup.object().shape({
-    fullname: yup.string().required("Tên là bất buộc").min(2).max(100),
+    fullName: yup.string().required("Tên là bất buộc").min(2).max(100),
     email: yup.string().required("Email là bất buộc").email().max(150),
     phone: yup.string().nullable().max(15),
     classId: yup.number().nullable().positive("Không được âm"),
@@ -31,7 +31,7 @@ export const studentCreateSchema = yup.object().shape({
 });
 
 export const studentUpdateSchema = yup.object().shape({
-    fullname: yup.string().min(2).max(100),
+    fullName: yup.string().min(2).max(100),
     email: yup.string().email().max(150),
     phone: yup.string().nullable().max(15),
     classId: yup.number().nullable().positive("Không được âm"),

@@ -70,13 +70,12 @@ export async function deleteClass(request: Request, respone: Response, next: Nex
 
 export async function transferStudent(request: Request, respone: Response, next: NextFunction) {
     try {
-        const studentId = request.body;
-        const newClassId = respone.locals.id;
+        const {studentId} = request.body;
+        const newClassId = Number(respone.locals.id);
         const student = await svc.transferStudent(studentId, newClassId);
-        
         respone.json({
             success: true,
-            data: "student"
+            data: student
         })
     } catch (error) {
         next(error)

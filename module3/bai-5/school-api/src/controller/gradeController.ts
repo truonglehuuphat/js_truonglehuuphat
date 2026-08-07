@@ -16,8 +16,8 @@ export async function addGrade(req: Request, res: Response, next: NextFunction) 
 
 export async function updateGrade(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id } = req.params;
-        const grade = await svc.updateGrade(Number(id), req.body);
+        const { gradeId } = req.params;
+        const grade = await svc.updateGrade(Number(gradeId), req.body);
         res.json({
             success: true,
             data: grade
@@ -45,7 +45,7 @@ export async function deleteGrade(req: Request, res: Response, next: NextFunctio
     try {
         const { gradeId } = req.params;
         await svc.deleteGrade(Number(gradeId))
-        res.json({success:true, message: "Đã xóa điểm"});
+        res.json({ success: true, message: "Đã xóa điểm" });
     } catch (error) {
         next(error);
     }

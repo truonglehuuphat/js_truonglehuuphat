@@ -18,9 +18,14 @@ function calcLetterGrade(Avg: Decimal | number): LetterGrade {
     return LetterGrade.F;
 }
 
-export async function addGrade(studentId: number, input: {
-    subject: string, midterm: number, final: number
-}) {
+export async function addGrade(
+    studentId: number,
+    input: {
+        subject: string,
+        midterm: number,
+        final: number
+    }
+) {
     const student = await prisma.student.findUnique({ where: { id: studentId } });
     if (!student) throw new AppError(404, "Không tìm thấy học sinh");
 
@@ -40,21 +45,25 @@ export async function addGrade(studentId: number, input: {
 
 }
 
-export async function updateGrade(gradeId: number, input: {
-    midterm?: number, final?: number
-}) {
+export async function updateGrade(
+    gradeId: number,
+    input: {
+        midterm?: number,
+        final?: number
+    }
+) {
     const grade = await prisma.grade.findUnique({ where: { id: gradeId } });
     if (!grade) throw new AppError(404, "Không tìm thấy bản ghi điểm");
 
     const midterm = input.midterm ?? Number(grade.midterm);
-    const final = input.final ??  Number(grade.final);
+    const final = input.final ?? Number(grade.final);
 
     const average = calcAverage(midterm, final);
     const letterGrade = calcLetterGrade(average);
     return prisma.grade.update({
-        where: {id : gradeId},
+        where: { id: gradeId },
         data: {
-            midterm : new Decimal(midterm),
+            midterm: new Decimal(midterm),
             final: new Decimal(final),
             average,
             letterGrade
@@ -62,15 +71,17 @@ export async function updateGrade(gradeId: number, input: {
     })
 }
 
-export async function getStudentById(studentId: number){
+export async function getStudentById(studentId: number) {
     return prisma.grade.findMany({
-        where:{studentId},
-        orderBy: {recordedAt: 'desc'}
+        where: { studentId },
+        orderBy: { recordedAt: 'desc' }
     });
 }
 
-export async function deleteGrade(gradeId: number){
+export async function deleteGrade(gradeId: number) {
+    const grade = await prisma.grade.findUnique({ where: { id: gradeId } });
+    if (!grade) throw new AppError(404, "Không tìm thấy bản ghi điểm");
     return prisma.grade.delete({
-        where: {id: gradeId} 
+        where: { id: gradeId }
     });
 }
