@@ -10,8 +10,11 @@ CREATE TYPE "TimeType" AS ENUM ('morning', 'afternoon', 'evening');
 -- CreateEnum
 CREATE TYPE "StatusDoctor" AS ENUM ('inactive', 'active');
 
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('patient', 'doctor', 'admin');
+
 -- CreateTable
-CREATE TABLE "patient" (
+CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "gender" "Gender" NOT NULL,
@@ -20,17 +23,18 @@ CREATE TABLE "patient" (
     "password" VARCHAR(50) NOT NULL,
     "datebirth" TIMESTAMP(3) NOT NULL,
     "tokenUser" VARCHAR(255),
+    "user" "Role" DEFAULT 'patient',
     "isDelete" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "patient_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Appointment" (
     "id" SERIAL NOT NULL,
-    "patient_id" INTEGER,
+    "user_Id" INTEGER,
     "doctor_id" INTEGER,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "Time_Type" "TimeType" NOT NULL,
@@ -45,15 +49,8 @@ CREATE TABLE "Appointment" (
 -- CreateTable
 CREATE TABLE "doctor" (
     "id" SERIAL NOT NULL,
-    "fullname" VARCHAR(100) NOT NULL,
-    "gender" "Gender" NOT NULL,
-    "datebirth" TIMESTAMP(3) NOT NULL,
-    "email" VARCHAR(200) NOT NULL,
-    "phone" VARCHAR(50) NOT NULL,
-    "password" VARCHAR(100) NOT NULL,
-    "tokenDoctor" VARCHAR(255),
+    "user_id" INTEGER,
     "status" "StatusDoctor" NOT NULL DEFAULT 'active',
-    "isDelete" BOOLEAN NOT NULL DEFAULT false,
     "department_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -122,16 +119,22 @@ CREATE TABLE "bill_item" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "patient_email_key" ON "patient"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "doctor_user_id_key" ON "doctor"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "bill_history_id_key" ON "bill"("history_id");
 
 -- AddForeignKey
-ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "patient"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_user_Id_fkey" FOREIGN KEY ("user_Id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_doctor_id_fkey" FOREIGN KEY ("doctor_id") REFERENCES "doctor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Appointment" ADD CONSTRAINT "Appointment_doctor_id_fkey" FOREIGN KEY ("doctor_id") REFERENCES "doctor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "doctor" ADD CONSTRAINT "doctor_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "doctor" ADD CONSTRAINT "doctor_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "Special"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -140,7 +143,7 @@ ALTER TABLE "doctor" ADD CONSTRAINT "doctor_department_id_fkey" FOREIGN KEY ("de
 ALTER TABLE "History" ADD CONSTRAINT "History_doctor_id_fkey" FOREIGN KEY ("doctor_id") REFERENCES "doctor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "History" ADD CONSTRAINT "History_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "patient"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "History" ADD CONSTRAINT "History_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "medical" ADD CONSTRAINT "medical_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "Special"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -149,7 +152,7 @@ ALTER TABLE "medical" ADD CONSTRAINT "medical_department_id_fkey" FOREIGN KEY ("
 ALTER TABLE "bill" ADD CONSTRAINT "bill_doctor_id_fkey" FOREIGN KEY ("doctor_id") REFERENCES "doctor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bill" ADD CONSTRAINT "bill_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "patient"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "bill" ADD CONSTRAINT "bill_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "bill" ADD CONSTRAINT "bill_history_id_fkey" FOREIGN KEY ("history_id") REFERENCES "History"("id") ON DELETE SET NULL ON UPDATE CASCADE;

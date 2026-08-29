@@ -41,7 +41,7 @@ enum Role {
   admin
 }
 
-model Patient {
+model User {
   id           Int           @id @default(autoincrement())
   name         String        @db.VarChar(100)
   gender       Gender
@@ -49,21 +49,22 @@ model Patient {
   phone        String        @db.VarChar(50)
   password     String        @db.VarChar(50)
   datebirth    DateTime
-  tokenUser    String?       @db.VarChar(255)
-  user         Role?         @default(user)
+  refreshToken String?       @map("refresh_token") // refresh token hiện tại, dùng để revoke
+  role         Role?         @default(patient)
   isDelete     Boolean       @default(false)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
   appointments Appointment[]
   histories    History[]
   bills        Bill[]
+  doctors      Doctor[]
 
-  @@map("patient")
+  @@map("User")
 }
 
 model Appointment {
   id          Int               @id @default(autoincrement())
-  patientId   Int?              @map("patient_id")
+  userId      Int?              @map("user_Id")
   doctorId    Int?              @map("doctor_id")
   date        DateTime          @default(now()) @map("date")
   timeType    TimeType          @map("Time_Type")
@@ -71,45 +72,63 @@ model Appointment {
   description String            @db.VarChar(500)
   createdAt   DateTime          @default(now()) @map("created_at")
   updatedAt   DateTime          @default(now()) @updatedAt @map("updated_at")
-  patient     Patient?          @relation(fields: [patientId], references: [id], onDelete: SetNull)
-  doctor      Doctor?           @relation(fields: [doctorId], references: [id], onDelete: SetNull)
+  user        User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctor      Doctor?           @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
   @@map("Appointment")
 }
 
 model Doctor {
-  id           Int          @id @default(autoincrement())
-  fullname     String       @db.VarChar(100)
-  gender       Gender
-  datebirth    DateTime
-  email        String       @db.VarChar(200)
-  phone        String       @db.VarChar(50)
-  password     String       @db.VarChar(100)
-  tokenDoctor  String?      @db.VarChar(255)
-  status       StatusDoctor @default(active)
-  user         Role?        @default(user)
-  isDelete     Boolean      @default(false)
-  departmentId Int?         @map("department_id")
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at")
-
-  Department   Department?   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  id           Int           @id @default(autoincrement())
+  userId       Int?          @unique @map("user_id")
+  status       StatusDoctor  @default(active)
+  departmentId Int?          @map("department_id")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department   Department?   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   appointments Appointment[]
   histories    History[]
   bills        Bill[]
+  timeSlots    timeSlot[]
 
   @@map("doctor")
 }
 
+enum DayOfWeek {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
+}
+
+model timeSlot {
+  id        Int       @id @default(autoincrement())
+  doctorId  Int?      @map("doctor_id")
+  dayOfWeek DayOfWeek @default(monday)
+  date      DateTime  @db.Date
+  startTime DateTime  @map("start_time")
+  endTime   DateTime  @map("end_timetime")
+  isBlocked Boolean   @default(false)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  
+  doctor    Doctor?   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  @@map("time_slots")
+}
+
 model Department {
   id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(100)
+  name      String    @unique @db.VarChar(100)
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   doctors   Doctor[]
   medicals  Medical[]
 
-  @@map("Special")
+  @@map("Department")
 }
 
 model History {
@@ -121,9 +140,9 @@ model History {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  doctor  Doctor?  @relation(fields: [doctorId], references: [id], onDelete: SetNull)
-  patient Patient? @relation(fields: [patientId], references: [id], onDelete: SetNull)
-  bill    Bill?
+  doctor Doctor? @relation(fields: [doctorId], references: [id], onDelete: SetNull)
+  user   User?   @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  bill   Bill?
 
   @@map("History")
 }
@@ -153,7 +172,7 @@ model Bill {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   doctor  Doctor?    @relation(fields: [doctorId], references: [id], onDelete: SetNull)
-  patient Patient?   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  user    User?      @relation(fields: [patientId], references: [id], onDelete: Cascade)
   history History?   @relation(fields: [historyId], references: [id], onDelete: SetNull)
   items   BillItem[]
 
@@ -171,17 +190,4 @@ model BillItem {
   medician Medical? @relation(fields: [medicianId], references: [id])
 
   @@map("bill_item")
-}
-
-model Admin {
-  id           Int      @id @default(autoincrement())
-  name         String   @db.VarChar(100)
-  email        String   @unique @db.VarChar(150)
-  password     String
-  refreshToken String?
-  user         Role?    @default(admin)
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("Admins")
 }
