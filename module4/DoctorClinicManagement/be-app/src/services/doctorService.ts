@@ -33,7 +33,7 @@ export async function findAll(query: {
 
     const userWhere: Prisma.UserWhereInput = {};
     if (role) {
-        userWhere.role = role as any; // hoặc ép kiểu chuẩn Enum của Prisma
+        userWhere.role = 'doctor'; // hoặc ép kiểu chuẩn Enum của Prisma
     }
 
     if (search) {

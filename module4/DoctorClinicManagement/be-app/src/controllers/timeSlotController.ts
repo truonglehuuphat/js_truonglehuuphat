@@ -29,3 +29,11 @@ export async function createTimeSlots(req: Request, res: Response, next: NextFun
         next(error);
     }
 }
+
+export async function updateStatus(req: Request, res: Response, next: NextFunction){
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
+}

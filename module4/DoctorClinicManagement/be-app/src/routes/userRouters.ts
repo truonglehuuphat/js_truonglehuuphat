@@ -3,30 +3,27 @@ import { authenticate } from '../mildware/authenticate';
 import { validate, validatedId, validateQuery } from '../mildware/validate';
 import { updateProfileSchema, updateRoleSchema, userQuerySchema } from '../schema/userSchema';
 import * as controller from '../controllers/userController';
+import * as doctorController from '../controllers/doctorController';
+import * as appointmentController from '../controllers/appointmentsController';
+import * as reviewDoctor from '../controllers/reviewController';
 import { authorize } from '../mildware/authorize';
 import { authorizeOwner } from '../mildware/authorizeOwner';
 
 const userRouters = Router();
 
 //mọi route /users đều yêu cầu đăng nhập
-userRouters.use(authenticate);
+userRouters.use(authenticate, authorize("patient"));
 
-// GET /users chỉ admin (?role=&search=&page=&limit=)
-userRouters.get('/', authorize('admin'), validateQuery(userQuerySchema), controller.getUsers);
+userRouters.get("/doctors/:id", doctorController.getDoctorById);
+userRouters.get("/doctors/:id/available-slots", doctorController.getAvailableTimeSlots);
+userRouters.get("/doctors", doctorController.getDoctors);
 
-// GET /user:id - chỉ admin
-userRouters.get('/:id', authorize('admin'), validatedId, controller.getUserById);
-
-// Update profile: self OR admin
-userRouters.get('/:id', 
-    validatedId, 
-    authorizeOwner(async (req) => parseInt(req.params.id as string, 10)), 
-    validate(updateProfileSchema), 
-    controller.updateProfile
-);
-
-//change role /delete: admin onlu (and not on selft)
-userRouters.patch('/:id/role', authorize('admin'), validatedId, validate(updateRoleSchema), controller.updateRole);
-userRouters.delete('/:id', authorize('admin'), validatedId, controller.deleteUser);
+userRouters.post("/appointments", appointmentController.book);
+userRouters.get("/appointments", appointmentController.getMyAppointments);
+userRouters.patch("/appointments/:id/cancel", appointmentController.cancelAppointment);
+userRouters.patch("/appointments/:id/reviews", appointmentController.createReview);
+userRouters.patch("/appointments/:id/reviews", appointmentController.getReview);
+userRouters.get("/appointments/:id/reviews", reviewDoctor.getReviews);
+userRouters.get("/appointments/:id/reviews", reviewDoctor.getReviewById);
 
 export default userRouters;

@@ -15,6 +15,14 @@ export async function getReviews(req: Request, res: Response, next: NextFunction
     }
 }
 
+export async function getReviewById(req: Request, res: Response, next: NextFunction) {
+    try {
+
+    } catch (error) {
+        next();
+    }
+}
+
 export async function createReview(req: Request, res: Response, next: NextFunction) {
     try {
 

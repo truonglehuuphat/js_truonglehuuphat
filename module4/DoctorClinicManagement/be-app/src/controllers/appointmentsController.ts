@@ -3,7 +3,7 @@ import * as svc from '../services/doctorService';
 import { buildMeta } from "../utils/pagination";
 
 
-export async function me(req: Request, res: Response, next: NextFunction) {
+export async function getAllAppointments(req: Request, res: Response, next: NextFunction) {
     try {
         
     } catch (error) {
@@ -11,7 +11,7 @@ export async function me(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export async function getDoctor(req: Request, res: Response, next: NextFunction) {
+export async function updateAppointmentStatus(req: Request, res: Response, next: NextFunction) {
     try {
         
     } catch (error) {
@@ -19,7 +19,23 @@ export async function getDoctor(req: Request, res: Response, next: NextFunction)
     }
 }
 
-export async function createAppointment(req: Request, res: Response, next: NextFunction) {
+export async function getMyAppointments(req: Request, res: Response, next: NextFunction) {
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function cancelAppointment(req: Request, res: Response, next: NextFunction) {
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function book(req: Request, res: Response, next: NextFunction) {
     try {
         
     } catch (error) {
@@ -28,6 +44,22 @@ export async function createAppointment(req: Request, res: Response, next: NextF
 }
 
 export async function updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function createReview(req: Request, res: Response, next: NextFunction) {
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getReview(req: Request, res: Response, next: NextFunction) {
     try {
         
     } catch (error) {

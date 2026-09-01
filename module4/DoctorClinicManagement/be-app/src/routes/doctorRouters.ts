@@ -5,56 +5,39 @@ import { updateProfileSchema, updateRoleSchema, userQuerySchema } from '../schem
 import * as controller from '../controllers/doctorController';
 import * as reviewController from '../controllers/reviewController';
 import * as timeslotController from '../controllers/timeslotController';
+import * as appointmentController from '../controllers/appointmentController';
 import { authorize } from '../mildware/authorize';
 import { authorizeOwner } from '../mildware/authorizeOwner';
 
 const doctorRouters = Router();
 
+//Doctor
 //mọi route /users đều yêu cầu đăng nhập
-doctorRouters.use(authenticate);
-// GET /users chỉ admin (?role=&search=&page=&limit=)
-doctorRouters.get('/', authorize('doctor', 'admin'), validateQuery(userQuerySchema), controller.getUsers);
+doctorRouters.use(authenticate, authorize('doctor'));
+// GET /users
+doctorRouters.get('/', validateQuery(userQuerySchema), controller.getDoctors);
+// GET /user:id
+doctorRouters.get('/:id', validatedId, controller.getDoctorById);
 
-// GET /user:id - chỉ admin
-doctorRouters.get('/:id',
-    authorize('doctor', 'admin'),
-    validatedId, controller.getUserById
-);
-
-// Update profile: self OR admin
-//change role /delete: admin onlu (and not on selft)
-doctorRouters.patch('/:id',
-    validatedId,
-    authorizeOwner(async (req) => parseInt(req.params.id as string, 10)),
-    authorize("admin"),
-    controller.updateProfile
-);
-
-// delete doctor
-doctorRouters.delete('/:id',
-    validatedId,
-    authorize("admin"),
-    controller.deleteDoctor
-);
-
+//timeSlot
 // GET timeSlot
-doctorRouters.get('/:id/timeslots',
-    authorize('doctor', 'admin'),
-    validatedId, timeslotController.getAllTimeSlots
-);
+doctorRouters.get('/:id/timeslots', validatedId, reviewController.getReviews);
+// post timeSlot
+doctorRouters.post('/:id/timeslots', validatedId, timeslotController.createTimeSlots);
+// patch timeSlot
+doctorRouters.patch('/:id/', validatedId, timeslotController.updateStatus);
 
-// GET timeSlot
-doctorRouters.post('/:id/timeslots',
-    authorize('doctor', 'admin'),
-    validatedId, timeslotController.createTimeSlots
-);
+//review
+//GET 
+doctorRouters.get('/:id/reviews', validatedId, reviewController.getReviews);
 
-//GET review
-doctorRouters.get('/:id/reviews',
-    validatedId,
-    authorize('doctor','admin'),
-    reviewController.getReviews
-);
+//appointments
+//GET 
+doctorRouters.get('/:id/reviews', validatedId, appointmentController.getMyAppointments);
+doctorRouters.get('/:id/reviews', validatedId, appointmentController.getReviews);
+//patch
+doctorRouters.patch('/:id/appointments/:id/status', validatedId, appointmentController.updateAppointmentStatus);
+
 
 
 export default doctorRouters;

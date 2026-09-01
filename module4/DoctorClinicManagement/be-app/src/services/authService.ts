@@ -17,8 +17,8 @@ interface TokenUser {
 
 //Helper tạo cặp access + refresh token
 function generateTokens(user: TokenUser) {
-    const accessToken = jwt.sign({ id: user.id, email: user.email, role: user.role }, ACCESS_EXPIRES, { expiresIn: '15m' } as SignOptions);
-    const refreshToken = jwt.sign({ id: user.id, email: user.email, role: user.role }, REFESH_EXPIRES, { expiresIn: '15m' } as SignOptions);
+    const accessToken = jwt.sign({ id: user.id, email: user.email, role: user.role }, ACCESS_SECRET, { expiresIn: ACCESS_EXPIRES } as SignOptions);
+    const refreshToken = jwt.sign({ id: user.id, email: user.email, role: user.role }, REFESH_SECRET, { expiresIn: REFESH_EXPIRES } as SignOptions);
     return { accessToken, refreshToken };
 }
 

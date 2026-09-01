@@ -21,7 +21,7 @@ export async function findAll(query: {
 ) {
     const { role, search, page, limit } = query;
     const where: Prisma.UserWhereInput = {
-        ...(role && { role: role as Role }),
+        ...(role && { role: 'role' as Role }),
         ...(search && {
             OR: [
                 { name: { contains: search, mode: 'insensitive' } },
