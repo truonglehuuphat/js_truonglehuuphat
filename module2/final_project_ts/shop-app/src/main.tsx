@@ -17,7 +17,6 @@ const Providers = () => {
           <RouterProvider router={router} />
         </LocalizationProvider>
       </CartProvider>
-
     </ThemeProvider>
   )
 

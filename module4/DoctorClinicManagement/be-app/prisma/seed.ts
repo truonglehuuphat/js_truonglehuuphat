@@ -7,6 +7,8 @@ import { fakerVI as faker } from '@faker-js/faker'; // Sử dụng locale Tiến
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
+
+
 async function main() {
   console.log('Bắt đầu dọn dẹp dữ liệu cũ...');
   await prisma.billItem.deleteMany();
