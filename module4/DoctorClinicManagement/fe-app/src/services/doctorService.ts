@@ -40,7 +40,7 @@ export interface Doctor {
 const normalizeDoctor = (item: RawDoctor): Doctor => ({
   id: item.id,
   name: item.user?.name,
-  email: item.user?.email,  
+  email: item.user?.email,
   title: item.title,
   special: item.department?.name,
   position: item.position,
@@ -88,13 +88,13 @@ export const getAllDoctors = async (
     // params: { limit },
     // signal,
   });
-  console.log(response.data)
+
   const rawDoctors = response.data?.data;
-  console.log("rawDoctors ", rawDoctors)
+
   let doctors: DoctorInfo[] = Array.isArray(rawDoctors)
     ? rawDoctors.map(normalizeDoctor) // Cần khai báo hàm normalizeDoctor nếu API trả về data thô
     : [];
-console.log("doctor sau khi loc ", doctors)
+
   // Filter theo từ khoá tìm kiếm (Name, Title, Position)
 
   // Filter chính xác theo Title
