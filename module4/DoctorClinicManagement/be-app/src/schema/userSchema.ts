@@ -7,7 +7,7 @@ export const updateProfileSchema = yup.object().shape({
 });
 
 // Update role - chỉ admin. Role phải hợp lệ
-export const updateRoleSchema = yup.object.shape({
+export const updateRoleSchema = yup.object().shape({
     role: yup.string().required('Role là bắt buộc').oneOf(['user','admin', 'super'], 'Role chỉ có thể là user, admind, super')
 });
 

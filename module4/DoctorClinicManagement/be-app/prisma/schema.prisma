@@ -53,6 +53,10 @@ model Doctor {
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
   appointments Appointment[]
+  description  String        @db.VarChar(500)
+  position     String        @db.VarChar(50)
+  title        String        @db.VarChar(50)
+  yearsExp     Int           @map("years_exp")
   histories    History[]
   bills        Bill[]
   department   Department?   @relation(fields: [departmentId], references: [id])

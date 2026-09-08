@@ -7,155 +7,202 @@ import { fakerVI as faker } from '@faker-js/faker'; // Sử dụng locale Tiến
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
-
-
+const DEFAULT_PASSWORD = '123456';
+ 
+function randomDateBetween(start: Date, end: Date): Date {
+  const s = start.getTime();
+  const e = end.getTime();
+  return new Date(s + Math.random() * (e - s));
+}
+ 
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+ 
 async function main() {
-  console.log('Bắt đầu dọn dẹp dữ liệu cũ...');
-  await prisma.billItem.deleteMany();
-  await prisma.bill.deleteMany();
-  await prisma.history.deleteMany();
-  await prisma.appointment.deleteMany();
-  await prisma.medical.deleteMany();
-  await prisma.doctor.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.department.deleteMany();
-  console.log('Bắt đầu tạo dữ liệu mẫu...');
-
-  // 1. Tạo 1 Khoa (Department) để gán cho các Bác sĩ
+  console.log('🌱 Bắt đầu seed dữ liệu...');
+ 
+  // ---------------------------------------------------------------------
+  // 1. Departments (Khoa)
+  // ---------------------------------------------------------------------
   const departmentNames = [
-    'Khoa Nội chung',
-    'Khoa Ngoại tổng quát',
+    'Khoa Nội tổng quát',
+    'Khoa Ngoại',
     'Khoa Nhi',
-    'Khoa Sản - Phụ khoa',
-    'Khoa Tai Mũi Họng',
-    'Khoa Răng Hàm Mặt',
-    'Khoa Mắt',
-    'Khoa Da Liễu',
+    'Khoa Sản phụ khoa',
     'Khoa Tim mạch',
-    'Khoa Cơ xương khớp'
   ];
-
-  await prisma.department.createMany({
-    data: departmentNames.map((name) => ({ name })),
-  });
-
-  // 2. Tạo 5 Admins
-  const admins = [];
-  for (let i = 1; i <= 5; i++) {
-    admins.push({
-      name: `Admin ${i}`,
-      gender: Gender.male,
-      email: `admin${i}@clinic.com`,
-      phone: `090000000${i}`,
-      password: 'hashedpassword123',
-      datebirth: new Date('1990-01-01'),
-      role: Role.admin, // Note: Đây là trường role trong schema của bạn
+ 
+  const departments = [];
+  for (const name of departmentNames) {
+    const dept = await prisma.department.upsert({
+      where: { name },
+      update: {},
+      create: { name },
     });
+    departments.push(dept);
   }
-  await prisma.user.createMany({ data: admins });
-  console.log('✅ Đã tạo 5 Admin');
-
-
-  // Lấy danh sách các khoa vừa tạo để gán cho Bác sĩ
-  const departments = await prisma.department.findMany();
-  console.log(`✅ Đã tạo ${departments.length} Khoa (Department)`);
-
-  // ... (Giữ nguyên Bước 2: Tạo 5 Admins) ...
-
-  // 3. Tạo 20 Doctors (Phân bổ ngẫu nhiên vào các khoa)
-  const doctorsData = [];
-  for (let i = 1; i <= 20; i++) {
-    // Lấy ngẫu nhiên 1 khoa từ danh sách departments
-    const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
-
-    const user = await prisma.user.create({
-      data: {
-        name: `Bác sĩ ${i}`,
-        gender: i % 2 === 0 ? Gender.female : Gender.male,
-        email: `doctor${i}@clinic.com`,
-        phone: `09100000${i < 10 ? '0' + i : i}`,
-        password: 'hashedpassword123',
-        datebirth: new Date('1985-05-15'),
-        role: Role.doctor,
-        doctors: {
-          create: {
-            status: StatusDoctor.active,
-            departmentId: randomDepartment.id, // Gán ID khoa ngẫu nhiên
-          }
-        }
+  console.log(`✅ Đã tạo ${departments.length} khoa`);
+ 
+  // ---------------------------------------------------------------------
+  // 2. Admins (3 tài khoản)
+  // ---------------------------------------------------------------------
+  const adminData = [
+    { name: 'Nguyễn Văn Admin', email: 'admin1@hospital.vn', gender: Gender.male },
+    { name: 'Trần Thị Quản Trị', email: 'admin2@hospital.vn', gender: Gender.female },
+    { name: 'Lê Hoàng Admin', email: 'admin3@hospital.vn', gender: Gender.male },
+  ];
+ 
+  for (const [i, a] of adminData.entries()) {
+    await prisma.user.upsert({
+      where: { email: a.email },
+      update: {},
+      create: {
+        name: a.name,
+        gender: a.gender,
+        email: a.email,
+        phone: `09${(10000000 + i).toString().padStart(8, '0')}`,
+        password: DEFAULT_PASSWORD,
+        datebirth: new Date(1985 + i, i, 15),
+        role: Role.admin,
+        address: `${i + 1} Đường Lê Lợi, Quận 1, TP.HCM`,
       },
-      include: { doctors: true }
-    });
-    doctorsData.push(user.doctors[0]);
-  }
-  console.log('✅ Đã tạo 20 Bác sĩ và phân bổ vào các chuyên khoa');
-
-  // 4. Tạo 100 Patients
-  const patientsData = [];
-  for (let i = 1; i <= 100; i++) {
-    patientsData.push({
-      name: `Bệnh nhân ${i}`,
-      gender: i % 2 === 0 ? Gender.female : Gender.male,
-      email: `patient${i}@gmail.com`,
-      phone: `0920000${i < 100 ? (i < 10 ? '00' + i : '0' + i) : i}`,
-      password: 'hashedpassword123',
-      datebirth: new Date('2000-10-10'),
-      role: Role.patient,
     });
   }
-  await prisma.user.createMany({ data: patientsData });
-
-  // Lấy danh sách ID bệnh nhân để tạo lịch
-  const allPatients = await prisma.user.findMany({ where: { role: Role.patient } });
-  console.log('✅ Đã tạo 100 Bệnh nhân');
-
-  // 5. Tạo 200 Lịch khám (Appointments)
-  const appointmentsData = [];
-
-  // Helper lấy random
-  const getRandomPatientId = () => allPatients[Math.floor(Math.random() * allPatients.length)].id;
-  const getRandomDoctorId = () => doctorsData[Math.floor(Math.random() * doctorsData.length)].id;
-  const getRandomTimeType = () => [TimeType.morning, TimeType.afternoon, TimeType.evening][Math.floor(Math.random() * 3)];
-
-  // a) 100 lịch khám ĐÃ HOÀN TẤT (Done) - Date ở quá khứ
-  for (let i = 0; i < 100; i++) {
-    appointmentsData.push({
-      userId: getRandomPatientId(),
-      doctorId: getRandomDoctorId(),
-      date: new Date(new Date().setDate(new Date().getDate() - Math.floor(Math.random() * 30) - 1)), // Quá khứ
-      timeType: getRandomTimeType(),
-      status: StatusAppointment.Done,
-      description: 'Đã hoàn tất quá trình khám bệnh.',
+  console.log(`✅ Đã tạo ${adminData.length} admin`);
+ 
+  // ---------------------------------------------------------------------
+  // 3. Doctors (10 bác sĩ: tạo User role=doctor + hồ sơ Doctor)
+  // ---------------------------------------------------------------------
+  const doctorNames = [
+    'BS. Phạm Minh Tuấn',
+    'BS. Nguyễn Thị Lan',
+    'BS. Trần Văn Hùng',
+    'BS. Lê Thị Hoa',
+    'BS. Đỗ Quang Huy',
+    'BS. Vũ Thị Mai',
+    'BS. Bùi Anh Dũng',
+    'BS. Ngô Thị Thu',
+    'BS. Đặng Văn Long',
+    'BS. Hoàng Thị Ngọc',
+  ];
+ 
+  const positions = ['Bác sĩ điều trị', 'Trưởng khoa', 'Phó khoa', 'Bác sĩ tư vấn'];
+  const titles = ['Thạc sĩ', 'Tiến sĩ', 'Bác sĩ CKI', 'Bác sĩ CKII', 'Giáo sư'];
+ 
+  const doctors = [];
+  for (const [i, name] of doctorNames.entries()) {
+    const email = `doctor${i + 1}@hospital.vn`;
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: {},
+      create: {
+        name,
+        gender: i % 2 === 0 ? Gender.male : Gender.female,
+        email,
+        phone: `09${(20000000 + i).toString().padStart(8, '0')}`,
+        password: DEFAULT_PASSWORD,
+        datebirth: new Date(1975 + i, (i * 2) % 12, (i % 28) + 1),
+        role: Role.doctor,
+        address: `${i + 10} Đường Nguyễn Huệ, Quận 1, TP.HCM`,
+      },
     });
-  }
-
-  // b) 90 lịch khám SẮP TỚI (Active/Pending) - Date ở tương lai
-  for (let i = 0; i < 90; i++) {
-    appointmentsData.push({
-      userId: getRandomPatientId(),
-      doctorId: getRandomDoctorId(),
-      date: new Date(new Date().setDate(new Date().getDate() + Math.floor(Math.random() * 14) + 1)), // Tương lai (trong vòng 14 ngày tới)
-      timeType: getRandomTimeType(),
-      status: StatusAppointment.Active, // Dùng Active cho "sắp tới"
-      description: 'Khám định kỳ tổng quát.',
+ 
+    const doctor = await prisma.doctor.upsert({
+      where: { userId: user.id },
+      update: {},
+      create: {
+        userId: user.id,
+        status: StatusDoctor.active,
+        departmentId: departments[i % departments.length].id,
+        description: `${name} có nhiều năm kinh nghiệm trong khám và điều trị chuyên khoa.`,
+        position: pick(positions),
+        title: pick(titles),
+        yearsExp: 3 + (i % 15),
+      },
     });
+    doctors.push(doctor);
   }
-
-  // c) 10 lịch khám HỦY (Cancelled)
-  for (let i = 0; i < 10; i++) {
-    appointmentsData.push({
-      userId: getRandomPatientId(),
-      doctorId: getRandomDoctorId(),
-      date: new Date(),
-      timeType: getRandomTimeType(),
-      status: StatusAppointment.Cancelled,
-      description: 'Bệnh nhân bận việc đột xuất nên hủy.',
+  console.log(`✅ Đã tạo ${doctors.length} bác sĩ`);
+ 
+  // ---------------------------------------------------------------------
+  // 4. Patients (20 bệnh nhân)
+  // ---------------------------------------------------------------------
+  const patientFirstNames = [
+    'Nguyễn Văn An', 'Trần Thị Bích', 'Lê Văn Cường', 'Phạm Thị Duyên',
+    'Hoàng Văn Em', 'Vũ Thị Phương', 'Đặng Văn Giang', 'Bùi Thị Hạnh',
+    'Ngô Văn Inh', 'Đỗ Thị Kim', 'Trịnh Văn Long', 'Mai Thị Mến',
+    'Phan Văn Nam', 'Lý Thị Oanh', 'Dương Văn Phúc', 'Đoàn Thị Quỳnh',
+    'Tô Văn Sơn', 'Chu Thị Tâm', 'Lương Văn Út', 'Vương Thị Vân',
+  ];
+ 
+  const patients = [];
+  for (const [i, name] of patientFirstNames.entries()) {
+    const email = `patient${i + 1}@example.com`;
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: {},
+      create: {
+        name,
+        gender: i % 2 === 0 ? Gender.male : Gender.female,
+        email,
+        phone: `03${(30000000 + i).toString().padStart(8, '0')}`,
+        password: DEFAULT_PASSWORD,
+        datebirth: new Date(1960 + (i % 45), i % 12, (i % 28) + 1),
+        role: Role.patient,
+        address: `${i + 1} Đường Cách Mạng Tháng Tám, Quận 3, TP.HCM`,
+      },
     });
+    patients.push(user);
   }
-
-  await prisma.appointment.createMany({ data: appointmentsData });
-  console.log('✅ Đã tạo 200 Lịch khám (100 Done, 90 Active, 10 Cancelled)');
-  console.log('🎉 Hoàn tất seed dữ liệu!');
+  console.log(`✅ Đã tạo ${patients.length} bệnh nhân`);
+ 
+  // ---------------------------------------------------------------------
+  // 5. Appointments (20 lịch khám mẫu)
+  // ---------------------------------------------------------------------
+  const timeTypes = [TimeType.morning, TimeType.afternoon, TimeType.evening];
+  const statuses = [
+    StatusAppointment.Done,
+    StatusAppointment.Pending,
+    StatusAppointment.Active,
+    StatusAppointment.Cancelled,
+  ];
+  const descriptions = [
+    'Khám tổng quát định kỳ',
+    'Đau bụng, cần kiểm tra tiêu hóa',
+    'Tái khám sau phẫu thuật',
+    'Khám thai định kỳ',
+    'Kiểm tra huyết áp, tim mạch',
+    'Sốt, ho kéo dài',
+    'Đau lưng, khớp gối',
+    'Khám sức khỏe tổng quát cho trẻ em',
+    'Tư vấn dinh dưỡng',
+    'Khám da liễu',
+  ];
+ 
+  const rangeStart = new Date('2025-01-01');
+  const rangeEnd = new Date('2025-12-31');
+ 
+  let created = 0;
+  for (let i = 0; i < 20; i++) {
+    const patient = patients[i % patients.length];
+    const doctor = doctors[i % doctors.length];
+ 
+    await prisma.appointment.create({
+      data: {
+        userId: patient.id,
+        doctorId: doctor.id,
+        date: randomDateBetween(rangeStart, rangeEnd),
+        timeType: pick(timeTypes),
+        status: pick(statuses),
+        description: pick(descriptions),
+      },
+    });
+    created++;
+  }
+  console.log(`✅ Đã tạo ${created} lịch khám`);
+ 
+  console.log('🎉 Seed dữ liệu hoàn tất!');
 }
 
 main()

@@ -21,6 +21,8 @@ interface UpdateDoctorDto {
     departmentId?: number | null;
 }
 
+const DEFAULT_LIMIT = 24;
+
 export async function findAll(query: {
     role?: string,
     search?: string,
@@ -29,8 +31,9 @@ export async function findAll(query: {
     limit: number
 }
 ) {
-    const { role, search, status, page, limit } = query;
-
+    const { role, search, status } = query;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit)|| 10;
     const userWhere: Prisma.UserWhereInput = {};
     if (role) {
         userWhere.role = 'doctor'; // hoặc ép kiểu chuẩn Enum của Prisma

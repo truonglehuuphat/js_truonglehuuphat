@@ -58,6 +58,10 @@ CREATE TABLE "doctor" (
     "department_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "description" VARCHAR(500) NOT NULL,
+    "position" VARCHAR(50) NOT NULL,
+    "title" VARCHAR(50) NOT NULL,
+    "years_exp" INTEGER NOT NULL,
 
     CONSTRAINT "doctor_pkey" PRIMARY KEY ("id")
 );

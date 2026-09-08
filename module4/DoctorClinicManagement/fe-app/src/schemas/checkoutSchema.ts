@@ -9,9 +9,9 @@ export const checkoutSchema = yup.object({
     .matches(/^(0|\+84)\d{9,10}$/, "Invalid phone number")
     .required("Phone is required"),
   address: yup.string().trim().min(8, "Address must be at least 8 characters").required("Address is required"),
-  provinceCode: yup.string().required("Please select a province"),
-  wardCode: yup.string().required("Please select a ward"),
-  deliveryDate: yup
+  department: yup.string().required("Làm ơn chọn chuyên khoa"),
+  birthdate: yup.date(),
+  appointmentDate: yup
     .string()
     .required("Delivery date is required")
     .test("future-date", "Delivery date must be from tomorrow", (value) => {

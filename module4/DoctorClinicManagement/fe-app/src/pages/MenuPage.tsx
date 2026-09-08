@@ -43,7 +43,7 @@ const MenuPage = () => {
 
                         </Grid>
                         <Grid size={6} sx={{ border: "1px solid" }}>
-                            <Box component={Link} to="#">
+                            <Box component={Link} to="doctors">
                                 <LocalHospitalOutlinedIcon sx={{ fontSize: 100 }} />
                                 <Typography>Chuyên gia - Bác sĩ</Typography>
                             </Box>

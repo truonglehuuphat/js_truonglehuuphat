@@ -1,44 +1,36 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError, ApiResponse } from "../types/api";
+import { ValidationError } from "yup";
 
 export const errorHandler = (
     err: any,
     req: Request,
     res: Response,
     next: NextFunction
-) =>{
-    console.error('Error', err);
-
-    let statusCode = 500;
-    let message = "Internal Server Error";
-    let code = 'INTERNAL_ERROR';
-    if(err instanceof AppError){
-        statusCode = err.statuscode;
-        message = err.message;
-        code = err.code || 'APP_ERROR';
-    } else if (err.code === 'P2002'){
-        statusCode = 409;
-        message = `${err.meta?.target.[0] || 'Data'} is Exist`;
-        code = 'DUPLICATE_ENTRY';
-    } else if (err.code === 'P2025'){
-        statusCode = 404;
-        message = `Bản ghi không tồn tại`;
-        code = 'NOT_FOUND';
-    } else if (err.code === 'P2003'){
-        statusCode = 409;
-        message = 'Không thể xóa - có dữ liệu liên kết';
-        code = 'FOREIGN_KEY_CONSTRAINT';
-    } else if (err.code === 'P2014'){
-        statusCode = 409;
-        message = 'Lỗi ràng buộc dữ liệu';
-        code = 'RELATION_CÓNTRAINT';
+) => {
+    if (err instanceof AppError) {
+        res.status(err.statuscode).json({ success: false, message: err.message });
+        return;
     }
-    const response: ApiResponse = {
-        success: false,
-        message,
-        data: undefined,
-    };
-    res.status(statusCode).json(response);
+    if (err instanceof ValidationError) {
+        res.status(400).json({
+            success: false,
+            message: 'Dữ liệu không hợp lệ',
+            errors: err.inner.map((e) => ({ field: e.path, message: e.message })),
+        });
+        return;
+    }
+    // Prisma known errors
+    if (err.code === 'P2002') {
+        res.status(409).json({ success: false, message: 'Học viên đã đăng ký khoá học này' });
+        return;
+    }
+    if (err.code === 'P2025') {
+        res.status(404).json({ success: false, message: 'Không tìm thấy bản ghi' });
+        return;
+    }
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
 }
 
 export const notFoundHandler = (req: Request, res: Response) => {

@@ -10,9 +10,9 @@ const HomePage = () => {
                 container
                 spacing={0}
                 sx={{
-                    minHeight: '100vh',
-                    justifyContent: "center", // Canh giữa theo chiều ngang
-                    alignItems: "center"     // Canh giữa theo chiều dọc
+                    // minHeight: '50vh',
+                    // justifyContent: "center", // Canh giữa theo chiều ngang
+                    // alignItems: "center"     // Canh giữa theo chiều dọc
                 }} // Thêm dòng này nếu muốn căn giữa toàn màn hình
             >
                 <Grid size={8} sx={{ display: 'flex', justifyContent: 'flex-end' }}>

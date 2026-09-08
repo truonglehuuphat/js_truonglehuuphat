@@ -12,25 +12,25 @@ const appointmentRouter = Router();
 //mọi route /users đều yêu cầu đăng nhập
 appointmentRouter.use(authenticate);
 
-appointmentRouter.post(
-    "/",
-    authorize('patient','admin'),
-    controller.createAppointment
-);
+// appointmentRouter.post(
+//     "/",
+//     authorize('patient','admin'),
+//     controller.createAppointment
+// );
 
-appointmentRouter.get(
-    "/me",
-    authorize('patient','admin'),
-    controller.me
-);
+// appointmentRouter.get(
+//     "/me",
+//     authorize('patient','admin'),
+//     controller.me
+// );
 
-appointmentRouter.get(
-    "/:doctorId",
-    validatedId,
-    authenticate,
-    authorize('patient','admin'),
-    controller.getDoctor
-);
+// appointmentRouter.get(
+//     "/:doctorId",
+//     validatedId,
+//     authenticate,
+//     authorize('patient','admin'),
+//     controller.getDoctor
+// );
 
 appointmentRouter.patch(
     "/:id/status",

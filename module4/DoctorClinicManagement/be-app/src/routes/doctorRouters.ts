@@ -5,7 +5,7 @@ import { updateProfileSchema, updateRoleSchema, userQuerySchema } from '../schem
 import * as controller from '../controllers/doctorController';
 import * as reviewController from '../controllers/reviewController';
 import * as timeslotController from '../controllers/timeslotController';
-import * as appointmentController from '../controllers/appointmentController';
+import * as appointmentController from '../controllers/appointmentsController';
 import { authorize } from '../mildware/authorize';
 import { authorizeOwner } from '../mildware/authorizeOwner';
 
@@ -13,12 +13,12 @@ const doctorRouters = Router();
 
 //Doctor
 //mọi route /users đều yêu cầu đăng nhập
-doctorRouters.use(authenticate, authorize('doctor'));
 // GET /users
 doctorRouters.get('/', validateQuery(userQuerySchema), controller.getDoctors);
 // GET /user:id
 doctorRouters.get('/:id', validatedId, controller.getDoctorById);
 
+doctorRouters.use(authenticate, authorize('doctor'));
 //timeSlot
 // GET timeSlot
 doctorRouters.get('/:id/timeslots', validatedId, reviewController.getReviews);
@@ -34,10 +34,8 @@ doctorRouters.get('/:id/reviews', validatedId, reviewController.getReviews);
 //appointments
 //GET 
 doctorRouters.get('/:id/reviews', validatedId, appointmentController.getMyAppointments);
-doctorRouters.get('/:id/reviews', validatedId, appointmentController.getReviews);
+// doctorRouters.get('/:id/reviews', validatedId, appointmentController.getReviews);
 //patch
 doctorRouters.patch('/:id/appointments/:id/status', validatedId, appointmentController.updateAppointmentStatus);
-
-
 
 export default doctorRouters;

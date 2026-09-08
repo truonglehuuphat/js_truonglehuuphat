@@ -11,6 +11,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { checkoutSchema, type CheckoutFormData } from "../schemas/checkoutSchema";
 import React from "react";
 import type { Department } from "../types/specialty";
+import { Link } from "react-router-dom";
 
 export const departments: Department[] = [
     { code: "1", name: "CK Tai Mắt Mũi Họng" },
@@ -33,12 +34,12 @@ const RegisterPage = () => {
         resolver: yupResolver(checkoutSchema),
         defaultValues: {
             name: "",
+            birthdate: undefined,
             email: "",
             phone: "",
             address: "",
-            provinceCode: "",
-            wardCode: "",
-            deliveryDate: "",
+            department: "",
+            appointmentDate: "",
             note: "",
         },
     });
@@ -64,10 +65,10 @@ const RegisterPage = () => {
         setAlignment2(newAlignment);
     };
     return (
-        <Container maxWidth="lg" sx={{ py: { xs: 2.5, md: 4 } }}>
+        <Container>
             {/* LEFT FORM */}
-            <Grid container spacing={3}>
-                <Grid size={{ xs: 12, md: 7 }}>
+            <Grid container spacing={1}>
+                <Grid >
                     <Paper sx={{ p: 3, borderRadius: 3 }} variant="outlined">
                         <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
                             Đăng ký khám và tạo hồ sơ
@@ -92,8 +93,8 @@ const RegisterPage = () => {
                                                 slotProps={{
                                                     textField: {
                                                         fullWidth: true,
-                                                        error: !!errors.deliveryDate,
-                                                        helperText: errors.deliveryDate?.message,
+                                                        error: !!errors.appointmentDate,
+                                                        helperText: errors.appointmentDate?.message,
                                                     },
                                                 }}
                                             />
@@ -188,7 +189,7 @@ const RegisterPage = () => {
                                 <Grid size={{ xs: 12}}>
                                     <Controller
                                         control={control}
-                                        name="wardCode"
+                                        name="department"
                                         render={({ field }) => (
                                             <FormControl fullWidth >
                                                 <InputLabel>Chọn chuyên khoa</InputLabel>
@@ -202,7 +203,7 @@ const RegisterPage = () => {
 
 
                                                 <Typography variant="caption" color="error">
-                                                    {errors.provinceCode?.message}
+                                                    {errors.department?.message}
                                                 </Typography>
                                             </FormControl>
                                         )}
@@ -222,8 +223,8 @@ const RegisterPage = () => {
                                                 slotProps={{
                                                     textField: {
                                                         fullWidth: true,
-                                                        error: !!errors.deliveryDate,
-                                                        helperText: errors.deliveryDate?.message,
+                                                        error: !!errors.appointmentDate,
+                                                        helperText: errors.appointmentDate?.message,
                                                     },
                                                 }}
                                             />
@@ -245,7 +246,7 @@ const RegisterPage = () => {
 
                             </Grid>
 
-                            <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }} disabled={submitting}>
+                            <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }} disabled={submitting} component={Link} to="/login">
                                 {submitting ? "Tiếp theo..." : "Tiếp theo"}
                             </Button>
                         </Box>

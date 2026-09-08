@@ -10,12 +10,14 @@ import timeSlotsRouters from './routes/timeSlotRoutes';
 import historyRoutes from './routes/reviewRoutes';
 import appointmentRouters from './routes/appointmentRouters';
 import reviewRoutes from './routes/reviewRoutes';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Health check
 app.get('/health', (req, res) => {
@@ -27,7 +29,6 @@ app.use('/api/v1/users', userRouters);
 app.use('/api/v1/department', departmentRouters);
 app.use('/api/v1/doctor', doctorRouters);
 app.use('/api/v1/appointments', appointmentRouters);
-
 
 // Error handling
 app.use(notFoundHandler);

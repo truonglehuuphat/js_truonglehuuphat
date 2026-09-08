@@ -5,6 +5,7 @@ import DoctorPage from "../pages/DoctorPage";
 import PatientPage from "../pages/PatientPage";
 import AdminPage from "../pages/AdminPage";
 import LoginPage from "../pages/public/LoginPage";
+import RegisterAccountPage from "../pages/public/RegisterAccountPage";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
                 path: "login",
                 element: <LoginPage />,
             },
+            {
+                path: "register",
+                element: <RegisterAccountPage />,
+            },            
             // {
             //     path: "doctors:/id",
             //     element: <DoctorDetailPage />,
