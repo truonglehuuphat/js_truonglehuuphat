@@ -18,8 +18,10 @@ export async function register(req: Request, res: Response, next: NextFunction){
 export async function login(req: Request, res: Response, next: NextFunction){
     try{
         const result = await svc.login(req.body);
-        res.json({sucess: true, data: result});
+        console.log("result ctl",result);
+        res.status(200).json({sucess: true, data: result});
     } catch(err){
+        console.log("login lỗi:",err);
         next(err);
     }
 }

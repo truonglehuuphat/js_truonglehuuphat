@@ -5,7 +5,7 @@ import { AppError } from '../types/api';
 
 const SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS) || 12;
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
-const REFESH_SECRET = process.env.JWT_REFESH_SECRET!;
+const REFESH_SECRET = process.env.JWT_REFRESH_SECRET!;
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || '15m';
 const REFESH_EXPIRES = process.env.JWT_REFESH_EXPIRES || '7d';
 
@@ -59,7 +59,9 @@ export async function login(input: {
     password: string;
 }) {
     // find user by email
+    console.log("email ", input.email);
     const user = await prisma.user.findUnique({ where: { email: input.email } });
+    console.log("user ", user);
     // check user is exist and password is correct
     // khong thong bao email khong ton tai hay sai password tranh ro ri thong tin
     const isValid = user && await bcrypt.compare(input.password, user.password);
@@ -84,7 +86,8 @@ export async function login(input: {
         refreshToken: tokens.refreshToken,
         user: {
             id: user.id,
-            name: user.name
+            name: user.name,
+            role: user.role
         }
     }
 }

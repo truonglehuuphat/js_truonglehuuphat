@@ -1,27 +1,41 @@
 import { Box, Button, Container, FormGroup, Grid, Input, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getLogin } from '../../services/authSerivce';
+import PatientPage from '../PatientPage';
+import AdminPage from '../AdminPage';
+import DoctorPage from '../DoctorPage';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = async()  => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         if (!username || !password) {
             setError('Please fill in both fields.');
             return;
         }
 
         try {
-            const result = await getLogin({ userName: username, password: password });
-            console.log("Token:", result.token);
-            console.log("RefreshToken:", result.refreshToken);
+            const result = await getLogin({ email: username, password: password });
+
 
             // Lưu token vào localStorage / Cookie và chuyển hướng trang
-            localStorage.setItem("token", result.token);
-            
+            if (result !== null) {
+                localStorage.setItem("User", JSON.stringify(result));
+            }
+            // console.log("result.user?.role:", result.user?.role);
+            if (result.user?.role === "patient") {
+                navigate('/patient');
+            } else if (result.user?.role === "admin") {
+                navigate('/admin');
+            } else if (result.user?.role === "doctor") {
+                navigate('/doctor');
+            }
+
         } catch (err: any) {
             if (err.code === "P101") {
                 setError(err.message); // Hiển thị thông báo: Tên đăng nhập hoặc mật khẩu không chính xác
@@ -65,7 +79,7 @@ const LoginPage = () => {
                         </Typography>
                     )}
 
-                    <Stack spacing={2} sx={{ pb: '30px',alignItems:"center"  }}>
+                    <Stack spacing={2} sx={{ pb: '30px', alignItems: "center" }}>
                         <Button variant="contained" type="submit" sx={{ borderRadius: 10, width: '100%' }}>
                             Log In
                         </Button>
