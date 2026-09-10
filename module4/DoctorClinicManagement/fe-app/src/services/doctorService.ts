@@ -28,7 +28,7 @@ export interface RawDoctor {
 export interface Doctor {
   id: number;
   name: string;
-  special: string;
+  departmentId: number;
   title: string;
   position: string;
   description: string;
@@ -42,7 +42,7 @@ const normalizeDoctor = (item: RawDoctor): Doctor => ({
   name: item.user?.name,
   email: item.user?.email,
   title: item.title,
-  special: item.department?.name,
+  departmentId: item.department?.id,
   position: item.position,
   description: item.description,
   thumbnail: item.image,
@@ -72,7 +72,7 @@ export const getAllDoctors = async (
   params: GetDoctorsParams & { signal?: AbortSignal } = {}
 ): Promise<GetDoctorsResponse> => {
   const {
-    speciality = "all",
+    departmentId = 1,
     title = "",
     position = "",
     sortBy = "",

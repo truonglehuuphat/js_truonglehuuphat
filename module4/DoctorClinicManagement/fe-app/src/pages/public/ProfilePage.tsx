@@ -32,7 +32,7 @@ const ProfileCard = ({ userInfo }: { userInfo: UserInfo } )=> {
                         overflow: "hidden",
                         minHeight: 48,
                     }}
-                >{userInfo.user?.name}</Typography>
+                >Tên: {userInfo.name}</Typography>
             </CardContent>
         </Card>
     )

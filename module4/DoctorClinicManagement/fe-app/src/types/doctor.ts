@@ -6,5 +6,6 @@ export interface DoctorInfo {
     position: string;
     description: string;
     thumbnail: string
+    departmentId: number;
 }
 

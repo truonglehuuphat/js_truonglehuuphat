@@ -19,7 +19,9 @@ export async function findAll(query: {
     limit: number
 }
 ) {
-    const { role, search, page, limit } = query;
+    const { role, search } = query;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit)|| 10;
     const where: Prisma.DepartmentWhereInput = {
         ...(search && {
             OR: [

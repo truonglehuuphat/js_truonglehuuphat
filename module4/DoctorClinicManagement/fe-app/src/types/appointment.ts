@@ -27,3 +27,21 @@ export interface GetAppointmentResponse {
   limit: number;
   skip: number;
 }
+
+export interface WorkShift {
+  id: string;
+  date: string; // YYYY-MM-DD
+  session: "MORNING" | "AFTERNOON";
+  timeRange: string;
+  isBooked: boolean;
+}
+
+export interface TimeSlot {
+  id: number;
+  doctorId: number;
+  dayOfWeek: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+  date: string;       // ISO string or YYYY-MM-DD
+  startTime: string;  // ISO string hoặc HH:mm
+  endTime: string;    // ISO string hoặc HH:mm
+  isBlocked: boolean;
+}
