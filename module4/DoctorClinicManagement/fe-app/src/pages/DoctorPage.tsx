@@ -204,41 +204,30 @@ const DoctorPage = () => {
   const [error, setError] = useState("");
   console.log("0. fetchData bắt đầu chạy"); // KIỂM TRA 0
   useEffect(() => {
-    console.log("1. fetchData bắt đầu chạy"); // KIỂM TRA 1
+    // console.log("1. fetchData bắt đầu chạy"); // KIỂM TRA 1
     const fetchData = async () => {
       try {
         setLoading(true);
         setError("");
-        console.log("2. Gọi API:"); // KIỂM TRA 2
+        // console.log("2. Gọi API:"); // KIỂM TRA 2
         const doctorRes = await getAllDoctors();
-        console.log("2. Kết quả API:", doctorRes.doctors); // KIỂM TRA 2
+        // console.log("2. Kết quả API:", doctorRes.doctors); // KIỂM TRA 2
         setDoctors((doctorRes as GetDoctorsResponse).doctors);
       } catch (err: any) {
-        console.log("3. Lỗi gặp phải:", err); // KIỂM TRA 3
+        // console.log("3. Lỗi gặp phải:", err); // KIỂM TRA 3
         if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") {
           return;
         }
         setError("Cannot load doctors right now. Please try again.");
-        console.log("Cannot load doctors right now. Please try again."); // KIỂM TRA fail
+        // console.log("Cannot load doctors right now. Please try again."); // KIỂM TRA fail
       } finally {
-        console.log("Cannot load doctors right now. finally"); // KIỂM TRA fail
+        // console.log("Cannot load doctors right now. finally"); // KIỂM TRA fail
         setLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
-  //   fetchProduct();
-  // }, [id]);
-
-  // if (loading) {
-  //   return <Loading />;
-  // }
-
-  // if (error || !product) {
-  //   return <EmptyState message={error || "Product not found"} />;
-  // }
 
   return (
     <>{

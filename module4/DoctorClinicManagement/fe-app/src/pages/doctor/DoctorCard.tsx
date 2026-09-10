@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const DoctorCard = ({ doctorInfo }: { doctorInfo: DoctorInfo }) => {
 
-
     const handleAddToCart = () => {
 
     };
