@@ -140,7 +140,7 @@ const FindDoctorPage = () => {
     // }, [doctors, selectedDeptId]);
     // Lọc danh sách bác sĩ thuộc Chuyên khoa đang chọn
     const filteredDoctors = useMemo(() => {
-        if (!selectedDeptId ) return [];
+        if (!selectedDeptId) return [];
         if (doctors !== null) {
             return doctors.filter((doc) => doc.departmentId === Number(selectedDeptId));
         }
@@ -163,7 +163,7 @@ const FindDoctorPage = () => {
         );
     };
     // --- RENDER SKLETON LOADING ---
-    if (loading) {
+    if (loading || !filteredDoctors) {
         return (
             <EmptyState />
         );
@@ -198,17 +198,17 @@ const FindDoctorPage = () => {
                                 name="departmentId"
                                 render={({ field }) => (
                                     <FormControl fullWidth size="small">
-                                        <InputLabel id="dept-select-label">Chọn Chuyên Khoa</InputLabel>
+                                        <InputLabel id="dept-select-label">1. Chọn Chuyên Khoa (*)</InputLabel>
                                         <Select
                                             {...field}
                                             labelId="dept-select-label"
-                                            label="Chọn Chuyên Khoa"
-                                            onChange={(e) => handleDepartmentChange(e.targe?.value, field.onChange)}
+                                            label="1. Chọn Chuyên Khoa (*)"
+                                            onChange={(e) => handleDepartmentChange(e.target.value, field.onChange)}
                                         >
                                             <MenuItem value="">
                                                 <em>-- Chọn chuyên khoa --</em>
                                             </MenuItem>
-                                            {departments?.map((dept) => (
+                                            {departments.map((dept) => (
                                                 <MenuItem key={dept.id} value={dept.id}>
                                                     {dept.name}
                                                 </MenuItem>
@@ -223,20 +223,26 @@ const FindDoctorPage = () => {
                                 control={control}
                                 name="doctorId"
                                 render={({ field }) => (
-                                    <FormControl fullWidth size="small">
-                                        <InputLabel id="doc-select-label">Chọn Bác Sĩ</InputLabel>
+                                    <FormControl
+                                        fullWidth
+                                        size="small"
+                                        disabled={!selectedDeptId} // 👈 KHÓA LẠI NẾU CHƯA CHỌN KHOA
+                                    >
+                                        <InputLabel id="doc-select-label">
+                                            {selectedDeptId ? "2. Chọn Bác Sĩ" : "2. Vui lòng chọn khoa trước"}
+                                        </InputLabel>
                                         <Select
                                             {...field}
                                             labelId="doc-select-label"
-                                            label="Chọn Bác Sĩ"
+                                            label={selectedDeptId ? "2. Chọn Bác Sĩ" : "2. Vui lòng chọn khoa trước"}
                                             onChange={(e) => handleDoctorChange(e.target.value, field.onChange)}
                                         >
                                             <MenuItem value="">
                                                 <em>-- Chọn bác sĩ --</em>
                                             </MenuItem>
-                                            {filteredDoctors?.map((doc) => (
+                                            {filteredDoctors.map((doc) => (
                                                 <MenuItem key={doc.id} value={doc.id}>
-                                                    {doc.name}
+                                                    {doc.title} {doc.user?.name || `Bác sĩ #${doc.id}`}
                                                 </MenuItem>
                                             ))}
                                         </Select>
