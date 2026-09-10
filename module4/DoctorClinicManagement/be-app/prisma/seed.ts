@@ -8,9 +8,6 @@ import bcrypt from 'bcrypt';
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
-
-
-
 function randomDateBetween(start: Date, end: Date): Date {
   const s = start.getTime();
   const e = end.getTime();
@@ -162,6 +159,75 @@ async function main() {
     });
   }
   console.log("Đã tạo 10 lịch khám mới (Pending).");
+
+// --- 7. TẠO TIME SLOTS CHO BÁC SĨ (7 NGÀY TỚI) ---
+  console.log("Đang tạo ca khám (Time Slots)...");
+
+  // Mapping ngày trong tuần từ JS sang enum DayOfWeek
+  const dayOfWeekMap: Record<number, DayOfWeek> = {
+    0: "sunday",
+    1: "monday",
+    2: "tuesday",
+    3: "wednesday",
+    4: "thursday",
+    5: "friday",
+    6: "saturday",
+  };
+
+  // Cấu hình các ca khám mặc định trong ngày
+  const slotTemplates = [
+    { type: "morning", startHour: 8, startMin: 0, endHour: 11, endMin: 30 },
+    { type: "afternoon", startHour: 13, startMin: 30, endHour: 17, endMin: 0 },
+    { type: "evening", startHour: 18, startMin: 0, endHour: 20, endMin: 30 },
+  ];
+
+  // Lấy tất cả các lịch khám đã được đặt
+  const existingAppointments = await prisma.appointment.findMany({
+    select: { doctorId: true, date: true, timeType: true }
+  });
+
+  const today = new Date();
+
+  for (const doctor of doctors) {
+    // Tạo ca khám từ hôm nay đến 7 ngày tới
+    for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+      const slotDate = new Date();
+      slotDate.setDate(today.getDate() + dayOffset);
+      slotDate.setHours(0, 0, 0, 0);
+
+      const dayEnum = dayOfWeekMap[slotDate.getDay()];
+
+      for (const template of slotTemplates) {
+        const startTime = new Date(slotDate);
+        startTime.setHours(template.startHour, template.startMin, 0, 0);
+
+        const endTime = new Date(slotDate);
+        endTime.setHours(template.endHour, template.endMin, 0, 0);
+
+        // Kiểm tra xem ca khám này bác sĩ đã có lịch hẹn chưa
+        const isBooked = existingAppointments.some(app => {
+          if (!app.doctorId || app.doctorId !== doctor.id) return false;
+          if (app.timeType !== template.type) return false;
+
+          const appDate = new Date(app.date);
+          return appDate.toISOString().split('T')[0] === slotDate.toISOString().split('T')[0];
+        });
+
+        await prisma.timeSlot.create({
+          data: {
+            doctorId: doctor.id,
+            dayOfWeek: dayEnum,
+            date: slotDate,
+            startTime: startTime,
+            endTime: endTime,
+            isBlocked: isBooked, // Trùng lịch => isBlocked = true, ngược lại => false (Rảnh)
+          }
+        });
+      }
+    }
+  }
+
+  console.log("Đã tạo xong ca khám (Time Slots) cho các bác sĩ.");
   console.log("Seed dữ liệu thành công!");
 }
 
