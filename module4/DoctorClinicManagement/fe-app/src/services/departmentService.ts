@@ -6,6 +6,6 @@ export const getDepartments = async () => {
         // params: { limit },
         // signal,
     });
-    console.log(response.data?.data);
+    // console.log(response.data?.data);
     return response.data?.data;
 }

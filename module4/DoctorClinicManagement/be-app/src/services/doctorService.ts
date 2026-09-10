@@ -1,5 +1,5 @@
 import prisma from '../db/prisma';
-import { Prisma, Role } from "../generated/prisma/client";
+import { DayOfWeek, Prisma, Role } from "../generated/prisma/client";
 import { AppError } from "../types/api";
 import { buildSkip } from '../utils/pagination';
 
@@ -21,6 +21,14 @@ interface UpdateDoctorDto {
     departmentId?: number | null;
 }
 
+export interface CreateTimeSlotInput {
+    dayOfWeek: DayOfWeek;
+    date: Date | string;
+    startTime: Date | string;
+    endTime: Date | string;
+    isBlocked?: boolean;
+}
+
 const DEFAULT_LIMIT = 24;
 
 export async function findAll(query: {
@@ -33,7 +41,7 @@ export async function findAll(query: {
 ) {
     const { role, search, status } = query;
     const page = Number(query.page) || 1;
-    const limit = Number(query.limit)|| 10;
+    const limit = Number(query.limit) || 10;
     const userWhere: Prisma.UserWhereInput = {};
     if (role) {
         userWhere.role = 'doctor'; // hoặc ép kiểu chuẩn Enum của Prisma
@@ -228,4 +236,140 @@ export async function remove(targetId: number, requestId: number) {
     return {
         message: "Xóa người dùng thành công",
     };
+}
+
+
+export async function timeSlot(
+    doctorId: number,
+) {
+    // 1. Kiểm tra bác sĩ có tồn tại không & lấy giá dịch vụ khám từ Khoa
+    const doctor = await prisma.doctor.findUnique({
+        where: { id: doctorId },
+        select: {
+            id: true,
+            department: {
+                select: {
+                    medicals: {
+                        where: { isService: true },
+                        select: { price: true },
+                    },
+                },
+            },
+        },
+    });
+    if (!doctor) {
+        throw new AppError(404, "Bác sĩ không tồn tại");
+    }
+
+    // // 2. Xây dựng điều kiện lọc ca khám
+    const where: Prisma.timeSlotWhereInput = { doctorId };
+
+    // if (query?.date) {
+    //     where.date = new Date(query.date);
+    // }
+
+    // if (query?.isBlocked !== undefined) {
+    //     where.isBlocked = query.isBlocked === 'true' || query.isBlocked === true;
+    // }
+    // 3. Truy vấn danh sách ca khám
+    const slots = await prisma.timeSlot.findMany({
+        where,
+        orderBy: [
+            { date: 'asc' },
+            { startTime: 'asc' },
+        ],
+    });
+
+    // 4. Trả về ca khám đính kèm giá (price)
+    return slots;
+}
+
+/**
+ * Tạo 1 hoặc nhiều ca khám (TimeSlot) cho bác sĩ
+ */
+export async function createTimeSlots(
+    doctorId: number,
+    payload: CreateTimeSlotInput | CreateTimeSlotInput[]
+) {
+    const doctor = await prisma.doctor.findUnique({
+        where: { id: doctorId },
+    });
+
+    if (!doctor) {
+        throw new AppError(404, "Bác sĩ không tồn tại");
+    }
+
+    // Chuyển về dạng mảng để xử lý linh hoạt (dù client gửi 1 object hay mảng object)
+    const slots = Array.isArray(payload) ? payload : [payload];
+    const createdSlots = [];
+
+    for (const slot of slots) {
+        const startTime = new Date(slot.startTime);
+        const endTime = new Date(slot.endTime);
+
+        if (startTime >= endTime) {
+            throw new AppError(400, "Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc");
+        }
+
+        // Kiểm tra ca khám bị trùng lặp
+        const overlappingSlot = await prisma.timeSlot.findFirst({
+            where: {
+                doctorId,
+                date: new Date(slot.date),
+                OR: [
+                    {
+                        startTime: { lte: startTime },
+                        endTime: { gt: startTime },
+                    },
+                    {
+                        startTime: { lt: endTime },
+                        endTime: { gte: endTime },
+                    },
+                ],
+            },
+        });
+
+        if (overlappingSlot) {
+            throw new AppError(409, `Ca khám (${slot.startTime} - ${slot.endTime}) bị trùng thời gian`);
+        }
+
+        const newSlot = await prisma.timeSlot.create({
+            data: {
+                doctorId,
+                dayOfWeek: slot.dayOfWeek,
+                date: new Date(slot.date),
+                startTime,
+                endTime,
+                isBlocked: slot.isBlocked ?? false,
+            },
+        });
+
+        createdSlots.push(newSlot);
+    }
+
+    return createdSlots;
+}
+
+/**
+ * Cập nhật trạng thái khóa/mở (isBlocked) của ca khám
+ */
+export async function updateTimeSlotStatus(slotId: number, isBlocked: boolean) {
+    const existingSlot = await prisma.timeSlot.findUnique({
+        where: { id: slotId },
+    });
+
+    if (!existingSlot) {
+        throw new AppError(404, "Ca khám không tồn tại");
+    }
+
+    if (isBlocked === undefined) {
+        throw new AppError(400, "Vui lòng truyền trạng thái isBlocked");
+    }
+
+    return prisma.timeSlot.update({
+        where: { id: slotId },
+        data: {
+            isBlocked: Boolean(isBlocked),
+        },
+    });
 }

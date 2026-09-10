@@ -132,3 +132,10 @@ export const getAllDoctors = async (
     skip,
   };
 };
+
+export const getTimeSlotByDoctorId = async(doctorId: number) => {
+  // console.log("getTimeSlotByDoctorId", doctorId);
+  const response = await axiosClient.get(`/api/v1/doctor/${doctorId}/timeSlot`);
+  // console.log(response.data?.data);
+  return response.data?.data;
+}

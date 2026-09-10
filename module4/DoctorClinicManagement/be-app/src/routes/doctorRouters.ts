@@ -17,15 +17,16 @@ const doctorRouters = Router();
 doctorRouters.get('/', validateQuery(userQuerySchema), controller.getDoctors);
 // GET /user:id
 doctorRouters.get('/:id', validatedId, controller.getDoctorById);
+doctorRouters.get('/:id/timeSlot', controller.getTimeSlotsByDoctor);
 
 doctorRouters.use(authenticate, authorize('doctor'));
 //timeSlot
 // GET timeSlot
-doctorRouters.get('/:id/timeslots', validatedId, reviewController.getReviews);
+
 // post timeSlot
-doctorRouters.post('/:id/timeslots', validatedId, timeslotController.createTimeSlots);
+doctorRouters.post('/:id/timeslots', validatedId, controller.createTimeSlots);
 // patch timeSlot
-doctorRouters.patch('/:id/', validatedId, timeslotController.updateStatus);
+doctorRouters.patch('/:id/', validatedId, controller.updateTimeSlotStatus);
 
 //review
 //GET 
@@ -37,5 +38,7 @@ doctorRouters.get('/:id/reviews', validatedId, appointmentController.getMyAppoin
 // doctorRouters.get('/:id/reviews', validatedId, appointmentController.getReviews);
 //patch
 doctorRouters.patch('/:id/appointments/:id/status', validatedId, appointmentController.updateAppointmentStatus);
+
+
 
 export default doctorRouters;

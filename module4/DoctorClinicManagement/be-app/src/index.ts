@@ -30,6 +30,7 @@ app.use('/api/v1/department', departmentRouters);
 app.use('/api/v1/doctor', doctorRouters);
 app.use('/api/v1/appointments', appointmentRouters);
 
+
 // Error handling
 app.use(notFoundHandler);
 app.use(errorHandler);

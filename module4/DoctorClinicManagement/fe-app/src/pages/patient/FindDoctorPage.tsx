@@ -8,7 +8,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import type { WorkShift } from "../../types/appointment";
 import type DoctorInfo from "../doctor/DoctorInfo";
-import { getAllDoctors } from "../../services/doctorService";
+import { getAllDoctors, getTimeSlotByDoctorId } from "../../services/doctorService";
 import { getDepartments } from "../../services/departmentService";
 import EmptyState from "../../components/common/EmptyState";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
@@ -27,6 +27,7 @@ const FindDoctorPage = () => {
     const [selectedShift, setSelectedShift] = useState<WorkShift | null>(null);
 
     const [loading, setLoading] = useState(true);
+    const [loadingTimeSlot, setLoadingTimeSlot] = useState(true);
     const [error, setError] = useState("");
 
     // --- REACT HOOK FORM ---
@@ -61,8 +62,8 @@ const FindDoctorPage = () => {
                 // ]);
                 const doctorRes = await getAllDoctors();
                 const departmentsRes = await getDepartments();
-                console.log(doctorRes)
-                console.log(departmentsRes)
+                // console.log(doctorRes)
+                // console.log(departmentsRes)
                 setDepartments(departmentsRes);
 
                 setDoctors(doctorRes.doctors);
@@ -70,7 +71,7 @@ const FindDoctorPage = () => {
                 if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
                     return;
                 }
-                setError("Cannot load products right now. Please try again.");
+                setError("Cannot load doctor and department right now. Please try again.");
             } finally {
                 setLoading(false);
             }
@@ -136,7 +137,6 @@ const FindDoctorPage = () => {
     //     if (doctors !== null) {
     //         return doctors.filter((doc) => doc.departmentId === selectedDeptId);
     //     }
-
     // }, [doctors, selectedDeptId]);
     // Lọc danh sách bác sĩ thuộc Chuyên khoa đang chọn
     const filteredDoctors = useMemo(() => {
@@ -146,6 +146,37 @@ const FindDoctorPage = () => {
         }
     }, [doctors, selectedDeptId]);
 
+    useEffect(() => {
+        // 1. Khởi tạo AbortController
+        const controller = new AbortController();
+
+        const fetchDataTimeSlot = async () => {
+            try {
+                // 🛑 Chỉ gọi API khi đã chọn bác sĩ hợp lệ
+                if (!currentDoctor?.id) return;
+                setLoadingTimeSlot(true);
+                setError("");
+                // if (currentDoctor !== undefined) {
+                const timeSlotByDoctorId = await getTimeSlotByDoctorId(currentDoctor.id);
+                console.log(timeSlotByDoctorId);
+                // }
+            } catch (err: any) {
+                if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
+                    return;
+                }
+                setError("Cannot load timeSlotByDoctorId right now. Please try again.");
+            } finally {
+                setLoadingTimeSlot(false);
+            }
+        };
+
+        fetchDataTimeSlot();
+
+        // 4. Cleanup: Hủy request khi component unmount
+        return () => {
+            controller.abort();
+        };
+    }, [currentDoctor]);
 
     // Helper kiểm tra ngày trong quá khứ
     const isPastDate = (dateString: string) => {

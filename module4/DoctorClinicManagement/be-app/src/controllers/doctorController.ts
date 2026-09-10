@@ -85,3 +85,51 @@ export async function createDoctor(req: Request, res: Response, next: NextFuncti
         next(error);
     }
 }
+
+export async function getTimeSlotsByDoctor(req: Request, res: Response, next: NextFunction) {
+    try {
+        const doctorId = Number(req.params.id);
+        // console.log("getTimeSlotsByDoctor ",doctorId )
+        const data = await svc.timeSlot(doctorId);
+        // console.log("getTimeSlotsByDoctor data ", data)
+        return res.status(200).json({
+            success: true,
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function createTimeSlots(req: Request, res: Response, next: NextFunction) {
+    try {
+        const doctorId = Number(req.params.id);
+        const data = await svc.createTimeSlots(doctorId, req.body);
+
+        return res.status(201).json({
+            success: true,
+            message: "Tạo lịch khám thành công",
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function updateTimeSlotStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+        // Lấy slotId từ params (:id hoặc :slotId)
+        const slotId = Number(req.params.slotId || req.params.id);
+        const { isBlocked } = req.body;
+
+        const data = await svc.updateTimeSlotStatus(slotId, isBlocked);
+
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật trạng thái ca khám thành công",
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
