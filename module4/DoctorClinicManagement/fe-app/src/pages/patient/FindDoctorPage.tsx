@@ -5,8 +5,8 @@ import {
     Container, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Card, CardContent, Avatar,
     Chip, Button, Box, Divider, Paper, Alert, CircularProgress, Skeleton
 } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
-import type { WorkShift } from "../../types/appointment";
+import { useForm, Controller, set } from "react-hook-form";
+import type { TimeSlot, WorkShift } from "../../types/appointment";
 import type DoctorInfo from "../doctor/DoctorInfo";
 import { getAllDoctors, getTimeSlotByDoctorId } from "../../services/doctorService";
 import { getDepartments } from "../../services/departmentService";
@@ -14,6 +14,7 @@ import EmptyState from "../../components/common/EmptyState";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import DoctorScheduleCalendar from "../doctor/DoctorScheduleCalendar";
 
 interface FormValues {
     departmentId: number | "";
@@ -25,7 +26,7 @@ const FindDoctorPage = () => {
     const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
     const [departments, setDepartments] = useState<Department[] | null>(null);
     const [selectedShift, setSelectedShift] = useState<WorkShift | null>(null);
-
+    const [doctorTimeSlots, setDoctorTimeSlots] = useState<TimeSlot[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingTimeSlot, setLoadingTimeSlot] = useState(true);
     const [error, setError] = useState("");
@@ -102,13 +103,13 @@ const FindDoctorPage = () => {
         // const numericDeptId = deptId !== "" ? Number(deptId) : null;
         // 3. Nếu chọn khoa khác mà bác sĩ đang chọn không thuộc khoa này -> reset chọn bác sĩ
         // if (currentDoctor && currentDoctor.departmentId !== numericDeptId) {
-        //     setValue("doctorId", "");
-        //     setSelectedShift(null);
+            // setValue("doctorId", "");
+            // setSelectedShift(null);
         // }
         // Luôn reset Bác sĩ & Ca khám khi đổi Chuyên khoa
         // Giúp người dùng bắt buộc chọn lại Bác sĩ phù hợp với Khoa mới
         setValue("doctorId", "");
-        setSelectedShift(null);
+        // setSelectedShift(null);
     };
 
     const handleDoctorChange = (docId: number | string, onChange: (val: any) => void) => {
@@ -116,28 +117,21 @@ const FindDoctorPage = () => {
         setSelectedShift(null);
         // // 1. Tự động đồng bộ Chuyên khoa lên dropdown nếu chưa chọn
         // // 2. Nếu bỏ chọn Bác sĩ (chọn "-- Chọn bác sĩ --")
-        // if (docId === "" || docId === null) {
-        //     return;
-        // }
+        if (docId === "" || docId === null) {
+            return;
+        }
         // // 3. Tự động đồng bộ Chuyên khoa lên Select Department tương ứng với Bác sĩ được chọn
-        // const numericDocId = Number(docId);
-        // const targetDoc = doctors?.find((d) => d.id === numericDocId);
+        const numericDocId = Number(docId);
+        const targetDoc = doctors?.find((d) => d.id === numericDocId);
 
-        // if (targetDoc) {
-        //     // Nếu Chuyên khoa hiện tại trên Form khác với Chuyên khoa của Bác sĩ này -> Tự động update
-        //     if (Number(selectedDeptId) !== targetDoc.departmentId) {
-        //         setValue("departmentId", targetDoc.departmentId);
-        //     }
-        // }
+        if (targetDoc) {
+            // Nếu Chuyên khoa hiện tại trên Form khác với Chuyên khoa của Bác sĩ này -> Tự động update
+            if (Number(selectedDeptId) !== targetDoc.departmentId) {
+                setValue("departmentId", targetDoc.departmentId);
+            }
+        }
     };
 
-    // Lọc danh sách bác sĩ dựa trên chuyên khoa đang chọn
-    // const filteredDoctors = useMemo(() => {
-    //     if (!selectedDeptId) return doctors;
-    //     if (doctors !== null) {
-    //         return doctors.filter((doc) => doc.departmentId === selectedDeptId);
-    //     }
-    // }, [doctors, selectedDeptId]);
     // Lọc danh sách bác sĩ thuộc Chuyên khoa đang chọn
     const filteredDoctors = useMemo(() => {
         if (!selectedDeptId) return [];
@@ -157,13 +151,10 @@ const FindDoctorPage = () => {
                 setLoadingTimeSlot(true);
                 setError("");
                 // if (currentDoctor !== undefined) {
-                const timeSlotByDoctorId = await getTimeSlotByDoctorId(currentDoctor.id);
-                console.log(timeSlotByDoctorId);
+                const res = await getTimeSlotByDoctorId(currentDoctor.id);
                 // }
+                setDoctorTimeSlots(res || []);
             } catch (err: any) {
-                if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
-                    return;
-                }
                 setError("Cannot load timeSlotByDoctorId right now. Please try again.");
             } finally {
                 setLoadingTimeSlot(false);
@@ -187,7 +178,9 @@ const FindDoctorPage = () => {
     };
 
     const handleBooking = () => {
+        console.log("selectedShift", selectedShift);
         if (!selectedShift || !currentDoctor) return;
+
         alert(
             `Đã chọn đặt lịch thành công!\n- Bác sĩ: ${currentDoctor.name}\n- Ngày: ${selectedShift.date}\n- Ca: ${selectedShift.session === "MORNING" ? "Sáng" : "Chiều"
             } (${selectedShift.timeRange})`
@@ -381,6 +374,16 @@ const FindDoctorPage = () => {
                                     </Grid>
                                 )} */}
 
+
+                                <Box>
+                                    <DoctorScheduleCalendar
+                                        timeSlots={doctorTimeSlots}
+                                        onSelectSlot={(selectedShift) => {
+                                            console.log("Suất khám đã chọn:", selectedShift);
+                                            setSelectedShift(selectedShift)
+                                        }} />
+                                </Box>
+
                                 {/* Nút đặt lịch */}
                                 <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
                                     <Button
@@ -393,6 +396,7 @@ const FindDoctorPage = () => {
                                         {selectedShift ? `Đặt Lịch Khám (${selectedShift.date})` : "Vui lòng chọn suất khám"}
                                     </Button>
                                 </Box>
+
                             </CardContent>
                         </Card>
                     ) : (
@@ -402,6 +406,7 @@ const FindDoctorPage = () => {
                             </Typography>
                         </Paper>
                     )}
+
                 </Grid>
             </Grid>
         </Container >
