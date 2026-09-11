@@ -15,6 +15,7 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DoctorScheduleCalendar from "../doctor/DoctorScheduleCalendar";
+import { createAppointment } from "../../services/appointmentService";
 
 interface FormValues {
     departmentId: number | "";
@@ -30,6 +31,7 @@ const FindDoctorPage = () => {
     const [loading, setLoading] = useState(true);
     const [loadingTimeSlot, setLoadingTimeSlot] = useState(true);
     const [error, setError] = useState("");
+    const [isBooking, setIsBooking] = useState(false);
 
     // --- REACT HOOK FORM ---
     const { control, watch, setValue } = useForm<FormValues>({
@@ -103,8 +105,8 @@ const FindDoctorPage = () => {
         // const numericDeptId = deptId !== "" ? Number(deptId) : null;
         // 3. Nếu chọn khoa khác mà bác sĩ đang chọn không thuộc khoa này -> reset chọn bác sĩ
         // if (currentDoctor && currentDoctor.departmentId !== numericDeptId) {
-            // setValue("doctorId", "");
-            // setSelectedShift(null);
+        // setValue("doctorId", "");
+        // setSelectedShift(null);
         // }
         // Luôn reset Bác sĩ & Ca khám khi đổi Chuyên khoa
         // Giúp người dùng bắt buộc chọn lại Bác sĩ phù hợp với Khoa mới
@@ -177,10 +179,23 @@ const FindDoctorPage = () => {
         return targetDate < today;
     };
 
-    const handleBooking = () => {
+    const handleBooking = async () => {
         console.log("selectedShift", selectedShift);
         if (!selectedShift || !currentDoctor) return;
-
+        try {
+            setIsBooking(true);
+            await createAppointment({
+                doctorId: currentDoctor.id,
+                timeSlotId: selectedShift.id,
+                date: selectedShift.date,
+            });
+            // setSuccessMsg("Đặt lịch thành công!");
+            setSelectedShift(null); // Reset lại lựa chọn
+        } catch (err) {
+            setError("Đặt lịch thất bại.");
+        } finally {
+            setIsBooking(false);
+        }
         alert(
             `Đã chọn đặt lịch thành công!\n- Bác sĩ: ${currentDoctor.name}\n- Ngày: ${selectedShift.date}\n- Ca: ${selectedShift.session === "MORNING" ? "Sáng" : "Chiều"
             } (${selectedShift.timeRange})`

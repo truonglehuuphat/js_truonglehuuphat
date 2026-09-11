@@ -10,3 +10,8 @@ export interface GetDoctorsResponse {
 export const getAllDoctors = async ():Promise<GetDoctorsResponse>  => {
 
 }
+
+export const createAppointment = async (doctorId: number, timeSlotId : number, date: date) => {
+
+
+}
