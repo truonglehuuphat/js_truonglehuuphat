@@ -41,7 +41,7 @@ const PatientPage = () => {
     return (
         <>
             <ProfileCard userInfo={userInfo} />
-            <FindDoctorPage />
+            <FindDoctorPage userInfo={userInfo}/>
         </>
     )
 }

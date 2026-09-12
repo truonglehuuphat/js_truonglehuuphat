@@ -15,7 +15,8 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DoctorScheduleCalendar from "../doctor/DoctorScheduleCalendar";
-import { createAppointment } from "../../services/appointmentService";
+import { createAppointment, type createTimeSlotDto } from "../../services/appointmentService";
+import type { UserInfo } from "../../types/user";
 
 interface FormValues {
     departmentId: number | "";
@@ -23,12 +24,13 @@ interface FormValues {
 }
 
 
-const FindDoctorPage = () => {
+const FindDoctorPage = (userInfo: UserInfo) => {
     const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
     const [departments, setDepartments] = useState<Department[] | null>(null);
-    const [selectedShift, setSelectedShift] = useState<WorkShift | null>(null);
+    const [selectedShift, setSelectedShift] = useState<TimeSlot | null>(null);
     const [doctorTimeSlots, setDoctorTimeSlots] = useState<TimeSlot[]>([]);
     const [loading, setLoading] = useState(true);
+    const [successMsg, setSuccessMsg] = useState("");
     const [loadingTimeSlot, setLoadingTimeSlot] = useState(true);
     const [error, setError] = useState("");
     const [isBooking, setIsBooking] = useState(false);
@@ -54,19 +56,9 @@ const FindDoctorPage = () => {
                 setLoading(true);
                 setError("");
 
-                // // 2. Gọi đồng thời các API bằng Promise.all
-                // const [departmentsRes, doctorsRes] = await Promise.all([
-                //     axios.get<Department[]>(`${API_BASE_URL}/departments`, {
-                //         signal: controller.signal
-                //     }),
-                //     axios.get<DoctorInfo[]>(`${API_BASE_URL}/doctors`, {
-                //         signal: controller.signal
-                //     })
-                // ]);
                 const doctorRes = await getAllDoctors();
                 const departmentsRes = await getDepartments();
-                // console.log(doctorRes)
-                // console.log(departmentsRes)
+
                 setDepartments(departmentsRes);
 
                 setDoctors(doctorRes.doctors);
@@ -81,8 +73,6 @@ const FindDoctorPage = () => {
         };
 
         fetchData();
-
-        // 4. Cleanup: Hủy request khi component unmount
         return () => {
             controller.abort();
         };
@@ -101,33 +91,19 @@ const FindDoctorPage = () => {
     // --- HANDLERS ---
     const handleDepartmentChange = (deptId: number | string, onChange: (val: any) => void) => {
         onChange(deptId);
-        // 2. Chuyển sang kiểu number để so sánh với Prisma Schema (tránh lỗi "1" !== 1)
-        // const numericDeptId = deptId !== "" ? Number(deptId) : null;
-        // 3. Nếu chọn khoa khác mà bác sĩ đang chọn không thuộc khoa này -> reset chọn bác sĩ
-        // if (currentDoctor && currentDoctor.departmentId !== numericDeptId) {
-        // setValue("doctorId", "");
-        // setSelectedShift(null);
-        // }
-        // Luôn reset Bác sĩ & Ca khám khi đổi Chuyên khoa
-        // Giúp người dùng bắt buộc chọn lại Bác sĩ phù hợp với Khoa mới
         setValue("doctorId", "");
-        // setSelectedShift(null);
     };
 
     const handleDoctorChange = (docId: number | string, onChange: (val: any) => void) => {
         onChange(docId);
         setSelectedShift(null);
-        // // 1. Tự động đồng bộ Chuyên khoa lên dropdown nếu chưa chọn
-        // // 2. Nếu bỏ chọn Bác sĩ (chọn "-- Chọn bác sĩ --")
         if (docId === "" || docId === null) {
             return;
         }
-        // // 3. Tự động đồng bộ Chuyên khoa lên Select Department tương ứng với Bác sĩ được chọn
         const numericDocId = Number(docId);
         const targetDoc = doctors?.find((d) => d.id === numericDocId);
 
         if (targetDoc) {
-            // Nếu Chuyên khoa hiện tại trên Form khác với Chuyên khoa của Bác sĩ này -> Tự động update
             if (Number(selectedDeptId) !== targetDoc.departmentId) {
                 setValue("departmentId", targetDoc.departmentId);
             }
@@ -183,21 +159,35 @@ const FindDoctorPage = () => {
         console.log("selectedShift", selectedShift);
         if (!selectedShift || !currentDoctor) return;
         try {
-            setIsBooking(true);
-            await createAppointment({
-                doctorId: currentDoctor.id,
-                timeSlotId: selectedShift.id,
-                date: selectedShift.date,
-            });
-            // setSuccessMsg("Đặt lịch thành công!");
-            setSelectedShift(null); // Reset lại lựa chọn
+            if (userInfo.user.id !== currentDoctor.id) {
+                setIsBooking(true);
+                console.log("selectedShift ", selectedShift);
+                const data: createTimeSlotDto = {
+                    userId:  userInfo.user.id,
+                    doctorId:  selectedShift.doctorId,
+                    dayOfWeek:  selectedShift.dayOfWeek,
+                    date:  selectedShift.date,
+                    startTime:  selectedShift.startTime,
+                    endTime:  selectedShift.endTime,
+                }
+                await createAppointment(data);
+                setSuccessMsg("Đặt lịch thành công!");
+                setSelectedShift(null); // Reset lại lựa chọn
+            } else {
+                setIsBooking(false);
+                setError("Đặt lịch thất bại, Bác sĩ không thể đặt lịch chính mình");
+            }
         } catch (err) {
             setError("Đặt lịch thất bại.");
         } finally {
             setIsBooking(false);
         }
+
         alert(
-            `Đã chọn đặt lịch thành công!\n- Bác sĩ: ${currentDoctor.name}\n- Ngày: ${selectedShift.date}\n- Ca: ${selectedShift.session === "MORNING" ? "Sáng" : "Chiều"
+            `Đã chọn đặt lịch thành công!\n
+            - Bác sĩ: ${currentDoctor.name}\n
+            - Ngày: ${selectedShift.date}\n
+            - Ca: ${selectedShift.session === "MORNING" ? "Sáng" : "Chiều"
             } (${selectedShift.timeRange})`
         );
     };
@@ -207,7 +197,6 @@ const FindDoctorPage = () => {
             <EmptyState />
         );
     }
-
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>

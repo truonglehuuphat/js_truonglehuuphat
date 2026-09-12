@@ -12,11 +12,10 @@ const appointmentRouter = Router();
 //mọi route /users đều yêu cầu đăng nhập
 appointmentRouter.use(authenticate);
 
-// appointmentRouter.post(
-//     "/",
-//     authorize('patient','admin'),
-//     controller.createAppointment
-// );
+appointmentRouter.post(
+    "/",
+    controller.book
+);
 
 // appointmentRouter.get(
 //     "/me",

@@ -39,6 +39,4 @@ doctorRouters.get('/:id/reviews', validatedId, appointmentController.getMyAppoin
 //patch
 doctorRouters.patch('/:id/appointments/:id/status', validatedId, appointmentController.updateAppointmentStatus);
 
-
-
 export default doctorRouters;

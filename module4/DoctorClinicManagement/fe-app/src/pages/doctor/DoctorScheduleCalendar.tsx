@@ -4,8 +4,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers';
-import type {PickerDayProps}  from '@mui/x-date-pickers';
-import { Badge, Tooltip, Box, Typography, Chip, Paper, Stack } from '@mui/material';
+import type { PickerDayProps } from '@mui/x-date-pickers';
+import { Badge, Tooltip, Box, Typography, Chip, Paper, Stack, FormControl, InputLabel, Select, MenuItem, InputBase, styled, ButtonGroup, Button } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import { TimeSlotPicker } from '../patient/TimeSlotPickerPage';
 
 export interface TimeSlot {
     id: number;
@@ -17,13 +19,45 @@ export interface TimeSlot {
     isBlocked: boolean;
     createdAt?: string;
     updatedAt?: string;
+    timeRange: string;
 }
 
 interface DoctorScheduleCalendarProps {
     timeSlots: TimeSlot[];
     onSelectSlot?: (slot: TimeSlot) => void;
 }
-
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+    'label + &': {
+        marginTop: theme.spacing(3),
+    },
+    '& .MuiInputBase-input': {
+        borderRadius: 4,
+        position: 'relative',
+        backgroundColor: (theme.vars ?? theme).palette.background.paper,
+        border: '1px solid #ced4da',
+        fontSize: 16,
+        padding: '10px 26px 10px 12px',
+        transition: theme.transitions.create(['border-color', 'box-shadow']),
+        // Use the system font instead of the default Roboto font.
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
+        '&:focus': {
+            borderRadius: 4,
+            borderColor: '#80bdff',
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        },
+    },
+}));
 // Format giờ dạng HH:mm từ chuỗi ISO
 const formatTime = (isoString: string) => {
     return dayjs(isoString).format('HH:mm');
@@ -101,7 +135,7 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
     // Lấy danh sách các suất khám trong ngày đang được click chọn
     const currentSelectedDateKey = selectedDate ? selectedDate.format('YYYY-MM-DD') : '';
     const activeSlots = slotsByDate.get(currentSelectedDateKey) || [];
-
+    console.log("activeSlots ", activeSlots);
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Paper elevation={2} sx={{ p: 2, borderRadius: 3 }}>
@@ -131,8 +165,8 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                             Bác sĩ không có lịch làm việc trong ngày này.
                         </Typography>
                     ) : (
-                        <Stack spacing={1} sx={{direction:"row", flexWrap:"wrap" }}  useFlexGap>
-                            {activeSlots.map((slot) => {
+                        <Stack spacing={1} sx={{ direction: "row", flexWrap: "wrap" }} useFlexGap>
+                            {/* {activeSlots.map((slot) => {
                                 const isSelected = selectedSlot?.id === slot.id;
                                 return (
                                     <Chip
@@ -147,7 +181,8 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                                         sx={{ cursor: 'pointer', my: 0.5 }}
                                     />
                                 );
-                            })}
+                            })} */}
+                            <TimeSlotPicker />
                         </Stack>
                     )}
                 </Box>
