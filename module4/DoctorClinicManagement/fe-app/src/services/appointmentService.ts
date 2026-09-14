@@ -1,5 +1,5 @@
 import axiosClient from "../api/axiosClient";
-import type { TimeSlot } from "../types/appointment";
+import type { TimeSlot, TimeType } from "../types/appointment";
 
 enum DayOfWeek {
   monday = "monday",
@@ -11,11 +11,14 @@ enum DayOfWeek {
   sunda = "sunday"
 }
 
+
+
 export interface createTimeSlotDto {
   userId: number;
   doctorId: number;
   dayOfWeek: DayOfWeek.monday;
   date: string;       // ISO string or YYYY-MM-DD
+  timeType: TimeType;
   startTime: string;  // ISO string hoặc HH:mm
   endTime: string;    // ISO string hoặc HH:mm
 }

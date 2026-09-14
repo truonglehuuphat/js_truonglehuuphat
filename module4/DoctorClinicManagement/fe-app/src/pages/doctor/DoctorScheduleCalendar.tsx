@@ -66,7 +66,7 @@ const formatTime = (isoString: string) => {
 export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: DoctorScheduleCalendarProps) {
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
     const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
-
+    const [selectedTime, setSelectedTime] = useState<string>('');
     // 1. Gom nhóm danh sách timeSlot khả dụng (isBlocked === false) theo ngày dạng "YYYY-MM-DD"
     const slotsByDate = useMemo(() => {
         const map = new Map<string, TimeSlot[]>();
@@ -135,7 +135,19 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
     // Lấy danh sách các suất khám trong ngày đang được click chọn
     const currentSelectedDateKey = selectedDate ? selectedDate.format('YYYY-MM-DD') : '';
     const activeSlots = slotsByDate.get(currentSelectedDateKey) || [];
+    const timeSlotsDoctor = activeSlots.map((m) => {
+        const date = new Date(m.startTime);
+        const hours = date.getUTCHours().toString().padStart(2, '0');
+        const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    })
     console.log("activeSlots ", activeSlots);
+    console.log("timeSlotsDoctor ", timeSlotsDoctor);
+
+    const handleTimeSelect = (time: string) => {
+        setSelectedTime(time);
+        console.log('Khung giờ được chọn:', time);
+    };
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Paper elevation={2} sx={{ p: 2, borderRadius: 3 }}>
@@ -182,7 +194,17 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                                     />
                                 );
                             })} */}
-                            <TimeSlotPicker />
+                            <TimeSlotPicker bookedTimeSlots={timeSlotsDoctor} // Truyền vào bookedTimeSlots
+                                onSelectTimeSlot={(handleTimeSelect)}
+                            // onSelectTimeSlot={(time) => {
+                            //     {
+                            //         activeSlots.map((slot) => {
+                            //             const isSelected = selectedSlot?.id === slot.id;
+                            //         })
+                            //     }
+                            // } // Truyền vào onSelectTimeSlot
+                            // value="08:00" // Truyền vào value
+                            />
                         </Stack>
                     )}
                 </Box>

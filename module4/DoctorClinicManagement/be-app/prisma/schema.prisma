@@ -26,30 +26,14 @@ model User {
   bills        Bill[]
   doctors      Doctor?
 
-  @@map("User")
-}
-
-model Appointment {
-  id          Int               @id @default(autoincrement())
-  userId      Int?              @map("user_Id")
-  doctorId    Int?              @map("doctor_id")
-  date        DateTime          @default(now()) @map("date")
-  timeType    TimeType          @map("Time_Type")
-  status      StatusAppointment @map("status")
-  description String            @db.VarChar(500)
-  createdAt   DateTime          @default(now()) @map("created_at")
-  updatedAt   DateTime          @default(now()) @updatedAt @map("updated_at")
-  doctor      Doctor?           @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-  user        User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("Appointment")
+  @@map("user")
 }
 
 model Doctor {
   id           Int           @id @default(autoincrement())
-  userId       Int?          @unique @map("user_id")
+  userId       Int           @unique @map("user_id")
   status       StatusDoctor  @default(active)
-  departmentId Int?          @map("department_id")
+  departmentId Int           @map("department_id")
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
   appointments Appointment[]
@@ -61,24 +45,9 @@ model Doctor {
   bills        Bill[]
   department   Department?   @relation(fields: [departmentId], references: [id])
   user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  timeSlots    timeSlot[]
+  timeSlots    TimeSlot[]
 
   @@map("doctor")
-}
-
-model timeSlot {
-  id        Int       @id @default(autoincrement())
-  doctorId  Int?      @map("doctor_id")
-  dayOfWeek DayOfWeek @default(monday)
-  date      DateTime  @db.Date
-  startTime DateTime  @map("start_time")
-  endTime   DateTime  @map("end_timetime")
-  isBlocked Boolean   @default(false)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
-  doctor    Doctor?   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-
-  @@map("time_slots")
 }
 
 model Department {
@@ -89,15 +58,15 @@ model Department {
   doctors   Doctor[]
   medicals  Medical[]
 
-  @@map("Department")
+  @@map("department")
 }
 
 model History {
   id          Int      @id @default(autoincrement())
   description String   @db.VarChar(500)
   date        DateTime @default(now())
-  doctorId    Int?     @map("doctor_id")
-  patientId   Int?     @map("patient_id")
+  doctorId    Int      @map("doctor_id")
+  patientId   Int      @map("patient_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
   doctor      Doctor?  @relation(fields: [doctorId], references: [id])
@@ -107,10 +76,44 @@ model History {
   @@map("History")
 }
 
+model TimeSlot {
+  id           Int           @id @default(autoincrement())
+  doctorId     Int           @map("doctor_id")
+  dayOfWeek    DayOfWeek     @default(monday)
+  date         DateTime      @db.Date
+  startTime    DateTime      @map("start_time")
+  endTime      DateTime      @map("end_timetime")
+  isBlocked    Boolean       @default(false)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
+  doctor       Doctor?       @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@map("time_slots")
+}
+
+model Appointment {
+  id          Int               @id @default(autoincrement())
+  userId      Int               @map("user_Id")
+  doctorId    Int               @map("doctor_id")
+  timeSlotId  Int               @map("time_slot_id")
+  date        DateTime          @default(now()) @map("date")
+  timeType    TimeType          @map("Time_Type")
+  status      StatusAppointment  @map("status")
+  description String?           @default("") @db.VarChar(500)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @default(now()) @updatedAt @map("updated_at")
+  doctor      Doctor?           @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  user        User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeSlot    TimeSlot?         @relation(fields: [timeSlotId], references: [id], onDelete: Cascade)
+
+  @@map("appointment")
+}
+
 model Medical {
   id           Int         @id @default(autoincrement())
   name         String      @db.VarChar(100)
-  departmentId Int?        @map("department_id")
+  departmentId Int         @map("department_id")
   price        Float
   quantity     Int         @default(0)
   isService    Boolean     @default(false)
@@ -123,9 +126,9 @@ model Medical {
 
 model Bill {
   id        Int        @id @default(autoincrement())
-  doctorId  Int?       @map("doctor_id")
-  patientId Int?       @map("patient_id")
-  historyId Int?       @unique @map("history_id")
+  doctorId  Int        @map("doctor_id")
+  patientId Int        @map("patient_id")
+  historyId Int        @unique @map("history_id")
   totalCost Float      @default(0)
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")

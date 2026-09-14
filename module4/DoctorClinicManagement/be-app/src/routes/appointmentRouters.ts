@@ -14,7 +14,7 @@ appointmentRouter.use(authenticate);
 
 appointmentRouter.post(
     "/",
-    controller.book
+    controller.create
 );
 
 // appointmentRouter.get(

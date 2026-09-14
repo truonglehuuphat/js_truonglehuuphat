@@ -1,16 +1,14 @@
 
-
-
-export enum TimeType {
-  morning,
-  afternoon,
-  evening,
-}
-
 export enum Status {
   Pending,    // 0
   Confirmed,  // 1
   Cancelled   // 2
+}
+
+export enum  TimeType {
+  morning = 'morning',
+  afternoon = 'afternoon',
+  evening = 'evening'
 }
 
 export interface AppointmentInfo {
@@ -55,4 +53,5 @@ export interface TimeSlot {
   isBlocked: boolean;
   session: "MORNING" | "AFTERNOON" | "EVENING";
   timeRange: string;
+  timeType: TimeType;
 }

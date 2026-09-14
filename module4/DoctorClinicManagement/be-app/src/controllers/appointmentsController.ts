@@ -41,9 +41,9 @@ export async function cancelAppointment(req: Request, res: Response, next: NextF
     }
 }
 
-export async function book(req: Request, res: Response, next: NextFunction) {
+export async function create(req: Request, res: Response, next: NextFunction) {
     try {
-        appointmentSvc.createAppointment(req.body);
+        appointmentSvc.create(req.body);
     } catch (error) {
         next(error);
     }

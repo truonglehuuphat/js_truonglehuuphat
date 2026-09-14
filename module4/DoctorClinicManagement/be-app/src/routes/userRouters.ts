@@ -18,7 +18,7 @@ userRouters.get("/doctors/:id", doctorController.getDoctorById);
 userRouters.get("/doctors/:id/available-slots", doctorController.getAvailableTimeSlots);
 userRouters.get("/doctors", doctorController.getDoctors);
 
-userRouters.post("/appointments", appointmentController.book);
+userRouters.post("/appointments", appointmentController.create);
 userRouters.get("/appointments", appointmentController.getMyAppointments);
 userRouters.patch("/appointments/:id/cancel", appointmentController.cancelAppointment);
 userRouters.patch("/appointments/:id/reviews", appointmentController.createReview);

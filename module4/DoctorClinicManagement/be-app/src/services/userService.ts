@@ -57,6 +57,8 @@ export async function updateProfile(
     data: {
         name?: string;
         email: string;
+        phone: string;
+        birthDay: string;
     }
 ) {
     if (data.email) {

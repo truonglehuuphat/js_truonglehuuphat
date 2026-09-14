@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from "../src/generated/prisma/client";
-import { Gender, StatusDoctor, TimeType, StatusAppointment, Role } from "../src/generated/prisma/enums";
+import { Gender, StatusDoctor, TimeType, StatusAppointment, Role, DayOfWeek } from "../src/generated/prisma/enums";
 import { fakerVI as faker } from '@faker-js/faker'; // Sử dụng locale Tiếng Việt
 import bcrypt from 'bcrypt';
 
@@ -17,6 +17,16 @@ function randomDateBetween(start: Date, end: Date): Date {
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
+
+const DAYS_OF_WEEK: DayOfWeek[] = [
+  DayOfWeek.sunday,
+  DayOfWeek.monday,
+  DayOfWeek.tuesday,
+  DayOfWeek.wednesday,
+  DayOfWeek.thursday,
+  DayOfWeek.friday,
+  DayOfWeek.saturday,
+];
 
 async function main() {
   console.log('Bắt đầu dọn dẹp dữ liệu cũ...');
@@ -39,7 +49,7 @@ async function main() {
     "Khoa Nội", "Khoa Ngoại", "Khoa Nhi", "Khoa Sản", "Khoa Tim Mạch",
     "Khoa Thần Kinh", "Khoa Da Liễu", "Khoa Tai Mũi Họng", "Khoa Mắt", "Khoa Răng Hàm Mặt"
   ];
-  
+
   const departments = [];
   for (const name of departmentsData) {
     const dept = await prisma.department.create({ data: { name } });
@@ -65,170 +75,140 @@ async function main() {
   console.log("Đã tạo 3 admin.");
 
   // 3. Tạo 20 Bệnh nhân (Patients)
-  const patients = [];
-  for (let i = 1; i <= 20; i++) {
+  console.log('--- Tạo 40 Bệnh nhân (Patients) ---');
+  const patientUsers = [];
+  for (let i = 1; i <= 40; i++) {
+    const isMale = i % 2 !== 0;
     const patient = await prisma.user.create({
       data: {
         name: `Bệnh nhân ${i}`,
-        gender: i % 2 === 0 ? "female" : "male",
-        email: `patient${i}@clinic.com`,
-        phone: `09100000${i < 10 ? '0'+i : i}`,
+        gender: isMale ? Gender.male : Gender.female,
+        email: `benhnhan${i}@gmail.com`,
+        phone: `09123456${i < 10 ? '0' + i : i}`,
         password: hashedPassword,
-        datebirth: new Date("2000-05-15"),
-        role: "patient",
-        address: "Hà Nội",
-      }
+        datebirth: new Date(1990, (i % 12), (i % 28) + 1),
+        address: `Số ${i} Đường Lớn, TP. Hồ Chí Minh`,
+        role: Role.patient,
+      },
     });
-    patients.push(patient);
+    patientUsers.push(patient);
   }
-  console.log("Đã tạo 20 bệnh nhân.");
 
   // 4. Tạo 20 Bác sĩ (Users + Doctors)
-  const doctors = [];
+  console.log('--- Tạo 20 Bác sĩ (Doctors) ---');
+  const doctorRecords = [];
   for (let i = 1; i <= 20; i++) {
-    const doctorUser = await prisma.user.create({
+    const isMale = i % 2 !== 0;
+    const dept = departments[i % departments.length];
+
+    // 1. Tạo User tài khoản cho Bác sĩ
+    const userDoctor = await prisma.user.create({
       data: {
         name: `Bác sĩ ${i}`,
-        gender: i % 2 === 0 ? "female" : "male",
+        gender: isMale ? Gender.male : Gender.female,
         email: `doctor${i}@clinic.com`,
-        phone: `09200000${i < 10 ? '0'+i : i}`,
+        phone: `09876543${i < 10 ? '0' + i : i}`,
         password: hashedPassword,
-        datebirth: new Date("1985-08-20"),
-        role: "doctor",
-        address: "Đà Nẵng",
-      }
+        datebirth: new Date(1980, (i % 12), (i % 28) + 1),
+        address: `Khu tập thể Bệnh viện, TP. Hồ Chí Minh`,
+        role: Role.doctor,
+      },
     });
 
+    // 2. Tạo thông tin Doctor tương ứng
     const doctor = await prisma.doctor.create({
       data: {
-        userId: doctorUser.id,
-        departmentId: departments[i % 10].id, // Phân đều vào 10 khoa
-        description: `Chuyên gia y tế ${i} với nhiều năm kinh nghiệm`,
-        position: "Bác sĩ chuyên khoa",
-        title: i % 2 === 0 ? "Tiến sĩ" : "Thạc sĩ",
-        yearsExp: Math.floor(Math.random() * 15) + 3,
-        status: "active"
-      }
+        userId: userDoctor.id,
+        departmentId: dept.id,
+        status: StatusDoctor.active,
+        description: `Chuyên gia về ${dept.name} với kinh nghiệm điều trị chuyên sâu.`,
+        position: i % 2 === 0 ? 'Trưởng khoa' : 'Bác sĩ chuyên khoa',
+        title: i % 3 === 0 ? 'PGS.TS' : 'Thạc sĩ, Bác sĩ',
+        yearsExp: 5 + (i % 15),
+      },
     });
-    doctors.push(doctor);
+    doctorRecords.push(doctor);
   }
-  console.log("Đã tạo 20 bác sĩ.");
 
-  // 5. Tạo 20 Lịch khám đã hoàn thành (Done) + 20 History (thay cho Review)
-  for (let i = 0; i < 20; i++) {
-    const patient = patients[i];
-    const doctor = doctors[i % 20];
-
-    await prisma.appointment.create({
-      data: {
-        userId: patient.id,
-        doctorId: doctor.id,
-        date: new Date(new Date().setDate(new Date().getDate() - (i + 1))), // Các ngày trước đó
-        timeType: i % 2 === 0 ? "morning" : "afternoon",
-        status: "Done",
-        description: `Khám tổng quát lần ${i + 1}`,
-      }
-    });
-
-    // Tạo History tương ứng với lịch khám Done (giả lập Review/Kết quả khám)
-    await prisma.history.create({
-      data: {
-        description: `Bệnh nhân sức khỏe ổn định. Cần theo dõi thêm. (Đánh giá/Review ${i + 1})`,
-        date: new Date(),
-        doctorId: doctor.id,
-        patientId: patient.id,
-      }
-    });
-  }
-  console.log("Đã tạo 20 lịch khám hoàn thành và 20 hồ sơ bệnh án (history).");
-
-  // 6. Tạo 10 Lịch khám mới (Pending)
-  for (let i = 0; i < 10; i++) {
-    const patient = patients[i]; // Lấy 10 bệnh nhân đầu tiên
-    const doctor = doctors[(i + 5) % 20]; // Chọn ngẫu nhiên bác sĩ khác
-
-    await prisma.appointment.create({
-      data: {
-        userId: patient.id,
-        doctorId: doctor.id,
-        date: new Date(new Date().setDate(new Date().getDate() + (i + 1))), // Các ngày trong tương lai
-        timeType: "evening",
-        status: "Pending",
-        description: `Tái khám tình trạng đau đầu lần ${i + 1}`,
-      }
-    });
-  }
-  console.log("Đã tạo 10 lịch khám mới (Pending).");
-
-// --- 7. TẠO TIME SLOTS CHO BÁC SĨ (7 NGÀY TỚI) ---
-  console.log("Đang tạo ca khám (Time Slots)...");
-
-  // Mapping ngày trong tuần từ JS sang enum DayOfWeek
-  const dayOfWeekMap: Record<number, DayOfWeek> = {
-    0: "sunday",
-    1: "monday",
-    2: "tuesday",
-    3: "wednesday",
-    4: "thursday",
-    5: "friday",
-    6: "saturday",
-  };
-
-  // Cấu hình các ca khám mặc định trong ngày
-  const slotTemplates = [
-    { type: "morning", startHour: 8, startMin: 0, endHour: 11, endMin: 30 },
-    { type: "afternoon", startHour: 13, startMin: 30, endHour: 17, endMin: 0 },
-    { type: "evening", startHour: 18, startMin: 0, endHour: 20, endMin: 30 },
-  ];
-
-  // Lấy tất cả các lịch khám đã được đặt
-  const existingAppointments = await prisma.appointment.findMany({
-    select: { doctorId: true, date: true, timeType: true }
-  });
-
+  console.log('--- Tạo TimeSlots cả tháng cho mỗi Bác sĩ (30 ngày tới) ---');
+  const createdTimeSlots = [];
   const today = new Date();
 
-  for (const doctor of doctors) {
-    // Tạo ca khám từ hôm nay đến 7 ngày tới
-    for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
-      const slotDate = new Date();
+  for (const doctor of doctorRecords) {
+    for (let dayOffset = 0; dayOffset < 30; dayOffset++) {
+      const slotDate = new Date(today);
       slotDate.setDate(today.getDate() + dayOffset);
-      slotDate.setHours(0, 0, 0, 0);
 
-      const dayEnum = dayOfWeekMap[slotDate.getDay()];
+      const dayOfWeekEnum = DAYS_OF_WEEK[slotDate.getDay()];
 
-      for (const template of slotTemplates) {
+      // Tạo 3 ca khám trong 1 ngày (Sáng, Chiều, Tối)
+      const shifts = [
+        { startHour: 8, endHour: 11 },  // Ca sáng
+        { startHour: 13, endHour: 16 }, // Ca chiều
+        { startHour: 17, endHour: 20 }, // Ca tối
+      ];
+
+      for (const shift of shifts) {
         const startTime = new Date(slotDate);
-        startTime.setHours(template.startHour, template.startMin, 0, 0);
+        startTime.setHours(shift.startHour, 0, 0, 0);
 
         const endTime = new Date(slotDate);
-        endTime.setHours(template.endHour, template.endMin, 0, 0);
+        endTime.setHours(shift.endHour, 0, 0, 0);
 
-        // Kiểm tra xem ca khám này bác sĩ đã có lịch hẹn chưa
-        const isBooked = existingAppointments.some(app => {
-          if (!app.doctorId || app.doctorId !== doctor.id) return false;
-          if (app.timeType !== template.type) return false;
-
-          const appDate = new Date(app.date);
-          return appDate.toISOString().split('T')[0] === slotDate.toISOString().split('T')[0];
-        });
-
-        await prisma.timeSlot.create({
+        const timeSlot = await prisma.timeSlot.create({
           data: {
             doctorId: doctor.id,
-            dayOfWeek: dayEnum,
+            dayOfWeek: dayOfWeekEnum,
             date: slotDate,
             startTime: startTime,
             endTime: endTime,
-            isBlocked: isBooked, // Trùng lịch => isBlocked = true, ngược lại => false (Rảnh)
-          }
+            isBlocked: false,
+          },
         });
+        createdTimeSlots.push(timeSlot);
       }
     }
   }
 
-  console.log("Đã tạo xong ca khám (Time Slots) cho các bác sĩ.");
-  console.log("Seed dữ liệu thành công!");
+  console.log('--- Tạo 20 Lịch hẹn đã xong (Done) ---');
+  for (let i = 0; i < 20; i++) {
+    const patient = patientUsers[i];
+    const doctor = doctorRecords[i % doctorRecords.length];
+    const timeSlot = createdTimeSlots[i]; // Lấy các khung giờ đầu tiên
+
+    await prisma.appointment.create({
+      data: {
+        userId: patient.id,
+        doctorId: doctor.id,
+        timeSlotId: timeSlot.id,
+        date: timeSlot.date,
+        timeType: i % 3 === 0 ? TimeType.morning : i % 3 === 1 ? TimeType.afternoon : TimeType.evening,
+        status: StatusAppointment.Done,
+        description: 'Tái khám định kỳ, sức khỏe ổn định.',
+      },
+    });
+  }
+
+  console.log('--- Tạo 20 Lịch hẹn mới (Pending) ---');
+  for (let i = 20; i < 40; i++) {
+    const patient = patientUsers[i]; // Lấy 20 bệnh nhân tiếp theo
+    const doctor = doctorRecords[i % doctorRecords.length];
+    const timeSlot = createdTimeSlots[i + 50]; // Lấy khung giờ chưa bị trùng
+
+    await prisma.appointment.create({
+      data: {
+        userId: patient.id,
+        doctorId: doctor.id,
+        timeSlotId: timeSlot.id,
+        date: timeSlot.date,
+        timeType: i % 3 === 0 ? TimeType.morning : i % 3 === 1 ? TimeType.afternoon : TimeType.evening,
+        status: StatusAppointment.Pending,
+        description: 'Đăng ký khám bệnh lý mới, đau họng nhẹ.',
+      },
+    });
+  }
+
+  console.log('--- Hoàn tất Seeding thành công! ---');
 }
 
 main()
