@@ -13,7 +13,6 @@ import { getDepartments } from "../../services/departmentService";
 import EmptyState from "../../components/common/EmptyState";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DoctorScheduleCalendar from "../doctor/DoctorScheduleCalendar";
 import { createAppointment, type createTimeSlotDto } from "../../services/appointmentService";
 import type { UserInfo } from "../../types/user";
@@ -163,12 +162,13 @@ const FindDoctorPage = (userInfo: UserInfo) => {
                 setIsBooking(true);
                 console.log("selectedShift ", selectedShift);
                 const data: createTimeSlotDto = {
-                    userId:  userInfo.user.id,
-                    doctorId:  selectedShift.doctorId,
-                    dayOfWeek:  selectedShift.dayOfWeek,
-                    date:  selectedShift.date,
-                    startTime:  selectedShift.startTime,
-                    endTime:  selectedShift.endTime,
+                    userId: userInfo.user.id,
+                    doctorId: selectedShift.doctorId,
+                    dayOfWeek: selectedShift.dayOfWeek,
+                    // timeType:
+                    date: selectedShift.date,
+                    startTime: selectedShift.startTime,
+                    endTime: selectedShift.endTime,
                 }
                 await createAppointment(data);
                 setSuccessMsg("Đặt lịch thành công!");
@@ -322,70 +322,14 @@ const FindDoctorPage = (userInfo: UserInfo) => {
                                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
                                     <CalendarMonthIcon color="action" /> Lịch Khám Khả Dụng
                                 </Typography>
-
-                                {/* {!currentDoctor.schedules || currentDoctor.schedules.length === 0 ? (
-                                    <Alert severity="info">Hiện tại chưa có lịch khám được mở cho Bác sĩ này.</Alert>
-                                ) : (
-                                    <Grid container spacing={1.5}>
-                                        {currentDoctor.schedules.map((shift) => {
-                                            const disabled = isPastDate(shift.date) || shift.isBooked;
-                                            const isSelected = selectedShift?.id === shift.id;
-
-                                            return (
-                                                <Grid item xs={12} sm={6} key={shift.id}>
-                                                    <Paper
-                                                        variant="outlined"
-                                                        onClick={() => !disabled && setSelectedShift(shift)}
-                                                        sx={{
-                                                            p: 1.5,
-                                                            borderRadius: 2,
-                                                            cursor: disabled ? "not-allowed" : "pointer",
-                                                            opacity: disabled ? 0.5 : 1,
-                                                            borderColor: isSelected ? "primary.main" : "divider",
-                                                            bgcolor: isSelected ? "primary.50" : "background.paper",
-                                                            borderWidth: isSelected ? 2 : 1,
-                                                            transition: "all 0.2s",
-                                                            "&:hover": {
-                                                                borderColor: disabled ? "divider" : "primary.main"
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                            <Typography variant="subtitle2" fontWeight={700}>
-                                                                Ngày: {shift.date} {isPastDate(shift.date) && "(Đã qua)"}
-                                                            </Typography>
-                                                            <Chip
-                                                                label={shift.session === "MORNING" ? "Sáng" : "Chiều"}
-                                                                size="small"
-                                                                color={shift.session === "MORNING" ? "warning" : "info"}
-                                                            />
-                                                        </Box>
-                                                        <Box display="flex" alignItems="center" gap={0.5} mt={0.5}>
-                                                            <AccessTimeIcon fontSize="small" color="action" />
-                                                            <Typography variant="caption" color="text.secondary">
-                                                                {shift.timeRange}
-                                                            </Typography>
-                                                        </Box>
-                                                        {shift.isBooked && (
-                                                            <Typography variant="caption" color="error.main" display="block" mt={0.5}>
-                                                                • Đã hết chỗ
-                                                            </Typography>
-                                                        )}
-                                                    </Paper>
-                                                </Grid>
-                                            );
-                                        })}
-                                    </Grid>
-                                )} */}
-
-
                                 <Box>
                                     <DoctorScheduleCalendar
                                         timeSlots={doctorTimeSlots}
-                                        onSelectSlot={(selectedShift) => {
-                                            console.log("Suất khám đã chọn:", selectedShift);
-                                            setSelectedShift(selectedShift)
-                                        }} />
+                                        onSelectSlot={(slot) => {
+                                            console.log("Suất khám đã chọn:", slot);
+                                            setSelectedShift(slot);
+                                        }}
+                                    />
                                 </Box>
 
                                 {/* Nút đặt lịch */}
@@ -397,7 +341,9 @@ const FindDoctorPage = (userInfo: UserInfo) => {
                                         onClick={handleBooking}
                                         sx={{ borderRadius: 2, px: 4 }}
                                     >
-                                        {selectedShift ? `Đặt Lịch Khám (${selectedShift.date})` : "Vui lòng chọn suất khám"}
+                                        {selectedShift
+                                            ? `Đặt Lịch Khám (${selectedShift.date} ${dayjs(selectedShift.startTime).format('HH:mm')})`
+                                            : "Vui lòng chọn suất khám"}
                                     </Button>
                                 </Box>
 

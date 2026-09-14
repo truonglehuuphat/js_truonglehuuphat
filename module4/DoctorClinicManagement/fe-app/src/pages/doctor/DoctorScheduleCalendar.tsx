@@ -8,56 +8,14 @@ import type { PickerDayProps } from '@mui/x-date-pickers';
 import { Badge, Tooltip, Box, Typography, Chip, Paper, Stack, FormControl, InputLabel, Select, MenuItem, InputBase, styled, ButtonGroup, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { TimeSlotPicker } from '../patient/TimeSlotPickerPage';
+import type { TimeSlot } from '../../types/appointment';
 
-export interface TimeSlot {
-    id: number;
-    doctorId: number;
-    dayOfWeek: string;
-    date: string;
-    startTime: string;
-    endTime: string;
-    isBlocked: boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    timeRange: string;
-}
 
 interface DoctorScheduleCalendarProps {
     timeSlots: TimeSlot[];
     onSelectSlot?: (slot: TimeSlot) => void;
 }
-const BootstrapInput = styled(InputBase)(({ theme }) => ({
-    'label + &': {
-        marginTop: theme.spacing(3),
-    },
-    '& .MuiInputBase-input': {
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: (theme.vars ?? theme).palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        // Use the system font instead of the default Roboto font.
-        fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}));
+
 // Format giờ dạng HH:mm từ chuỗi ISO
 const formatTime = (isoString: string) => {
     return dayjs(isoString).format('HH:mm');
@@ -67,6 +25,7 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
     const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>('');
+
     // 1. Gom nhóm danh sách timeSlot khả dụng (isBlocked === false) theo ngày dạng "YYYY-MM-DD"
     const slotsByDate = useMemo(() => {
         const map = new Map<string, TimeSlot[]>();
@@ -134,19 +93,33 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
 
     // Lấy danh sách các suất khám trong ngày đang được click chọn
     const currentSelectedDateKey = selectedDate ? selectedDate.format('YYYY-MM-DD') : '';
-    const activeSlots = slotsByDate.get(currentSelectedDateKey) || [];
-    const timeSlotsDoctor = activeSlots.map((m) => {
-        const date = new Date(m.startTime);
-        const hours = date.getUTCHours().toString().padStart(2, '0');
-        const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-        return `${hours}:${minutes}`;
-    })
-    console.log("activeSlots ", activeSlots);
-    console.log("timeSlotsDoctor ", timeSlotsDoctor);
-
+    const activeSlots = useMemo(() => {
+        return slotsByDate.get(currentSelectedDateKey) || [];
+    }, [slotsByDate, currentSelectedDateKey]);
+    console.log("activeSlots ",activeSlots)
+    // Danh sách chuỗi "HH:mm" truyền vào TimeSlotPicker
+    const availableTimeStrings = useMemo(() => {
+        return activeSlots.map((m) => formatTime(m.startTime));
+    }, [activeSlots]);
+    console.log("availableTimeStrings ",availableTimeStrings)
     const handleTimeSelect = (time: string) => {
         setSelectedTime(time);
-        console.log('Khung giờ được chọn:', time);
+
+        // Khởi tạo đối tượng Date từ chuỗi ISO và chuyển về HH:mm
+        const matchedSlot = activeSlots.find((slot) => formatTime(slot.startTime) === time);
+
+        if (matchedSlot) {
+            setSelectedSlot(matchedSlot);
+            if (onSelectSlot) {
+                onSelectSlot(matchedSlot);
+            }
+        } else {
+            setSelectedSlot(null);
+            if (onSelectSlot) {
+                onSelectSlot(null);
+            }
+        }
+
     };
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -160,6 +133,8 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                     onChange={(newDate) => {
                         setSelectedDate(newDate);
                         setSelectedSlot(null);
+                        setSelectedTime('');
+                        if (onSelectSlot) onSelectSlot(null);
                     }}
                     slots={{
                         day: renderServerDay,
@@ -178,32 +153,10 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                         </Typography>
                     ) : (
                         <Stack spacing={1} sx={{ direction: "row", flexWrap: "wrap" }} useFlexGap>
-                            {/* {activeSlots.map((slot) => {
-                                const isSelected = selectedSlot?.id === slot.id;
-                                return (
-                                    <Chip
-                                        key={slot.id}
-                                        label={`${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`}
-                                        color={isSelected ? 'primary' : 'default'}
-                                        variant={isSelected ? 'filled' : 'outlined'}
-                                        onClick={() => {
-                                            setSelectedSlot(slot);
-                                            if (onSelectSlot) onSelectSlot(slot);
-                                        }}
-                                        sx={{ cursor: 'pointer', my: 0.5 }}
-                                    />
-                                );
-                            })} */}
-                            <TimeSlotPicker bookedTimeSlots={timeSlotsDoctor} // Truyền vào bookedTimeSlots
-                                onSelectTimeSlot={(handleTimeSelect)}
-                            // onSelectTimeSlot={(time) => {
-                            //     {
-                            //         activeSlots.map((slot) => {
-                            //             const isSelected = selectedSlot?.id === slot.id;
-                            //         })
-                            //     }
-                            // } // Truyền vào onSelectTimeSlot
-                            // value="08:00" // Truyền vào value
+                            <TimeSlotPicker
+                                bookedTimeSlots={availableTimeStrings}
+                                onSelectTimeSlot={handleTimeSelect}
+                                value={selectedTime}
                             />
                         </Stack>
                     )}

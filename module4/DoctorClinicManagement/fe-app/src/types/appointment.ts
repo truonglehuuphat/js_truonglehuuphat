@@ -51,7 +51,19 @@ export interface TimeSlot {
   startTime: string;  // ISO string hoặc HH:mm
   endTime: string;    // ISO string hoặc HH:mm
   isBlocked: boolean;
-  session: "MORNING" | "AFTERNOON" | "EVENING";
-  timeRange: string;
-  timeType: TimeType;
+  // session: "MORNING" | "AFTERNOON" | "EVENING";
+  timeRange?: string;
+  timeType?: TimeType;
 }
+
+// export interface TimeSlot {
+//     doctorId: number;
+//     dayOfWeek: string;
+//     date: string;
+//     startTime: string;
+//     endTime: string;
+//     isBlocked: boolean;
+//     createdAt?: string;
+//     updatedAt?: string;
+//     timeRange: string;
+// }
