@@ -22,7 +22,7 @@ const LoginPage = () => {
         try {
             const result = await getLogin({ email: username, password: password });
 
-
+            console.log("result",result);
             // Lưu token vào localStorage / Cookie và chuyển hướng trang
             if (result !== null) {
                 localStorage.setItem("User", JSON.stringify(result));

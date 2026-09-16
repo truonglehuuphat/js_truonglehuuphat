@@ -89,9 +89,7 @@ export async function createDoctor(req: Request, res: Response, next: NextFuncti
 export async function getTimeSlotsByDoctor(req: Request, res: Response, next: NextFunction) {
     try {
         const doctorId = Number(req.params.id);
-        // console.log("getTimeSlotsByDoctor ",doctorId )
         const data = await svc.timeSlot(doctorId);
-        // console.log("getTimeSlotsByDoctor data ", data)
         return res.status(200).json({
             success: true,
             data,

@@ -17,7 +17,7 @@ interface TimeSlotPickerProps {
   /** Danh sách các khung giờ đã bị đặt (VD: ["08:30", "13:30", "15:00"]) */
   bookedTimeSlots?: string[];
   /** Callback trả về giá trị khung giờ được chọn */
-  onSelectTimeSlot?: (selectedTime: string) => void;
+  onSelectTimeSlot?: (time: string) => void;
   /** Khung giờ được chọn mặc định */
   value?: string;
 }
@@ -53,10 +53,13 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
   const afternoonSlots = generateTimeSlots(13, 17); // 13:00 -> 16:30
 
   const handleSelect = (time: string) => {
+    console.log("time", time);
     setSelectedSlot(time);
+
     if (onSelectTimeSlot) {
       onSelectTimeSlot(time);
     }
+    
   };
 
   // Helper render nhóm nút ButtonGroup cho từng ca
@@ -104,18 +107,18 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
 
   return (
     <Paper elevation={2} sx={{ p: 3, maxWidth: 650, borderRadius: 3 }}>
-      <Box sx={{display:"flex", alignItems:"center", gap:1, mb:3}} >
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }} >
         <AccessTimeIcon color="primary" />
-        <Typography sx={{variantvariant:"h6", fontWeight:"bold"}}>
+        <Typography sx={{ variantvariant: "h6", fontWeight: "bold" }}>
           Chọn khung giờ khám
         </Typography>
       </Box>
 
       {/* Ca Sáng */}
-      <Box sx={{mb:3}}>
-        <Box sx={{display:"flex", alignItems:"center", gap:1, mb:1}}>
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
           <WbSunnyIcon sx={{ color: '#f57c00', fontSize: 20 }} />
-          <Typography sx ={{variant:"subtitle1", fontWeight:"600", color:"text.primary"}}>
+          <Typography sx={{ variant: "subtitle1", fontWeight: "600", color: "text.primary" }}>
             Buổi sáng (08:00 - 12:00)
           </Typography>
         </Box>
@@ -125,10 +128,10 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
       <Divider sx={{ my: 2 }} />
 
       {/* Ca Chiều */}
-      <Box sx={{mb:3}}>
-        <Box sx={{display:"flex", alignItems:"center", gap:1, mb:1}}>
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
           <NightlightRoundIcon sx={{ color: '#0288d1', fontSize: 20 }} />
-          <Typography sx ={{variant:"subtitle1", fontWeight:"600", color:"text.primary"}}>
+          <Typography sx={{ variant: "subtitle1", fontWeight: "600", color: "text.primary" }}>
             Buổi chiều (13:00 - 17:00)
           </Typography>
         </Box>
@@ -136,7 +139,7 @@ export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
       </Box>
 
       {/* Trạng thái lựa chọn */}
-      <Box sx={{display:"flex", alignItems:"center", gap:1, mb:1}}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
         <Typography variant="body2" color="text.secondary">
           Trạng thái:
         </Typography>

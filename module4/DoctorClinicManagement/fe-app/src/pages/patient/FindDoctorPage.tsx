@@ -16,14 +16,20 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import DoctorScheduleCalendar from "../doctor/DoctorScheduleCalendar";
 import { createAppointment, type createTimeSlotDto } from "../../services/appointmentService";
 import type { UserInfo } from "../../types/user";
+import dayjs, { Dayjs } from 'dayjs';
 
+1
 interface FormValues {
     departmentId: number | "";
     doctorId: number | "";
 }
 
+// Format giờ dạng HH:mm từ chuỗi ISO
+const formatDate= (isoString: string) => {
+    return dayjs(isoString).format('DD/MM/YYYY');
+};
 
-const FindDoctorPage = (userInfo: UserInfo) => {
+const FindDoctorPage = ({ userInfo }: { userInfo: UserInfo } ) => {
     const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
     const [departments, setDepartments] = useState<Department[] | null>(null);
     const [selectedShift, setSelectedShift] = useState<TimeSlot | null>(null);
@@ -127,9 +133,7 @@ const FindDoctorPage = (userInfo: UserInfo) => {
                 if (!currentDoctor?.id) return;
                 setLoadingTimeSlot(true);
                 setError("");
-                // if (currentDoctor !== undefined) {
                 const res = await getTimeSlotByDoctorId(currentDoctor.id);
-                // }
                 setDoctorTimeSlots(res || []);
             } catch (err: any) {
                 setError("Cannot load timeSlotByDoctorId right now. Please try again.");
@@ -155,30 +159,41 @@ const FindDoctorPage = (userInfo: UserInfo) => {
     };
 
     const handleBooking = async () => {
-        console.log("selectedShift", selectedShift);
+
         if (!selectedShift || !currentDoctor) return;
+        // console.log("selectedShift", selectedShift);
+        // console.log("currentDoctor", currentDoctor);
+        // console.log("userInfo", userInfo);
+        // console.log("userInfo.id", userInfo.id);
         try {
-            if (userInfo.user.id !== currentDoctor.id) {
+            console.log("userInfo.id", userInfo.id)
+            console.log("currentDoctor.id", currentDoctor.id)
+            if (userInfo.id !== currentDoctor.id) {
                 setIsBooking(true);
                 console.log("selectedShift ", selectedShift);
                 const data: createTimeSlotDto = {
-                    userId: userInfo.user.id,
+                    userId: userInfo.id,
                     doctorId: selectedShift.doctorId,
+                    timeSlotId: selectedShift.id,
                     dayOfWeek: selectedShift.dayOfWeek,
-                    // timeType:
+                    timeType:selectedShift.timeType,
                     date: selectedShift.date,
                     startTime: selectedShift.startTime,
                     endTime: selectedShift.endTime,
                 }
-                await createAppointment(data);
+                // setSuccessMsg("data", data);
+                const response = await createAppointment(data);
                 setSuccessMsg("Đặt lịch thành công!");
+                console.log(response);
                 setSelectedShift(null); // Reset lại lựa chọn
             } else {
                 setIsBooking(false);
                 setError("Đặt lịch thất bại, Bác sĩ không thể đặt lịch chính mình");
             }
         } catch (err) {
+            console.log("err ", err);
             setError("Đặt lịch thất bại.");
+
         } finally {
             setIsBooking(false);
         }
@@ -342,7 +357,7 @@ const FindDoctorPage = (userInfo: UserInfo) => {
                                         sx={{ borderRadius: 2, px: 4 }}
                                     >
                                         {selectedShift
-                                            ? `Đặt Lịch Khám (${selectedShift.date} ${dayjs(selectedShift.startTime).format('HH:mm')})`
+                                            ? `Đặt Lịch Khám (${formatDate(selectedShift.date)} ${dayjs(selectedShift.startTime).format('HH:mm')})`
                                             : "Vui lòng chọn suất khám"}
                                     </Button>
                                 </Box>

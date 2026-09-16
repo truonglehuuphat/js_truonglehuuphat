@@ -59,9 +59,7 @@ export async function login(input: {
     password: string;
 }) {
     // find user by email
-    console.log("email ", input.email);
     const user = await prisma.user.findUnique({ where: { email: input.email } });
-    console.log("user ", user);
     // check user is exist and password is correct
     // khong thong bao email khong ton tai hay sai password tranh ro ri thong tin
     const isValid = user && await bcrypt.compare(input.password, user.password);

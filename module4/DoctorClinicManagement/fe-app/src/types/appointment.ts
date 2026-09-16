@@ -45,6 +45,7 @@ enum DayOfWeek {
 }
 
 export interface TimeSlot {
+  id: number;
   doctorId: number;
   dayOfWeek: DayOfWeek.monday;
   date: string;       // ISO string or YYYY-MM-DD

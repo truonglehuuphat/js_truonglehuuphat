@@ -8,7 +8,7 @@ import type { PickerDayProps } from '@mui/x-date-pickers';
 import { Badge, Tooltip, Box, Typography, Chip, Paper, Stack, FormControl, InputLabel, Select, MenuItem, InputBase, styled, ButtonGroup, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { TimeSlotPicker } from '../patient/TimeSlotPickerPage';
-import type { TimeSlot } from '../../types/appointment';
+import { TimeType, type TimeSlot } from '../../types/appointment';
 
 
 interface DoctorScheduleCalendarProps {
@@ -26,22 +26,21 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
     const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>('');
 
-    // 1. Gom nhóm danh sách timeSlot khả dụng (isBlocked === false) theo ngày dạng "YYYY-MM-DD"
+    // 1. Gom nhóm danh sách timeSlot theo ngày dạng "YYYY-MM-DD"
     const slotsByDate = useMemo(() => {
         const map = new Map<string, TimeSlot[]>();
         if (!Array.isArray(timeSlots)) return map;
 
         timeSlots.forEach((slot) => {
-            if (!slot.isBlocked) {
-                const dateKey = dayjs(slot.date).format('YYYY-MM-DD');
-                if (!map.has(dateKey)) {
-                    map.set(dateKey, []);
-                }
-                map.get(dateKey)!.push(slot);
+            const dateKey = dayjs(slot.date).format('YYYY-MM-DD');
+            if (!map.has(dateKey)) {
+                map.set(dateKey, []);
             }
+            map.get(dateKey)!.push(slot);
         });
         return map;
     }, [timeSlots]);
+
 
     // 2. Custom render cho từng ô ngày trên Lịch
     const renderServerDay = (props: PickerDayProps<Dayjs>) => {
@@ -96,22 +95,44 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
     const activeSlots = useMemo(() => {
         return slotsByDate.get(currentSelectedDateKey) || [];
     }, [slotsByDate, currentSelectedDateKey]);
-    console.log("activeSlots ",activeSlots)
+
     // Danh sách chuỗi "HH:mm" truyền vào TimeSlotPicker
     const availableTimeStrings = useMemo(() => {
-        return activeSlots.map((m) => formatTime(m.startTime));
+        return activeSlots.map((m) => {
+            if (!m.isBlocked) {
+                return formatTime(m.startTime);
+            }
+        })
     }, [activeSlots]);
-    console.log("availableTimeStrings ",availableTimeStrings)
-    const handleTimeSelect = (time: string) => {
-        setSelectedTime(time);
 
+    const unavailableTimeStrings = useMemo(() => {
+        return activeSlots.map((m) => {
+            if (m.isBlocked) {
+                return formatTime(m.startTime);
+            } {
+                return ""
+            }
+        })
+    }, [activeSlots]);
+
+
+    const handleTimeSelect = (time: string) => {
+
+        setSelectedTime(time);
         // Khởi tạo đối tượng Date từ chuỗi ISO và chuyển về HH:mm
         const matchedSlot = activeSlots.find((slot) => formatTime(slot.startTime) === time);
-
+        console.log("matchedSlot",matchedSlot);
         if (matchedSlot) {
-            setSelectedSlot(matchedSlot);
+            const timeType = time < "13:00" ? TimeType.morning : TimeType.afternoon;
+            // 2. Tạo object mới để giữ tính Immutability trong React
+            const updatedSlot = {
+                ...matchedSlot,
+                timeType,
+            };
+
+            setSelectedSlot(updatedSlot);
             if (onSelectSlot) {
-                onSelectSlot(matchedSlot);
+                onSelectSlot(updatedSlot);
             }
         } else {
             setSelectedSlot(null);
@@ -119,7 +140,6 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                 onSelectSlot(null);
             }
         }
-
     };
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -154,7 +174,7 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                     ) : (
                         <Stack spacing={1} sx={{ direction: "row", flexWrap: "wrap" }} useFlexGap>
                             <TimeSlotPicker
-                                bookedTimeSlots={availableTimeStrings}
+                                bookedTimeSlots={unavailableTimeStrings}
                                 onSelectTimeSlot={handleTimeSelect}
                                 value={selectedTime}
                             />

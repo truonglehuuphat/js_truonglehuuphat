@@ -21,7 +21,7 @@ export interface DataUser {
 // Hàm async phải trả về Promise<LoginInterface>
 export async function getLogin(userInput: DataUser): Promise<LoginInterface> {
     try {
-        // console.log("DataUser", userInput);
+        console.log("DataUser", userInput);
         const response = await axiosClient.post("/api/v1/auth/login", userInput);
         if (response.status === 204) {
             console.log("Thao tác thành công nhưng không có dữ liệu trả về.");

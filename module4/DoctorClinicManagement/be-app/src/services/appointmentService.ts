@@ -16,6 +16,7 @@ enum DayOfWeek {
 export interface createTimeSlotDto {
   userId: number;
   doctorId: number;
+  timeSlotId: number;
   dayOfWeek: DayOfWeek.monday;
   date: string;       // ISO string or YYYY-MM-DD
   timeType: TimeType;
@@ -38,7 +39,6 @@ export async function getAppointments() {
 }
 
 export async function create(data: createTimeSlotDto) {
-
   //kiểm tra người dùng có tồn tại không?
   // 1. Kiểm tra User (Bệnh nhân) và Doctor đồng thời để tối ưu hiệu năng
   const [userInfo, doctorInfo] = await Promise.all([
@@ -58,7 +58,7 @@ export async function create(data: createTimeSlotDto) {
   // 2. Tìm chính xác TimeSlot dựa trên timeSlotId và doctorId
   const timeSlot = await prisma.timeSlot.findFirst({
     where: {
-      doctorId: data.doctorId,
+      id: data.timeSlotId,
     },
   });
 

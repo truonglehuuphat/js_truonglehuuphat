@@ -26,7 +26,7 @@ const PatientPage = () => {
     }, []);
 
     useEffect(() => {
-        // console.log("userInfo sau khi state đã thay đổi:", userInfo);
+        console.log("userInfo sau khi state đã thay đổi:", userInfo);
     }, [userInfo]);
 
     // Trạng thái đang tải dữ liệu từ localStorage
