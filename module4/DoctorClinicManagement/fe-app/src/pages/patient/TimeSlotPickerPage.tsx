@@ -16,6 +16,8 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 interface TimeSlotPickerProps {
   /** Danh sách các khung giờ đã bị đặt (VD: ["08:30", "13:30", "15:00"]) */
   bookedTimeSlots?: string[];
+  /** Danh sách các khung giờ chưa đặt (VD: ["08:30", "13:30", "15:00"]) */
+  useTimeSlots?: string[];  
   /** Callback trả về giá trị khung giờ được chọn */
   onSelectTimeSlot?: (time: string) => void;
   /** Khung giờ được chọn mặc định */
@@ -24,6 +26,7 @@ interface TimeSlotPickerProps {
 
 export const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({
   bookedTimeSlots = [],
+  useTimeSlots = [],
   onSelectTimeSlot,
   value,
 }) => {

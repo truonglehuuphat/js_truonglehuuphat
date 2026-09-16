@@ -21,10 +21,33 @@ const formatTime = (isoString: string) => {
     return dayjs(isoString).format('HH:mm');
 };
 
+// Hàm tạo danh sách khung giờ theo khoảng thời gian bắt đầu & kết thúc (phút)
+const generateTimeSlots = (startHour: number, endHour: number): string[] => {
+    const slots: string[] = [];
+    let startMinutes = startHour * 60;
+    const endMinutes = endHour * 60;
+
+    while (startMinutes < endMinutes) {
+        const hours = Math.floor(startMinutes / 60);
+        const mins = startMinutes % 60;
+
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMins = mins.toString().padStart(2, '0');
+
+        slots.push(`${formattedHours}:${formattedMins}`);
+        startMinutes += 30; // Mỗi nút cách nhau 30 phút
+    }
+
+    return slots;
+};
+
+
 export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: DoctorScheduleCalendarProps) {
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
     const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>('');
+
+    const timeString = generateTimeSlots(8, 17);
 
     // 1. Gom nhóm danh sách timeSlot theo ngày dạng "YYYY-MM-DD"
     const slotsByDate = useMemo(() => {
@@ -96,23 +119,35 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
         return slotsByDate.get(currentSelectedDateKey) || [];
     }, [slotsByDate, currentSelectedDateKey]);
 
-    // Danh sách chuỗi "HH:mm" truyền vào TimeSlotPicker
-    const availableTimeStrings = useMemo(() => {
-        return activeSlots.map((m) => {
-            if (!m.isBlocked) {
-                return formatTime(m.startTime);
-            }
-        })
-    }, [activeSlots]);
+    // 2. Phân loại trong React Component
+    const { availableTimeStrings, unavailableTimeStrings } = useMemo(() => {
+        const available: string[] = [];
+        const unavailable: string[] = [];
 
-    const unavailableTimeStrings = useMemo(() => {
-        return activeSlots.map((m) => {
-            if (m.isBlocked) {
-                return formatTime(m.startTime);
-            } {
-                return ""
+        // Tạo Map để tra cứu trạng thái slot theo format "HH:mm" với độ phức tạp O(1)
+        const slotStatusMap = new Map<string, boolean>();
+        activeSlots.forEach((slot) => {
+            const formattedTime = formatTime(slot.startTime);
+            slotStatusMap.set(formattedTime, slot.isBlocked);
+        });
+
+        // Duyệt qua tất cả mốc thời gian từ 08:00 đến 16:30
+        timeString.forEach((timeString) => {
+            const isBlocked = slotStatusMap.get(timeString);
+
+            // Nếu tồn tại slot và KHÔNG bị block (!isBlocked) -> Available
+            if (slotStatusMap.has(timeString) && isBlocked === false) {
+                available.push(timeString);
+            } else {
+                // Ngược lại (Bị block HOẶC không tồn tại slot trong activeSlots) -> Unavailable
+                unavailable.push(timeString);
             }
-        })
+        });
+
+        return {
+            availableTimeStrings: available,
+            unavailableTimeStrings: unavailable,
+        };
     }, [activeSlots]);
 
 
@@ -121,7 +156,7 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
         setSelectedTime(time);
         // Khởi tạo đối tượng Date từ chuỗi ISO và chuyển về HH:mm
         const matchedSlot = activeSlots.find((slot) => formatTime(slot.startTime) === time);
-        console.log("matchedSlot",matchedSlot);
+        console.log("matchedSlot", matchedSlot);
         if (matchedSlot) {
             const timeType = time < "13:00" ? TimeType.morning : TimeType.afternoon;
             // 2. Tạo object mới để giữ tính Immutability trong React
@@ -175,6 +210,7 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
                         <Stack spacing={1} sx={{ direction: "row", flexWrap: "wrap" }} useFlexGap>
                             <TimeSlotPicker
                                 bookedTimeSlots={unavailableTimeStrings}
+                                useTimeSlots={availableTimeStrings}
                                 onSelectTimeSlot={handleTimeSelect}
                                 value={selectedTime}
                             />
