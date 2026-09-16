@@ -74,7 +74,7 @@ export default function DoctorScheduleCalendar({ timeSlots, onSelectSlot }: Doct
 
         // Chuỗi hiển thị danh sách khung giờ rảnh khi Hover
         const tooltipContent = hasSlots
-            ? `Giờ rảnh:\n` + availableSlots.map((s) => `• ${formatTime(s.startTime)} - ${formatTime(s.endTime)}`).join('\n')
+            ? `Giờ rảnh:\n` + availableSlots.map((s) => `• ${formatTime(s.startTime)}`).join('\n')
             : '';
 
         return (

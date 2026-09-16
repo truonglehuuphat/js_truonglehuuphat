@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ProfileCard from "./public/ProfilePage"
 import EmptyState from "../components/common/EmptyState";
 import FindDoctorPage from "./patient/FindDoctorPage";
+import CheckMeAppointment from "./patient/CheckMeAppointment";
 
 
 const PatientPage = () => {
@@ -42,6 +43,7 @@ const PatientPage = () => {
         <>
             <ProfileCard userInfo={userInfo} />
             <FindDoctorPage userInfo={userInfo}/>
+            <CheckMeAppointment />
         </>
     )
 }

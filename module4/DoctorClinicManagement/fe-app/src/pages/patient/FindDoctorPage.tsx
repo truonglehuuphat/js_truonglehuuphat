@@ -29,6 +29,11 @@ const formatDate= (isoString: string) => {
     return dayjs(isoString).format('DD/MM/YYYY');
 };
 
+// Format giờ dạng HH:mm từ chuỗi ISO
+const formatTime = (isoString: string) => {
+    return dayjs(isoString).format('HH:mm');
+};
+
 const FindDoctorPage = ({ userInfo }: { userInfo: UserInfo } ) => {
     const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
     const [departments, setDepartments] = useState<Department[] | null>(null);
@@ -201,9 +206,9 @@ const FindDoctorPage = ({ userInfo }: { userInfo: UserInfo } ) => {
         alert(
             `Đã chọn đặt lịch thành công!\n
             - Bác sĩ: ${currentDoctor.name}\n
-            - Ngày: ${selectedShift.date}\n
-            - Ca: ${selectedShift.session === "MORNING" ? "Sáng" : "Chiều"
-            } (${selectedShift.timeRange})`
+            - Ngày: ${formatDate(selectedShift.date)}\n
+            - Buổi ${selectedShift.timeType === "morning" ? "Sáng" : "Chiều" 
+            }: ${formatTime(selectedShift.startTime)}`
         );
     };
     // --- RENDER SKLETON LOADING ---
