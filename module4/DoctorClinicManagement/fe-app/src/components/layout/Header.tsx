@@ -33,6 +33,10 @@ const Header = () => (
         >
           <h2>CSC Hopital</h2>
         </Typography>
+
+        <IconButton component={Link} to="#" color="inherit">
+          <HeadsetMicOutlinedIcon /> Tư vấn khám bệnh
+        </IconButton>
         {/* RIGHT - ACTIONS (FIX HERE) */}
         <Box
           sx={{
@@ -43,14 +47,12 @@ const Header = () => (
           }}
         >
 
+
           <IconButton component={Link} to="login" color="inherit">
-            <PermIdentityOutlinedIcon /> Dành cho khách hàng
+            <PermIdentityOutlinedIcon /> Đăng nhập
           </IconButton>
-          <IconButton component={Link} to="#" color="inherit">
-            <HeadsetMicOutlinedIcon /> Hỏi đáp
-          </IconButton>
-          <IconButton component={Link} to="login" color="inherit">
-            <PermIdentityOutlinedIcon /> Dành cho nhân viên
+          <IconButton component={Link} to="register" color="inherit">
+            <PermIdentityOutlinedIcon /> Đăng ký
           </IconButton>
         </Box>
       </Toolbar>

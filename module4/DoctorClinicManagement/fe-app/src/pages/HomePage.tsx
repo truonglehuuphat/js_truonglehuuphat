@@ -1,10 +1,51 @@
 import { Grid } from "@mui/material";
 import MenuPage from "./MenuPage";
 import RegisterPage from "./RegisterPage";
+import { useEffect, useState } from "react";
+import type { Department } from "../types/department";
+import type DoctorInfo from "./doctor/DoctorInfo";
+import { getDepartments } from "../services/departmentService";
+import { getAllDoctors } from "../services/doctorService";
 
 
 const HomePage = () => {
-    
+    // const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
+    // const [departments, setDepartments] = useState<Department[] | null>(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState("");
+
+    useEffect(() => {
+        // 1. Khởi tạo AbortController
+        const controller = new AbortController();
+
+        const fetchData = async () => {
+            try {
+                // setLoading(true);
+                // setError("");
+
+                const doctorRes = await getAllDoctors();
+                const departmentsRes = await getDepartments();
+                // setDepartments(departmentsRes);
+                // setDoctors(doctorRes.doctors);
+                console.log(departmentsRes);
+                localStorage.setItem("department", JSON.stringify(departmentsRes));
+                localStorage.setItem("doctors",JSON.stringify(doctorRes.doctors));
+
+            } catch (err: any) {
+                if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
+                    return;
+                }
+                // setError("Cannot load doctor and department right now. Please try again.");
+            } finally {
+                // setLoading(false);
+            }
+        };
+
+        fetchData();
+        return () => {
+            controller.abort();
+        };
+    }, []);
 
     return (
         <>

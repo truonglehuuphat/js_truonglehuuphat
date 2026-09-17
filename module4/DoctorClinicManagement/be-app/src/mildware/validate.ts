@@ -24,7 +24,7 @@ export const validateQuery = (schema: yup.ObjectSchema<any>) =>
         }
     };
 export const validatedId = (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
     if(!id || isNaN(Number(id))){
         return next(new AppError(400, 'ID phải là số hợp lệ'));
     }

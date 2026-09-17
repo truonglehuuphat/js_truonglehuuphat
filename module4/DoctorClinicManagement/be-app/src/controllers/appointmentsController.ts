@@ -9,9 +9,29 @@ export interface CreateBookingDTO {
     userId?: number;
 }
 
-export async function getAllAppointments(req: Request, res: Response, next: NextFunction) {
-    try {
+interface AccessTokenPayload {
+    id: number;
+    email: string;
+    role: string;
+}
 
+interface AuthenticatedRequest extends Request {
+  user?: {
+    id: number;
+    email: string;
+    role: string;
+  };
+}
+
+export async function getAllAppointmentsById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(400).json({ message: 'Không tìm thấy thông tin User' });
+        }
+        const response = await appointmentSvc.getAllAppointmentsById(userId);
+        console.log("response" ,response);
+        return response;
     } catch (error) {
         next(error);
     }

@@ -10,6 +10,7 @@ declare global {
     }
 }
 
+
 interface AccessTokenPayload {
     id: number;
     email: string;
@@ -31,6 +32,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
         // combine user and req  for route handler
         console.log("payload",payload)
         req.user = { id: payload.id, email: payload.email, role: payload.role, };
+        console.log("req.user", req.user);
         next();
     } catch (error: any) {
          console.log("error",error)

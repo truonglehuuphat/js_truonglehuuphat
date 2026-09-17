@@ -30,8 +30,44 @@ export interface createTimeSlotResponseDto {
   timeType: string;
 }
 
-export const getAllDoctors = async () => {
+export const getAllAppointmentById = async (signal?: AbortSignal) => {
+  // 1. Lấy chuỗi thô từ localStorage
+  const rawUser = localStorage.getItem('User');
+  let token = "";
+  if (rawUser) {
+    try {
+      // 2. Parse từ chuỗi JSON sang Object với kiểu UserInfo
+      const user = JSON.parse(rawUser) as UserInfo;
+      token = user.accessToken;
 
+    } catch (e) {
+      console.error("Lỗi parse dữ liệu User từ localStorage", e);
+      return;
+    }
+  } else {
+    console.log("Không tìm thấy thông tin User trong localStorage");
+    return;
+  }
+
+  try {
+    console.log("goi api");
+    const response = await axiosClient.get("/api/v1/appointments/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }, signal
+    });
+    console.log("response", response);
+    return response;
+  } catch (error: any) {
+    // Nếu request bị hủy bởi AbortController thì throw tiếp để useEffect bắt
+    if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
+      throw error;
+    }
+    console.log("Đã có lỗi xảy ra khi tạo appointment");
+    if (error.response?.status === 401) {
+      console.error('Lỗi 401: Vui lòng đăng nhập lại.');
+    }
+  }
 }
 
 

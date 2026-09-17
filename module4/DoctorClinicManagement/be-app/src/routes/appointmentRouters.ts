@@ -17,11 +17,10 @@ appointmentRouter.post(
     controller.create
 );
 
-// appointmentRouter.get(
-//     "/me",
-//     authorize('patient','admin'),
-//     controller.me
-// );
+appointmentRouter.get(
+    "/me",
+    controller.getAllAppointmentsById
+);
 
 // appointmentRouter.get(
 //     "/:doctorId",

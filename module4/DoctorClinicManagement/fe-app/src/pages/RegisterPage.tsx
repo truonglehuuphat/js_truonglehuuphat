@@ -43,14 +43,43 @@ const RegisterPage = () => {
             note: "",
         },
     });
+
     const [success, setSuccess] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [department, setDepartment] = useState<Department[]>(departments);
+    const [doctors, setDoctors] = useState([]);
     const [submitError, setSubmitError] = useState("");
     const [alignment, setAlignment] = React.useState('web');
     const [alignment2, setAlignment2] = React.useState('web');
     const onSubmit = async (formData: CheckoutFormData) => {
     }
+
+    useEffect(() => {
+        // Lấy chuỗi dữ liệu từ localStorage (thay 'userData' bằng key bạn đã lưu)
+        const storedData = localStorage.getItem('department');
+        console.log(storedData);
+        if (storedData) {
+            try {
+                const parsedData = JSON.parse(storedData);
+                console.log(parsedData);
+                setDepartment(parsedData);
+            } catch (error) {
+                console.error("Lỗi parse dữ liệu từ localStorage:", error);
+            }
+        }
+        const doctorStore = localStorage.getItem('doctors');
+        console.log(doctorStore);
+        if (doctorStore) {
+            try {
+                const parsedDataDoctor = JSON.parse(doctorStore);
+                console.log(parsedDataDoctor);
+                setDoctors(parsedDataDoctor);
+            } catch (error) {
+                console.error("Lỗi parse dữ liệu từ localStorage:", error);
+            }
+        }
+    }, []);
+
 
     const handleChange = (
         event: React.MouseEvent<HTMLElement>,
@@ -123,7 +152,7 @@ const RegisterPage = () => {
                                     />
                                 </Grid>
                                 {/* Chọn dịch vụ khám */}
-                                <Grid size={{ xs: 12}} >
+                                <Grid size={{ xs: 12 }} >
                                     {/* </Box> */}
                                     <ToggleButtonGroup
                                         color="primary"
@@ -153,8 +182,9 @@ const RegisterPage = () => {
                                         <ToggleButton value="reverOnline">Khám online</ToggleButton>
                                     </ToggleButtonGroup>
                                 </Grid>
+
                                 {/* Chọn khung giờ khám */}
-                                <Grid size={{ xs: 12}} >
+                                <Grid size={{ xs: 12 }} >
                                     {/* </Box> */}
                                     <ToggleButtonGroup
                                         color="primary"
@@ -186,7 +216,7 @@ const RegisterPage = () => {
                                 </Grid>
 
                                 {/* Chọn chuyên khoa */}
-                                <Grid size={{ xs: 12}}>
+                                <Grid size={{ xs: 12 }}>
                                     <Controller
                                         control={control}
                                         name="department"
@@ -209,7 +239,30 @@ const RegisterPage = () => {
                                         )}
                                     />
                                 </Grid>
+                                {/* Chọn Bác sĩ */}
+                                <Grid size={{ xs: 12 }}>
+                                    <Controller
+                                        control={control}
+                                        name="doctors"
+                                        render={({ field }) => (
+                                            <FormControl fullWidth >
+                                                <InputLabel>Chọn Bác sĩ</InputLabel>
+                                                <Select label="Chọn Bác sĩ " {...field}>
+                                                    {doctors.map((w) => (
+                                                        <MenuItem key={w.code} value={String(w.code)}>
+                                                            {w.name}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
 
+
+                                                <Typography variant="caption" color="error">
+                                                    {errors.department?.message}
+                                                </Typography>
+                                            </FormControl>
+                                        )}
+                                    />
+                                </Grid>
                                 {/* DATE */}
                                 <Grid size={{ xs: 12, md: 6 }}>
                                     <Controller

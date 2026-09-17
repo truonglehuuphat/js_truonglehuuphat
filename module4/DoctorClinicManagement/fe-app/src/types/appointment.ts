@@ -57,14 +57,12 @@ export interface TimeSlot {
   timeType?: TimeType;
 }
 
-// export interface TimeSlot {
-//     doctorId: number;
-//     dayOfWeek: string;
-//     date: string;
-//     startTime: string;
-//     endTime: string;
-//     isBlocked: boolean;
-//     createdAt?: string;
-//     updatedAt?: string;
-//     timeRange: string;
-// }
+export interface MeAppointment {
+    doctorName: string;
+    department: string;
+    description: string;
+    date: Date;
+    status: string;
+    isBlocked: Boolean;
+    comment: string;
+}

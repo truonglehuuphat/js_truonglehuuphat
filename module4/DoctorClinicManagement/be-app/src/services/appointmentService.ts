@@ -24,15 +24,26 @@ export interface createTimeSlotDto {
   endTime: string;    // ISO string hoặc HH:mm
 }
 
-export async function getMyAppointments(
-  appointmentId: number,
-  status: StatusAppointment,
-  requesterId: number,
-  role: string) {
-
+export async function getAllAppointmentsById(userId: number) {
+  // kiểm tra userId có tồn tại không?
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+  if (!user) {
+    throw new AppError(404, "Thông tin bệnh nhân không tồn tại");
+  }
+  const data = await prisma.appointment.findMany({
+    where: { userId: userId },
+    include: {
+      doctor: true, // Bao gồm thông tin bác sĩ
+    },
+    orderBy: {
+      createdAt: 'desc', // Sắp xếp lịch hẹn mới nhất lên đầu
+    },
+  })
+  // console.log(data);
+  return data;
 }
-
-
 
 export async function getAppointments() {
 

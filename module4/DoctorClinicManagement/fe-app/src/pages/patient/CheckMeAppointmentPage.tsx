@@ -1,5 +1,5 @@
 
-const CheckMeAppointment = () =>{
+const CheckMeAppointmentPage = () =>{
     return (
         <>
             Table check appointment
@@ -7,4 +7,4 @@ const CheckMeAppointment = () =>{
     )
 }
 
-export default CheckMeAppointment;
+export default CheckMeAppointmentPage;
