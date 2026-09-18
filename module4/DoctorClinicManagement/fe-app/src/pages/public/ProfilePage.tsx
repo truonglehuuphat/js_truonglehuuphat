@@ -1,8 +1,12 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import type { UserInfo } from "../../types/user";
+import { useContext } from "react";
+import {  useUser } from "../../context/UserProvider";
 
 
-const ProfileCard = ({ userInfo }: { userInfo: UserInfo } )=> {
+const ProfileCard = () => {
+    const { user, setUser, logout } = useUser();
+
     return (
         <Card
             sx={{
@@ -32,7 +36,7 @@ const ProfileCard = ({ userInfo }: { userInfo: UserInfo } )=> {
                         overflow: "hidden",
                         minHeight: 48,
                     }}
-                >Tên: {userInfo.name}</Typography>
+                >Tên: {user.name}</Typography>
             </CardContent>
         </Card>
     )

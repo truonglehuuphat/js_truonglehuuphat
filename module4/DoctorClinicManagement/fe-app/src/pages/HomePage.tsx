@@ -6,6 +6,7 @@ import type { Department } from "../types/department";
 import type DoctorInfo from "./doctor/DoctorInfo";
 import { getDepartments } from "../services/departmentService";
 import { getAllDoctors } from "../services/doctorService";
+import { doctorContext } from "../context/DoctorProvider";
 
 
 const HomePage = () => {
@@ -13,7 +14,7 @@ const HomePage = () => {
     // const [departments, setDepartments] = useState<Department[] | null>(null);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState("");
-
+    const { doctors, setDoctor } = doctorContext();
     useEffect(() => {
         // 1. Khởi tạo AbortController
         const controller = new AbortController();

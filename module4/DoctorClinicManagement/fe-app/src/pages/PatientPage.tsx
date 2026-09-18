@@ -4,45 +4,27 @@ import EmptyState from "../components/common/EmptyState";
 import FindDoctorPage from "./patient/FindDoctorPage";
 import CheckMeAppointmentPage from "./patient/CheckMeAppointmentPage";
 import MyAppointmentsPage from "./patient/MyAppointmentsPage";
+import { UserProvider, useUser } from "../context/UserProvider";
 
 
 const PatientPage = () => {
-    const [userInfo, setUserInfo] = useState();
-    const [isLoadingInfo, setIsLoadingInfo] = useState(false);
-    useEffect(() => {
-        // Lấy chuỗi dữ liệu từ localStorage (thay 'userData' bằng key bạn đã lưu)
-        const storedData = localStorage.getItem('User');
-
-        if (storedData) {
-            try {
-                const parsedData = JSON.parse(storedData);
-                setUserInfo(parsedData.user);
-                setIsLoadingInfo(true);
-            } catch (error) {
-                console.error("Lỗi parse dữ liệu từ localStorage:", error);
-            }
-        }
-    }, []);
-
-    // useEffect(() => {
-    //     console.log("userInfo sau khi state đã thay đổi:", userInfo);
-    // }, [userInfo]);
-
+    // Lấy thông tin user và trạng thái loading trực tiếp từ Context
+    const { user, isLoading } = useUser();
+    console.log("user", user)
     // Trạng thái đang tải dữ liệu từ localStorage
-    if (!isLoadingInfo) {
+    if (!isLoading) {
         return <div>Loading...</div>;
     }
     // 3. Nếu không tìm thấy thông tin user trong localStorage
-    if (!userInfo) {
+    if (!user || user.id === 0) {
         return <EmptyState />;
     }
 
     return (
         <>
-            <ProfileCard userInfo={userInfo} />
-            <FindDoctorPage userInfo={userInfo} />
-            {userInfo ? <MyAppointmentsPage userInfo={userInfo} /> : <></>}
-
+            <ProfileCard />
+            <FindDoctorPage />
+            <MyAppointmentsPage />
         </>
     )
 }

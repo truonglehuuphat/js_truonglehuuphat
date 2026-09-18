@@ -17,6 +17,7 @@ import DoctorScheduleCalendar from "../doctor/DoctorScheduleCalendar";
 import { createAppointment, type createTimeSlotDto } from "../../services/appointmentService";
 import type { UserInfo } from "../../types/user";
 import dayjs, { Dayjs } from 'dayjs';
+import { useUser } from "../../context/UserProvider";
 
 1
 interface FormValues {
@@ -34,7 +35,8 @@ const formatTime = (isoString: string) => {
     return dayjs(isoString).format('HH:mm');
 };
 
-const FindDoctorPage = ({ userInfo }: { userInfo: UserInfo } ) => {
+const FindDoctorPage = ( ) => {
+    const { user, setUser, logout } = useUser();
     const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
     const [departments, setDepartments] = useState<Department[] | null>(null);
     const [selectedShift, setSelectedShift] = useState<TimeSlot | null>(null);
@@ -70,7 +72,6 @@ const FindDoctorPage = ({ userInfo }: { userInfo: UserInfo } ) => {
                 const departmentsRes = await getDepartments();
 
                 setDepartments(departmentsRes);
-
                 setDoctors(doctorRes.doctors);
             } catch (err: any) {
                 if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
@@ -171,13 +172,13 @@ const FindDoctorPage = ({ userInfo }: { userInfo: UserInfo } ) => {
         // console.log("userInfo", userInfo);
         // console.log("userInfo.id", userInfo.id);
         try {
-            console.log("userInfo.id", userInfo.id)
+            console.log("user.id", user.id)
             console.log("currentDoctor.id", currentDoctor.id)
-            if (userInfo.id !== currentDoctor.id) {
+            if (user.id !== currentDoctor.id) {
                 setIsBooking(true);
                 console.log("selectedShift ", selectedShift);
                 const data: createTimeSlotDto = {
-                    userId: userInfo.id,
+                    userId: user.id,
                     doctorId: selectedShift.doctorId,
                     timeSlotId: selectedShift.id,
                     dayOfWeek: selectedShift.dayOfWeek,

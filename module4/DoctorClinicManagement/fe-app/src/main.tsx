@@ -4,6 +4,9 @@ import { RouterProvider } from 'react-router-dom';
 import router from './router/index.tsx';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { UserProvider } from "./context/UserProvider.tsx";
+import { DoctorProvider } from "./context/DoctorProvider.tsx";
+import { DepartProvider } from "./context/DepartmentProvider.tsx";
 // import { DatePicker } from '@mui/x-date-pickers';
 
 
@@ -15,9 +18,15 @@ if (!rootElement) {
 
 const Providers = () => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <RouterProvider router={router} />
-    </LocalizationProvider>
+    <DepartProvider>
+      <DoctorProvider>
+        <UserProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <RouterProvider router={router} />
+          </LocalizationProvider>
+        </UserProvider>
+      </DoctorProvider>
+    </DepartProvider>
   );
 }
 

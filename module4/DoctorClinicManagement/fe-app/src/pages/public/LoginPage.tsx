@@ -12,7 +12,7 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e : any) => {
         e.preventDefault()
         if (!username || !password) {
             setError('Please fill in both fields.');
@@ -37,6 +37,7 @@ const LoginPage = () => {
             }
 
         } catch (err: any) {
+              console.log("err",err);
             if (err.code === "P101") {
                 setError(err.message); // Hiển thị thông báo: Tên đăng nhập hoặc mật khẩu không chính xác
             }
