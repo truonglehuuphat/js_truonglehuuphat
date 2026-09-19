@@ -5,13 +5,14 @@ import { getLogin } from '../../services/authSerivce';
 import PatientPage from '../PatientPage';
 import AdminPage from '../AdminPage';
 import DoctorPage from '../DoctorPage';
+import { useUser } from '../../context/UserProvider';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
+    const {setUser} = useUser();
     const handleSubmit = async (e : any) => {
         e.preventDefault()
         if (!username || !password) {
@@ -21,18 +22,18 @@ const LoginPage = () => {
 
         try {
             const result = await getLogin({ email: username, password: password });
-
-            console.log("result",result);
+            
             // Lưu token vào localStorage / Cookie và chuyển hướng trang
             if (result !== null) {
                 localStorage.setItem("User", JSON.stringify(result));
             }
             // console.log("result.user?.role:", result.user?.role);
-            if (result.user?.role === "patient") {
+            setUser(result)
+            if (result.role === "patient") {
                 navigate('/patient');
-            } else if (result.user?.role === "admin") {
+            } else if (result.role === "admin") {
                 navigate('/admin');
-            } else if (result.user?.role === "doctor") {
+            } else if (result.role === "doctor") {
                 navigate('/doctor');
             }
 

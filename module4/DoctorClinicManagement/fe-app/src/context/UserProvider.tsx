@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 export type UserContextType = {
     id: number;
     name: string;
     accessToken: string;
     resfreshToken: string;
+    role: string;
 };
 
 type UserContextValue = {
@@ -19,6 +21,7 @@ const initialState: UserContextType = {
     name: "",
     accessToken: "",
     resfreshToken: "",
+    role: ""
 };
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -28,7 +31,7 @@ const STORAGE_KEY = "User";
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUserState] = useState<UserContextType>(initialState);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    // const navigate = useNavigate();
     // Load dữ liệu từ localStorage khi ứng dụng khởi chạy
     useEffect(() => {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -38,7 +41,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
                 const parsed = JSON.parse(raw);
                 
                 // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong LocalStorage
-                setUserState(parsed.user ? { ...parsed.user, accessToken: parsed.accessToken } : parsed);
+                setUserState(parsed);
             } catch (err) {
                 console.error("Lỗi parse localStorage:", err);
                 setIsLoading(false);
@@ -57,6 +60,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         setUserState(initialState);
         localStorage.removeItem(STORAGE_KEY);
+        // navigate('/');
     };
 
     return (

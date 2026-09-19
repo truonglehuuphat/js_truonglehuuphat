@@ -7,7 +7,7 @@ export type DepartContextType = {
 };
 
 type DepartContextValue = {
-    depart: DepartContextType;
+    depart: DepartContextType[];
     setDepart: (user: DepartContextType) => void;
     isLoading: boolean;
 };

@@ -8,9 +8,11 @@ export interface User {
 }
 
 export interface LoginInterface {
+    id: number;
+    name: string;
+    role: string;
     accessToken: string;
-    refreshToken: string;
-    user: User
+    resfreshToken: string;
 }
 
 export interface DataUser {

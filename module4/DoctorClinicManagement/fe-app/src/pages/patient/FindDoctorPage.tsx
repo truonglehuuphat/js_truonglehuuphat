@@ -18,6 +18,8 @@ import { createAppointment, type createTimeSlotDto } from "../../services/appoin
 import type { UserInfo } from "../../types/user";
 import dayjs, { Dayjs } from 'dayjs';
 import { useUser } from "../../context/UserProvider";
+import { doctorContext } from "../../context/DoctorProvider";
+import { departContext } from "../../context/DepartmentProvider";
 
 1
 interface FormValues {
@@ -26,7 +28,7 @@ interface FormValues {
 }
 
 // Format giờ dạng HH:mm từ chuỗi ISO
-const formatDate= (isoString: string) => {
+const formatDate = (isoString: string) => {
     return dayjs(isoString).format('DD/MM/YYYY');
 };
 
@@ -35,10 +37,13 @@ const formatTime = (isoString: string) => {
     return dayjs(isoString).format('HH:mm');
 };
 
-const FindDoctorPage = ( ) => {
+const FindDoctorPage = () => {
     const { user, setUser, logout } = useUser();
-    const [doctors, setDoctors] = useState<DoctorInfo[] | null>(null);
+    const { doctor, setDoctor } = doctorContext();
+    const { depart, setDepart } = departContext();
+
     const [departments, setDepartments] = useState<Department[] | null>(null);
+
     const [selectedShift, setSelectedShift] = useState<TimeSlot | null>(null);
     const [doctorTimeSlots, setDoctorTimeSlots] = useState<TimeSlot[]>([]);
     const [loading, setLoading] = useState(true);
@@ -59,45 +64,45 @@ const FindDoctorPage = ( ) => {
     const selectedDocId = watch("doctorId");
 
 
-    useEffect(() => {
-        // 1. Khởi tạo AbortController
-        const controller = new AbortController();
+    // useEffect(() => {
+    //     // 1. Khởi tạo AbortController
+    //     const controller = new AbortController();
 
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                setError("");
+    //     const fetchData = async () => {
+    //         try {
+    //             setLoading(true);
+    //             setError("");
 
-                const doctorRes = await getAllDoctors();
-                const departmentsRes = await getDepartments();
+    //             const doctorRes = await getAllDoctors();
+    //             const departmentsRes = await getDepartments();
 
-                setDepartments(departmentsRes);
-                setDoctors(doctorRes.doctors);
-            } catch (err: any) {
-                if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
-                    return;
-                }
-                setError("Cannot load doctor and department right now. Please try again.");
-            } finally {
-                setLoading(false);
-            }
-        };
+    //             setDepartments(departmentsRes);
+    //             setDoctors(doctorRes.doctors);
+    //         } catch (err: any) {
+    //             if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {
+    //                 return;
+    //             }
+    //             setError("Cannot load doctor and department right now. Please try again.");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-        fetchData();
-        return () => {
-            controller.abort();
-        };
-    }, []);
+    //     fetchData();
+    //     return () => {
+    //         controller.abort();
+    //     };
+    // }, []);
 
     // --- MEMOIZED DERIVED STATES ---
 
 
     // Bác sĩ đang được chọn chi tiết
     const currentDoctor = useMemo(() => {
-        if (doctors !== null) {
-            return doctors.find((doc) => doc.id === selectedDocId) || null;
+        if (doctor !== null) {
+            return doctor.find((doc) => doc.id === selectedDocId) || null;
         }
-    }, [doctors, selectedDocId]);
+    }, [doctor, selectedDocId]);
 
     // --- HANDLERS ---
     const handleDepartmentChange = (deptId: number | string, onChange: (val: any) => void) => {
@@ -112,7 +117,7 @@ const FindDoctorPage = ( ) => {
             return;
         }
         const numericDocId = Number(docId);
-        const targetDoc = doctors?.find((d) => d.id === numericDocId);
+        const targetDoc = doctor?.find((d) => d.id === numericDocId);
 
         if (targetDoc) {
             if (Number(selectedDeptId) !== targetDoc.departmentId) {
@@ -124,10 +129,10 @@ const FindDoctorPage = ( ) => {
     // Lọc danh sách bác sĩ thuộc Chuyên khoa đang chọn
     const filteredDoctors = useMemo(() => {
         if (!selectedDeptId) return [];
-        if (doctors !== null) {
-            return doctors.filter((doc) => doc.departmentId === Number(selectedDeptId));
+        if (doctor !== null) {
+            return doctor.filter((doc) => doc.departmentId === Number(selectedDeptId));
         }
-    }, [doctors, selectedDeptId]);
+    }, [doctor, selectedDeptId]);
 
     useEffect(() => {
         // 1. Khởi tạo AbortController
@@ -156,13 +161,13 @@ const FindDoctorPage = ( ) => {
         };
     }, [currentDoctor]);
 
-    // Helper kiểm tra ngày trong quá khứ
-    const isPastDate = (dateString: string) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const targetDate = new Date(dateString);
-        return targetDate < today;
-    };
+    // // Helper kiểm tra ngày trong quá khứ
+    // const isPastDate = (dateString: string) => {
+    //     const today = new Date();
+    //     today.setHours(0, 0, 0, 0);
+    //     const targetDate = new Date(dateString);
+    //     return targetDate < today;
+    // };
 
     const handleBooking = async () => {
 
@@ -182,7 +187,7 @@ const FindDoctorPage = ( ) => {
                     doctorId: selectedShift.doctorId,
                     timeSlotId: selectedShift.id,
                     dayOfWeek: selectedShift.dayOfWeek,
-                    timeType:selectedShift.timeType,
+                    timeType: selectedShift.timeType,
                     date: selectedShift.date,
                     startTime: selectedShift.startTime,
                     endTime: selectedShift.endTime,
@@ -208,12 +213,12 @@ const FindDoctorPage = ( ) => {
             `Đã chọn đặt lịch thành công!\n
             - Bác sĩ: ${currentDoctor.name}\n
             - Ngày: ${formatDate(selectedShift.date)}\n
-            - Buổi ${selectedShift.timeType === "morning" ? "Sáng" : "Chiều" 
+            - Buổi ${selectedShift.timeType === "morning" ? "Sáng" : "Chiều"
             }: ${formatTime(selectedShift.startTime)}`
         );
     };
     // --- RENDER SKLETON LOADING ---
-    if (loading || !filteredDoctors) {
+    if (!loading || !filteredDoctors) {
         return (
             <EmptyState />
         );
@@ -257,7 +262,7 @@ const FindDoctorPage = ( ) => {
                                             <MenuItem value="">
                                                 <em>-- Chọn chuyên khoa --</em>
                                             </MenuItem>
-                                            {departments.map((dept) => (
+                                            {depart.map((dept) => (
                                                 <MenuItem key={dept.id} value={dept.id}>
                                                     {dept.name}
                                                 </MenuItem>
@@ -291,7 +296,7 @@ const FindDoctorPage = ( ) => {
                                             </MenuItem>
                                             {filteredDoctors.map((doc) => (
                                                 <MenuItem key={doc.id} value={doc.id}>
-                                                    {doc.title} {doc.user?.name || `Bác sĩ #${doc.id}`}
+                                                    {doc.title} {doc.name || `Bác sĩ #${doc.id}`}
                                                 </MenuItem>
                                             ))}
                                         </Select>

@@ -22,7 +22,7 @@ const MainLayout = () => {
             "radial-gradient(circle at 12% 18%, rgba(255, 122, 162, 0.22) 0, rgba(255,122,162,0) 18%), radial-gradient(circle at 84% 14%, rgba(94, 53, 177, 0.18) 0, rgba(94,53,177,0) 20%), radial-gradient(circle at 78% 82%, rgba(11, 116, 229, 0.16) 0, rgba(11,116,229,0) 16%), radial-gradient(circle at 15% 88%, rgba(89, 219, 170, 0.18) 0, rgba(89,219,170,0) 16%)",
         }}
       />
-      <Header search={search} setSearch={setSearch} />
+      <Header />
 
       <Box sx={{ flex: 1, position: "relative", zIndex: 1 }}>
         <Outlet context={{ search }} />

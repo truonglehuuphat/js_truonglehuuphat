@@ -3,11 +3,15 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 export type DoctorContextType = {
     id: number;
     name: string;
+    title: string;
+    thumbnail:string;
     departmentName: string;
+    departmentId: number;
+    description: string;
 };
 
 type DoctorContextValue = {
-    doctor: DoctorContextType;
+    doctor: DoctorContextType[];
     setDoctor: (user: DoctorContextType) => void;
     isLoading: boolean;
 };
@@ -15,7 +19,8 @@ type DoctorContextValue = {
 const initialState: DoctorContextType = {
     id: 0,
     name: "",
-    departmentName: ""
+    departmentName: "",
+    description: ""
 };
 
 
@@ -52,7 +57,7 @@ export const DoctorProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <DoctorContext.Provider value={{ doctor, setDoctor, isLoading}}>
+        <DoctorContext.Provider value={{ doctor, setDoctor, isLoading }}>
             {children}
         </DoctorContext.Provider>
     );

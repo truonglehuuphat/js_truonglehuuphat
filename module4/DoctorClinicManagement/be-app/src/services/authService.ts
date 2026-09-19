@@ -2,11 +2,12 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import prisma from '../db/prisma';
 import { AppError } from '../types/api';
+import 'dotenv/config'
 
 const SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS) || 12;
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
 const REFESH_SECRET = process.env.JWT_REFRESH_SECRET!;
-const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || '15m';
+const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || '7h';
 const REFESH_EXPIRES = process.env.JWT_REFESH_EXPIRES || '7d';
 
 interface TokenUser {
@@ -82,11 +83,10 @@ export async function login(input: {
     return {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
-        user: {
-            id: user.id,
-            name: user.name,
-            role: user.role
-        }
+        id: user.id,
+        name: user.name,
+        role: user.role
+
     }
 }
 
@@ -128,8 +128,8 @@ export async function refreshTokens(oldRefreshToken: string) {
 // 
 export async function logout(userId: number) {
     await prisma.user.update({
-        where: {id: userId},
-        data: {refreshToken: null},
+        where: { id: userId },
+        data: { refreshToken: null },
     });
 }
 
@@ -138,7 +138,7 @@ export async function logout(userId: number) {
 // 
 export async function getPorfile(userId: number) {
     const user = await prisma.user.findUnique({
-        where: {id: userId},
+        where: { id: userId },
         select: {
             id: true,
             name: true,
@@ -147,7 +147,7 @@ export async function getPorfile(userId: number) {
             createdAt: true,
         },
     });
-    if(!user ) throw new AppError(404, "No data");
+    if (!user) throw new AppError(404, "No data");
     return user;
 }
 

@@ -30,9 +30,9 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
         // verify token
         const payload = jwt.verify(token, process. env.JWT_ACCESS_SECRET!) as AccessTokenPayload;
         // combine user and req  for route handler
-        console.log("payload",payload)
+        // console.log("payload",payload)
         req.user = { id: payload.id, email: payload.email, role: payload.role, };
-        console.log("req.user", req.user);
+        // console.log("req.user", req.user);
         next();
     } catch (error: any) {
          console.log("error",error)

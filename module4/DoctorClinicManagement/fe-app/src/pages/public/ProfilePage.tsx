@@ -6,7 +6,6 @@ import {  useUser } from "../../context/UserProvider";
 
 const ProfileCard = () => {
     const { user, setUser, logout } = useUser();
-
     return (
         <Card
             sx={{
@@ -36,7 +35,7 @@ const ProfileCard = () => {
                         overflow: "hidden",
                         minHeight: 48,
                     }}
-                >Tên: {user.name}</Typography>
+                >Tên:{user.name}</Typography>
             </CardContent>
         </Card>
     )
