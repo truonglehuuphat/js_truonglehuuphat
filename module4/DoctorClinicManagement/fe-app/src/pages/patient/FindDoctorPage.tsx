@@ -3,7 +3,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import {
     Container, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Card, CardContent, Avatar,
-    Chip, Button, Box, Divider, Paper, Alert, CircularProgress, Skeleton
+    Chip, Button, Box, Divider, Paper, Alert, CircularProgress, Skeleton,
+    TextField
 } from "@mui/material";
 import { useForm, Controller, set } from "react-hook-form";
 import type { TimeSlot, WorkShift } from "../../types/appointment";
@@ -51,6 +52,7 @@ const FindDoctorPage = () => {
     const [loadingTimeSlot, setLoadingTimeSlot] = useState(true);
     const [error, setError] = useState("");
     const [isBooking, setIsBooking] = useState(false);
+    const [description, setDescription] = useState("");
 
     // --- REACT HOOK FORM ---
     const { control, watch, setValue } = useForm<FormValues>({
@@ -358,6 +360,15 @@ const FindDoctorPage = () => {
                                     />
                                 </Box>
 
+                                <TextField
+                                    fullWidth
+                                    label="Nhập vấn đề sức khỏe cần khám"
+                                    multiline
+                                    rows={3}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+
                                 {/* Nút đặt lịch */}
                                 <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
                                     <Button
@@ -372,7 +383,6 @@ const FindDoctorPage = () => {
                                             : "Vui lòng chọn suất khám"}
                                     </Button>
                                 </Box>
-
                             </CardContent>
                         </Card>
                     ) : (
