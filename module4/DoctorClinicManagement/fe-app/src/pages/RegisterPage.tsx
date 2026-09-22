@@ -55,8 +55,8 @@ const RegisterPage = () => {
     }
 
     useEffect(() => {
-        // Lấy chuỗi dữ liệu từ localStorage (thay 'userData' bằng key bạn đã lưu)
-        const storedData = localStorage.getItem('department');
+        // Lấy chuỗi dữ liệu từ sessionStorage (thay 'userData' bằng key bạn đã lưu)
+        const storedData = sessionStorage.getItem('department');
         console.log(storedData);
         if (storedData) {
             try {
@@ -64,10 +64,10 @@ const RegisterPage = () => {
                 console.log(parsedData);
                 setDepartment(parsedData);
             } catch (error) {
-                console.error("Lỗi parse dữ liệu từ localStorage:", error);
+                console.error("Lỗi parse dữ liệu từ sessionStorage:", error);
             }
         }
-        const doctorStore = localStorage.getItem('doctors');
+        const doctorStore = sessionStorage.getItem('doctors');
         console.log(doctorStore);
         if (doctorStore) {
             try {
@@ -75,7 +75,7 @@ const RegisterPage = () => {
                 console.log(parsedDataDoctor);
                 setDoctors(parsedDataDoctor);
             } catch (error) {
-                console.error("Lỗi parse dữ liệu từ localStorage:", error);
+                console.error("Lỗi parse dữ liệu từ sessionStorage:", error);
             }
         }
     }, []);

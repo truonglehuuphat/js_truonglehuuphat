@@ -31,7 +31,7 @@ export const combineProviders = (...providers: ProviderComponent[]) => {
 const AppProviders = combineProviders(
   DepartProvider,
   DoctorProvider,
-  UserProvider
+  UserProvider,
 );
 
 const Providers = () => {

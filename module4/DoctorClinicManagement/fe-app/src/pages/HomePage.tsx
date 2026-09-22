@@ -29,8 +29,8 @@ const HomePage = () => {
                 // setDepartments(departmentsRes);
                 // setDoctors(doctorRes.doctors);
                 console.log(departmentsRes);
-                localStorage.setItem("department", JSON.stringify(departmentsRes));
-                localStorage.setItem("doctors",JSON.stringify(doctorRes.doctors));
+                sessionStorage.setItem("department", JSON.stringify(departmentsRes));
+                sessionStorage.setItem("doctors",JSON.stringify(doctorRes.doctors));
 
             } catch (err: any) {
                 if (err?.name === "CanceledError" || err?.code === "ER  R_CANCELED") {

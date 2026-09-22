@@ -23,9 +23,9 @@ const LoginPage = () => {
         try {
             const result = await getLogin({ email: username, password: password });
             
-            // Lưu token vào localStorage / Cookie và chuyển hướng trang
+            // Lưu token vào sessionStorage / Cookie và chuyển hướng trang
             if (result !== null) {
-                localStorage.setItem("User", JSON.stringify(result));
+                sessionStorage.setItem("User", JSON.stringify(result));
             }
             // console.log("result.user?.role:", result.user?.role);
             setUser(result)

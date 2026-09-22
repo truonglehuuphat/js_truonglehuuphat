@@ -18,8 +18,11 @@ type DoctorContextValue = {
 
 const initialState: DoctorContextType = {
     id: 0,
+    title: "",
     name: "",
+    thumbnail: "",
     departmentName: "",
+    departmentId: 0,
     description: ""
 };
 
@@ -32,18 +35,18 @@ export const DoctorProvider = ({ children }: { children: ReactNode }) => {
     const [doctor, setDoctorState] = useState<DoctorContextType>(initialState);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // Load dữ liệu từ localStorage khi ứng dụng khởi chạy
+    // Load dữ liệu từ sessionStorage khi ứng dụng khởi chạy
     useEffect(() => {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = sessionStorage.getItem(STORAGE_KEY);
 
         if (raw) {
             try {
                 const parsed = JSON.parse(raw);
 
-                // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong LocalStorage
+                // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong sessionStorage
                 setDoctorState(parsed);
             } catch (err) {
-                console.error("Lỗi parse localStorage:", err);
+                console.error("Lỗi parse sessionStorage:", err);
                 setIsLoading(false);
             }
         }
@@ -53,7 +56,7 @@ export const DoctorProvider = ({ children }: { children: ReactNode }) => {
     // Hàm cập nhật User (được gọi ở các Component/Page khác)
     const setDoctor = (newDoctor: DoctorContextType) => {
         setDoctor(newDoctor);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newDoctor));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newDoctor));
     };
 
     return (

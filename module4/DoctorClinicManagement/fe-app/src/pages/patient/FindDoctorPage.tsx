@@ -7,7 +7,7 @@ import {
     TextField
 } from "@mui/material";
 import { useForm, Controller, set } from "react-hook-form";
-import type { TimeSlot, WorkShift } from "../../types/appointment";
+import { TimeType, type TimeSlot, type WorkShift } from "../../types/appointment";
 import type DoctorInfo from "../doctor/DoctorInfo";
 import { getAllDoctors, getTimeSlotByDoctorId } from "../../services/doctorService";
 import { getDepartments } from "../../services/departmentService";
@@ -21,6 +21,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useUser } from "../../context/UserProvider";
 import { doctorContext } from "../../context/DoctorProvider";
 import { departContext } from "../../context/DepartmentProvider";
+import { useAppointment } from "../../context/Appointment";
 
 1
 interface FormValues {
@@ -38,11 +39,15 @@ const formatTime = (isoString: string) => {
     return dayjs(isoString).format('HH:mm');
 };
 
+interface UserAppointment {
+    onIsAppoint: (isAppoint: boolean) => void
+}
+
 const FindDoctorPage = () => {
     const { user, setUser, logout } = useUser();
     const { doctor, setDoctor } = doctorContext();
     const { depart, setDepart } = departContext();
-
+    const { triggerRefresh } = useAppointment();
     const [departments, setDepartments] = useState<Department[] | null>(null);
 
     const [selectedShift, setSelectedShift] = useState<TimeSlot | null>(null);
@@ -189,15 +194,25 @@ const FindDoctorPage = () => {
                     doctorId: selectedShift.doctorId,
                     timeSlotId: selectedShift.id,
                     dayOfWeek: selectedShift.dayOfWeek,
-                    timeType: selectedShift.timeType,
+                    timeType: selectedShift.timeType ?? TimeType.morning,
                     date: selectedShift.date,
                     startTime: selectedShift.startTime,
                     endTime: selectedShift.endTime,
+                    description: description,
                 }
                 // setSuccessMsg("data", data);
+
                 const response = await createAppointment(data);
                 setSuccessMsg("Đặt lịch thành công!");
-                console.log(response);
+                triggerRefresh();
+                console.log("response Đặt lịch thành công!", response);
+                alert(
+                    `Đã chọn đặt lịch thành công!\n
+            - Bác sĩ: ${currentDoctor.name}\n
+            - Ngày: ${formatDate(selectedShift.date)}\n
+            - Buổi ${selectedShift.timeType === "morning" ? "Sáng" : "Chiều"
+                    }: ${formatTime(selectedShift.startTime)}`
+                );
                 setSelectedShift(null); // Reset lại lựa chọn
             } else {
                 setIsBooking(false);
@@ -211,13 +226,7 @@ const FindDoctorPage = () => {
             setIsBooking(false);
         }
 
-        alert(
-            `Đã chọn đặt lịch thành công!\n
-            - Bác sĩ: ${currentDoctor.name}\n
-            - Ngày: ${formatDate(selectedShift.date)}\n
-            - Buổi ${selectedShift.timeType === "morning" ? "Sáng" : "Chiều"
-            }: ${formatTime(selectedShift.startTime)}`
-        );
+
     };
     // --- RENDER SKLETON LOADING ---
     if (!loading || !filteredDoctors) {

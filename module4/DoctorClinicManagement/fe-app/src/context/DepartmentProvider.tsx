@@ -27,18 +27,18 @@ export const DepartProvider = ({ children }: { children: ReactNode }) => {
     const [depart, setDepartState] = useState<DepartContextType>(initialState);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // Load dữ liệu từ localStorage khi ứng dụng khởi chạy
+    // Load dữ liệu từ sessionStorage khi ứng dụng khởi chạy
     useEffect(() => {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = sessionStorage.getItem(STORAGE_KEY);
 
         if (raw) {
             try {
                 const parsed = JSON.parse(raw);
 
-                // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong LocalStorage
+                // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong sessionStorage
                 setDepartState(parsed);
             } catch (err) {
-                console.error("Lỗi parse localStorage:", err);
+                console.error("Lỗi parse sessionStorage:", err);
                 setIsLoading(false);
             }
         }
@@ -48,7 +48,7 @@ export const DepartProvider = ({ children }: { children: ReactNode }) => {
     // Hàm cập nhật User (được gọi ở các Component/Page khác)
     const setDepart = (newDepart: DepartContextType) => {
         setDepart(newDepart);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newDepart));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newDepart));
     };
 
     return (

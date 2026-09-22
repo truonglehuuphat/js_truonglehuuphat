@@ -32,34 +32,57 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUserState] = useState<UserContextType>(initialState);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     // const navigate = useNavigate();
-    // Load dữ liệu từ localStorage khi ứng dụng khởi chạy
+    // Load dữ liệu từ sessionStorage khi ứng dụng khởi chạy
     useEffect(() => {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = sessionStorage.getItem(STORAGE_KEY);
 
         if (raw) {
             try {
                 const parsed = JSON.parse(raw);
-                
-                // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong LocalStorage
+
+                // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong sessionStorage
                 setUserState(parsed);
             } catch (err) {
-                console.error("Lỗi parse localStorage:", err);
+                console.error("Lỗi parse sessionStorage:", err);
                 setIsLoading(false);
             }
         }
-        
+
+    }, []);
+
+    useEffect(() => {
+        // 1. Tải dữ liệu từ localStorage khi ứng dụng mount
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+            try {
+                setUserState(JSON.parse(raw));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // 2. Lắng nghe sự kiện tắt/đóng tab
+        const handleUnload = () => {
+            localStorage.removeItem(STORAGE_KEY);
+        };
+
+        window.addEventListener("beforeunload", handleUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleUnload);
+        };
     }, []);
 
     // Hàm cập nhật User (được gọi ở các Component/Page khác)
     const setUser = (newUser: UserContextType) => {
         setUserState(newUser);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
     };
 
     // Hàm Đăng xuất
     const logout = () => {
         setUserState(initialState);
-        localStorage.removeItem(STORAGE_KEY);
+        sessionStorage.removeItem(STORAGE_KEY);
         // navigate('/');
     };
 

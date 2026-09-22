@@ -23,6 +23,7 @@ export interface createTimeSlotDto {
   timeType: TimeType;
   startTime: string;  // ISO string hoặc HH:mm
   endTime: string;    // ISO string hoặc HH:mm
+  description?: string;
 }
 
 export interface createTimeSlotResponseDto {
@@ -31,8 +32,8 @@ export interface createTimeSlotResponseDto {
 }
 
 export const getAllAppointmentById = async (signal?: AbortSignal) => {
-  // 1. Lấy chuỗi thô từ localStorage
-  const rawUser = localStorage.getItem('User');
+  // 1. Lấy chuỗi thô từ sessionStorage
+  const rawUser = sessionStorage.getItem('User');
   let token = "";
   if (rawUser) {
     try {
@@ -41,11 +42,11 @@ export const getAllAppointmentById = async (signal?: AbortSignal) => {
       token = user.accessToken;
 
     } catch (e) {
-      console.error("Lỗi parse dữ liệu User từ localStorage", e);
+      console.error("Lỗi parse dữ liệu User từ sessionStorage", e);
       return;
     }
   } else {
-    console.log("Không tìm thấy thông tin User trong localStorage");
+    console.log("Không tìm thấy thông tin User trong sessionStorage");
     return;
   }
 
@@ -72,8 +73,8 @@ export const getAllAppointmentById = async (signal?: AbortSignal) => {
 
 
 export const createAppointment = async (data: createTimeSlotDto) => {
-  // 1. Lấy chuỗi thô từ localStorage
-  const rawUser = localStorage.getItem('User');
+  // 1. Lấy chuỗi thô từ sessionStorage
+  const rawUser = sessionStorage.getItem('User');
 
   let token = "";
   if (rawUser) {
@@ -83,11 +84,11 @@ export const createAppointment = async (data: createTimeSlotDto) => {
       token = user.accessToken;
       console.log("token", token);
     } catch (e) {
-      console.error("Lỗi parse dữ liệu User từ localStorage", e);
+      console.error("Lỗi parse dữ liệu User từ sessionStorage", e);
       return;
     }
   } else {
-    console.log("Không tìm thấy thông tin User trong localStorage");
+    console.log("Không tìm thấy thông tin User trong sessionStorage");
     return;
   }
   // 3. Tiến hành gọi API

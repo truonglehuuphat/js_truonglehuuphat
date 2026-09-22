@@ -7,6 +7,7 @@ import type { UserInfo } from "../../types/user";
 import { useUser } from "../../context/UserProvider";
 import { doctorContext } from "../../context/DoctorProvider";
 import { departContext } from "../../context/DepartmentProvider";
+import { useAppointment } from "../../context/Appointment";
 
 const MyAppointmentsPage = () => {
     const [appoint, SetAppoint] = useState([]);
@@ -16,20 +17,20 @@ const MyAppointmentsPage = () => {
     const { user, setUser, logout } = useUser();
     const { doctor, setDoctor } = doctorContext();
     const { depart, setDepart } = departContext();
+    const { refreshTrigger } = useAppointment();
+    console.log("refreshTrigger", refreshTrigger);
     useEffect(() => {
         const controller = new AbortController();
-        if (!user?.accessToken) {
-            return;
-        }
+        console.log("MyAppointmentsPage");
+        // if (!user?.accessToken) {
+        //     return;
+        // }
         const fetchData = async () => {
             try {
                 setLoading(true);
                 setError("");
-                // console.log("2. Gọi API:"); // KIỂM TRA 2
-                // console.log("userInfo.user.id", userInfo.id);
                 const result = await getAllAppointmentById(controller.signal);
                 // console.log("2. Kết quả API:", doctorRes.doctors); // KIỂM TRA 2
-                // console.log("result.data.data:", result.data?.data);
                 SetAppoint(result.data?.data);
             } catch (err: any) {
                 if (err.name === "CanceledError" || err.name === "AbortError" || err.code === "ERR_CANCELED") {
@@ -38,7 +39,6 @@ const MyAppointmentsPage = () => {
                 }
                 console.log("3. Lỗi gặp phải:", err); // KIỂM TRA 3
                 setError("Cannot load your Appointment right now. Please try again.");
-                // console.log("Cannot load doctors right now. Please try again."); // KIỂM TRA fail
             }
             finally {
                 if (!controller.signal.aborted) {
@@ -50,11 +50,7 @@ const MyAppointmentsPage = () => {
         return () => {
             controller.abort();
         };
-    }, [user]);
-
-    console.log("doctor", doctor);
-    console.log("appoint", appoint);
-
+    }, [user?.accessToken, refreshTrigger]);
     const appointmentData: MeAppointment = {
         doctorName: " ",
         department: " ",
@@ -99,7 +95,6 @@ const MyAppointmentsPage = () => {
     const mappedAppointments: MeAppointment[] = useMemo(() => {
         return mapAppointmentsToMeAppointments(appoint, doctor, depart);
     }, [appoint, doctor, depart]);
-    console.log("mappedAppointments", mappedAppointments)
 
     return (
         <Box sx={{ p: 3 }}>

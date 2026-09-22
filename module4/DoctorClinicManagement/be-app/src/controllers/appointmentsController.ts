@@ -16,11 +16,11 @@ interface AccessTokenPayload {
 }
 
 interface AuthenticatedRequest extends Request {
-  user?: {
-    id: number;
-    email: string;
-    role: string;
-  };
+    user?: {
+        id: number;
+        email: string;
+        role: string;
+    };
 }
 
 export async function getAllAppointmentsById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -35,7 +35,6 @@ export async function getAllAppointmentsById(req: AuthenticatedRequest, res: Res
             success: true,
             data: response
         });
-        return response;
     } catch (error) {
         next(error);
     }
@@ -67,7 +66,11 @@ export async function cancelAppointment(req: Request, res: Response, next: NextF
 
 export async function create(req: Request, res: Response, next: NextFunction) {
     try {
-        appointmentSvc.create(req.body);
+        const response = appointmentSvc.create(req.body);
+        return res.status(200).json({
+            success: true,
+            data: response
+        });
     } catch (error) {
         next(error);
     }

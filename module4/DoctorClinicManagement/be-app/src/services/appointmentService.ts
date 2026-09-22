@@ -18,6 +18,7 @@ export interface createTimeSlotDto {
   doctorId: number;
   timeSlotId: number;
   dayOfWeek: DayOfWeek.monday;
+  description: string;
   date: string;       // ISO string or YYYY-MM-DD
   timeType: TimeType;
   startTime: string;  // ISO string hoặc HH:mm
@@ -98,6 +99,7 @@ export async function create(data: createTimeSlotDto) {
         timeSlotId: timeSlot.id,
         date: data.date,
         timeType: data.timeType,
+        description: data.description,
         status: "Active" // Trạng thái mặc định ban đầu
       },
       include: {
