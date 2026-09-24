@@ -7,6 +7,11 @@ import type { MeAppointment } from "../../types/appointment";
 import CommentIcon from '@mui/icons-material/Comment';
 
 const MyAppointmetRowPage = React.memo(({ meAppointment }: { meAppointment: MeAppointment }) => {
+
+    const handleDeleteAppoint = async() => {
+        console.log("delete appointment")
+    }
+
     return (
         <TableRow hover>
             <TableCell sx={{ fontWeight: "bold", color: "#1a237e" }} >{meAppointment.doctorName}</TableCell>
@@ -17,7 +22,7 @@ const MyAppointmetRowPage = React.memo(({ meAppointment }: { meAppointment: MeAp
             <TableCell align="right" >
                 <ModeEditIcon> sửa </ModeEditIcon>
             </TableCell>
-            <TableCell align="right" >
+            <TableCell align="right" onClick={handleDeleteAppoint} >
                 <DeleteIcon> xóa </DeleteIcon>
             </TableCell>
             <TableCell align="right" >

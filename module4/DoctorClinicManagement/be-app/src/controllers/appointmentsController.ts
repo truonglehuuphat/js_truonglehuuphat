@@ -58,7 +58,11 @@ export async function getMyAppointments(req: Request, res: Response, next: NextF
 
 export async function cancelAppointment(req: Request, res: Response, next: NextFunction) {
     try {
-
+        const response = appointmentSvc.remove(req.body);
+        return res.status(200).json({
+            success: true,
+            data: response
+        });
     } catch (error) {
         next(error);
     }

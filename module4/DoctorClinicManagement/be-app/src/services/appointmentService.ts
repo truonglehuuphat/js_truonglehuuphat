@@ -2,6 +2,7 @@ import prisma from '../db/prisma';
 import { Prisma, Role, StatusAppointment, TimeType } from "../generated/prisma/client";
 import { AppError } from "../types/api";
 import { buildSkip } from '../utils/pagination';
+import { format } from 'date-fns';
 
 enum DayOfWeek {
   monday = "monday",
@@ -24,6 +25,15 @@ export interface createTimeSlotDto {
   startTime: string;  // ISO string hoặc HH:mm
   endTime: string;    // ISO string hoặc HH:mm
 }
+
+export interface deleteTimeSlotDto {
+  userId: number;
+  appointmentId: number;
+  timeSlotId: number;
+  date: string;       // ISO string or YYYY-MM-DD
+  startTime: string;  // ISO string hoặc HH:mm
+}
+
 
 export async function getAllAppointmentsById(userId: number) {
   // kiểm tra userId có tồn tại không?
@@ -67,7 +77,7 @@ export async function create(data: createTimeSlotDto) {
     throw new AppError(404, "Thông tin bác sĩ hoặc bệnh nhân không tồn tại");
   }
 
-  // 2. Tìm chính xác TimeSlot dựa trên timeSlotId và doctorId
+  // 2. Tìm chính xác TimeSlot dựa trên timeSlotId
   const timeSlot = await prisma.timeSlot.findFirst({
     where: {
       id: data.timeSlotId,
@@ -119,4 +129,70 @@ export async function create(data: createTimeSlotDto) {
 
 export async function updateStatus() {
 
+
+}
+
+
+function IsValidTimeToCancel(timeNow: Date, TimeInSlot: Date): boolean {
+  if (!(timeNow instanceof Date) || !(TimeInSlot instanceof Date)) {
+    throw new Error("Both arguments must be Date objects.");
+  }
+  if(timeNow.getDate() < TimeInSlot.getDate()){
+    return true;
+  }
+  // Extract hours, minutes, seconds
+  const time1 = timeNow.getHours() * 3600 + timeNow.getMinutes() * 60;
+  const time2 = TimeInSlot.getHours() * 3600 + TimeInSlot.getMinutes() * 60;
+  if (time2 - time1 > 7200) {
+    return true;
+  }
+  return false;
+}
+
+export async function remove(data: deleteTimeSlotDto) {
+  const [userInfo, appointmentInfo] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: data.userId },
+    }),
+    prisma.appointment.findUnique({
+      where: { id: data.appointmentId },
+      include: { user: true }, // Join bảng User để lấy thông tin chi tiết bác sĩ
+    }),
+  ]);
+
+  if (!userInfo || !appointmentInfo) {
+    throw new AppError(404, "Thông tin bệnh nhân hoặc đặt lịch không tồn tại");
+  }
+
+  // 2. Tìm chính xác TimeSlot dựa trên timeSlotId
+  const timeSlot = await prisma.timeSlot.findFirst({
+    where: {
+      id: data.timeSlotId,
+    },
+  });
+  if (!timeSlot) {
+    throw new AppError(404, "Thông tin thời gian đặt lịch không tồn tại");
+  }
+  const timeNow = new Date();
+  const TimeInSlot = new Date(timeSlot.startTime);
+
+  if (IsValidTimeToCancel(timeNow, TimeInSlot)) {
+    const result = await prisma.$transaction(async (tx) => {
+      // Đánh dấu khung giờ là đã bị block
+      await tx.timeSlot.update({
+        where: { id: timeSlot.id },
+        data: { isBlocked: false },
+      });
+
+      // Tạo lịch hẹn mới
+      await tx.appointment.delete({
+        where: {
+          id: data.appointmentId,
+        }
+      });
+    });
+    console.log("cancel lich hen thanh cong");
+  } else {
+    throw new AppError(500, "Xóa lịch đặt thât bại");
+  }
 }

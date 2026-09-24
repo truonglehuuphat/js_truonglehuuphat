@@ -18,6 +18,7 @@ export async function getDoctors(req: Request, res: Response, next: NextFunction
     try {
         const query = req.query as any;
         const { data, total } = await svc.findAll(query);
+        console.log(data);
         res.json({
             success: true,
             data,

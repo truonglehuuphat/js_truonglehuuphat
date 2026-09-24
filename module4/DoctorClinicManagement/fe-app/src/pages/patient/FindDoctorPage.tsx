@@ -184,11 +184,11 @@ const FindDoctorPage = () => {
         // console.log("userInfo", userInfo);
         // console.log("userInfo.id", userInfo.id);
         try {
-            console.log("user.id", user.id)
-            console.log("currentDoctor.id", currentDoctor.id)
+            // console.log("user.id", user.id)
+            // console.log("currentDoctor.id", currentDoctor.id)
             if (user.id !== currentDoctor.id) {
                 setIsBooking(true);
-                console.log("selectedShift ", selectedShift);
+                // console.log("selectedShift ", selectedShift);
                 const data: createTimeSlotDto = {
                     userId: user.id,
                     doctorId: selectedShift.doctorId,
@@ -205,7 +205,7 @@ const FindDoctorPage = () => {
                 const response = await createAppointment(data);
                 setSuccessMsg("Đặt lịch thành công!");
                 triggerRefresh();
-                console.log("response Đặt lịch thành công!", response);
+                // console.log("response Đặt lịch thành công!", response);
                 alert(
                     `Đã chọn đặt lịch thành công!\n
             - Bác sĩ: ${currentDoctor.name}\n
@@ -219,7 +219,7 @@ const FindDoctorPage = () => {
                 setError("Đặt lịch thất bại, Bác sĩ không thể đặt lịch chính mình");
             }
         } catch (err) {
-            console.log("err ", err);
+            // console.log("err ", err);
             setError("Đặt lịch thất bại.");
 
         } finally {

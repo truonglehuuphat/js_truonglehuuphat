@@ -4,7 +4,7 @@ export type DoctorContextType = {
     id: number;
     name: string;
     title: string;
-    thumbnail:string;
+    thumbnail?: string;
     departmentName: string;
     departmentId: number;
     description: string;
@@ -12,19 +12,21 @@ export type DoctorContextType = {
 
 type DoctorContextValue = {
     doctor: DoctorContextType[];
-    setDoctor: (user: DoctorContextType) => void;
-    isLoading: boolean;
+    setDoctor: (doctor: DoctorContextType) => void;
+    isDoctorLoading: boolean;
 };
 
-const initialState: DoctorContextType = {
-    id: 0,
-    title: "",
-    name: "",
-    thumbnail: "",
-    departmentName: "",
-    departmentId: 0,
-    description: ""
-};
+const initialState: DoctorContextType[] = [
+    {
+        id: 0,
+        title: "",
+        name: "",
+        thumbnail: "",
+        departmentName: "",
+        departmentId: 0,
+        description: ""
+    }
+];
 
 
 const STORAGE_KEY = "doctors";
@@ -32,8 +34,8 @@ const STORAGE_KEY = "doctors";
 const DoctorContext = createContext<DoctorContextValue | undefined>(undefined);
 
 export const DoctorProvider = ({ children }: { children: ReactNode }) => {
-    const [doctor, setDoctorState] = useState<DoctorContextType>(initialState);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [doctor, setDoctorState] = useState<DoctorContextType[]>(initialState);
+    const [isDoctorLoading, setIsDoctorLoading] = useState<boolean>(true);
 
     // Load dữ liệu từ sessionStorage khi ứng dụng khởi chạy
     useEffect(() => {
@@ -41,13 +43,15 @@ export const DoctorProvider = ({ children }: { children: ReactNode }) => {
 
         if (raw) {
             try {
+                setIsDoctorLoading(true);
                 const parsed = JSON.parse(raw);
 
                 // Đảm bảo lấy đúng cấu trúc dữ liệu lưu trong sessionStorage
                 setDoctorState(parsed);
+
             } catch (err) {
                 console.error("Lỗi parse sessionStorage:", err);
-                setIsLoading(false);
+                setIsDoctorLoading(false);
             }
         }
 
@@ -56,11 +60,12 @@ export const DoctorProvider = ({ children }: { children: ReactNode }) => {
     // Hàm cập nhật User (được gọi ở các Component/Page khác)
     const setDoctor = (newDoctor: DoctorContextType) => {
         setDoctor(newDoctor);
+        setIsDoctorLoading(true);
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newDoctor));
     };
 
     return (
-        <DoctorContext.Provider value={{ doctor, setDoctor, isLoading }}>
+        <DoctorContext.Provider value={{ doctor, setDoctor, isDoctorLoading }}>
             {children}
         </DoctorContext.Provider>
     );

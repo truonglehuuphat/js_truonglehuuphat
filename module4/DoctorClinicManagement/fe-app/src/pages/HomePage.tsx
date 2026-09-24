@@ -7,6 +7,7 @@ import type DoctorInfo from "./doctor/DoctorInfo";
 import { getDepartments } from "../services/departmentService";
 import { getAllDoctors } from "../services/doctorService";
 import { doctorContext } from "../context/DoctorProvider";
+import { departContext } from "../context/DepartmentProvider";
 
 
 const HomePage = () => {
@@ -14,7 +15,8 @@ const HomePage = () => {
     // const [departments, setDepartments] = useState<Department[] | null>(null);
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState("");
-    const { doctors, setDoctor } = doctorContext();
+    const { setDoctor } = doctorContext();
+    const {setDepart} = departContext();
     useEffect(() => {
         // 1. Khởi tạo AbortController
         const controller = new AbortController();
@@ -26,9 +28,11 @@ const HomePage = () => {
 
                 const doctorRes = await getAllDoctors();
                 const departmentsRes = await getDepartments();
-                // setDepartments(departmentsRes);
-                // setDoctors(doctorRes.doctors);
                 console.log(departmentsRes);
+                console.log(doctorRes);
+                // setDepart(departmentsRes);
+                // setDoctor(doctorRes);
+                // console.log(departmentsRes);
                 sessionStorage.setItem("department", JSON.stringify(departmentsRes));
                 sessionStorage.setItem("doctors",JSON.stringify(doctorRes.doctors));
 

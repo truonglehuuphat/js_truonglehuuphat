@@ -9,14 +9,16 @@ export type DepartContextType = {
 type DepartContextValue = {
     depart: DepartContextType[];
     setDepart: (user: DepartContextType) => void;
-    isLoading: boolean;
+    isDepartLoading: boolean;
 };
 
-const initialState: DepartContextType = {
-    id: 0,
-    name: "",
-    departmentName: ""
-};
+const initialState: DepartContextType[] = [
+    {
+        id: 0,
+        name: "",
+        departmentName: ""
+    }
+];
 
 
 const STORAGE_KEY = "department";
@@ -24,8 +26,8 @@ const STORAGE_KEY = "department";
 const DepartContext = createContext<DepartContextValue | undefined>(undefined);
 
 export const DepartProvider = ({ children }: { children: ReactNode }) => {
-    const [depart, setDepartState] = useState<DepartContextType>(initialState);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [depart, setDepartState] = useState<DepartContextType[]>(initialState);
+    const [isDepartLoading, setIsDepartLoading] = useState<boolean>(true);
 
     // Load dữ liệu từ sessionStorage khi ứng dụng khởi chạy
     useEffect(() => {
@@ -39,7 +41,7 @@ export const DepartProvider = ({ children }: { children: ReactNode }) => {
                 setDepartState(parsed);
             } catch (err) {
                 console.error("Lỗi parse sessionStorage:", err);
-                setIsLoading(false);
+                setIsDepartLoading(false);
             }
         }
 
@@ -48,11 +50,12 @@ export const DepartProvider = ({ children }: { children: ReactNode }) => {
     // Hàm cập nhật User (được gọi ở các Component/Page khác)
     const setDepart = (newDepart: DepartContextType) => {
         setDepart(newDepart);
+        setIsDepartLoading(true)
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newDepart));
     };
 
     return (
-        <DepartContext.Provider value={{ depart, setDepart, isLoading}}>
+        <DepartContext.Provider value={{ depart, setDepart, isDepartLoading }}>
             {children}
         </DepartContext.Provider>
     );

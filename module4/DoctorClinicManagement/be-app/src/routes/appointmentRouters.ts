@@ -30,6 +30,13 @@ appointmentRouter.get(
 //     controller.getDoctor
 // );
 
+appointmentRouter.delete(
+    "/me",
+    authenticate,
+    authorize('patient','admin'),
+    controller.cancelAppointment
+);
+
 appointmentRouter.patch(
     "/:id/status",
     validatedId,
