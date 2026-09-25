@@ -30,8 +30,8 @@ const HomePage = () => {
                 const departmentsRes = await getDepartments();
                 console.log(departmentsRes);
                 console.log(doctorRes);
-                // setDepart(departmentsRes);
-                // setDoctor(doctorRes);
+                setDepart(departmentsRes);
+                setDoctor(doctorRes);
                 // console.log(departmentsRes);
                 sessionStorage.setItem("department", JSON.stringify(departmentsRes));
                 sessionStorage.setItem("doctors",JSON.stringify(doctorRes.doctors));

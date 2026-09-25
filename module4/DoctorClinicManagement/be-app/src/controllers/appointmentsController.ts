@@ -58,12 +58,22 @@ export async function getMyAppointments(req: Request, res: Response, next: NextF
 
 export async function cancelAppointment(req: Request, res: Response, next: NextFunction) {
     try {
-        const response = appointmentSvc.remove(req.body);
+        const data = req.body;
+        console.log("data", data);
+        const message = await appointmentSvc.remove(data);
+        console.log("message", message);
+        if (message.includes("thất bại")) {
+            return res.status(400).json({
+                success: false,
+                message: message, // "Xóa lịch thất bại thời gian phải trên 2 tiếng"
+            });
+        }
         return res.status(200).json({
             success: true,
-            data: response
+            message: message
         });
     } catch (error) {
+        console.error("Lỗi server:", error);
         next(error);
     }
 }

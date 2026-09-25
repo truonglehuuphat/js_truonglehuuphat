@@ -46,7 +46,8 @@ export async function getAllAppointmentsById(userId: number) {
   const data = await prisma.appointment.findMany({
     where: { userId: userId },
     include: {
-      doctor: true, // Bao gồm thông tin bác sĩ
+      doctor: true, // Bao gồm thông tin bác sĩ,
+      timeSlot:true,
     },
     orderBy: {
       createdAt: 'desc', // Sắp xếp lịch hẹn mới nhất lên đầu
@@ -54,10 +55,6 @@ export async function getAllAppointmentsById(userId: number) {
   })
   // console.log(data);
   return data;
-}
-
-export async function getAppointments() {
-
 }
 
 export async function create(data: createTimeSlotDto) {
@@ -137,19 +134,24 @@ function IsValidTimeToCancel(timeNow: Date, TimeInSlot: Date): boolean {
   if (!(timeNow instanceof Date) || !(TimeInSlot instanceof Date)) {
     throw new Error("Both arguments must be Date objects.");
   }
+  console.log("timeNow",timeNow)
+  console.log("TimeInSlot",TimeInSlot)
   if(timeNow.getDate() < TimeInSlot.getDate()){
     return true;
   }
   // Extract hours, minutes, seconds
   const time1 = timeNow.getHours() * 3600 + timeNow.getMinutes() * 60;
   const time2 = TimeInSlot.getHours() * 3600 + TimeInSlot.getMinutes() * 60;
-  if (time2 - time1 > 7200) {
+  console.log("time1",time1)
+  console.log("time2",time2)
+  if (Math.abs(time2 - time1) > 7200) {
     return true;
   }
+
   return false;
 }
 
-export async function remove(data: deleteTimeSlotDto) {
+export async function remove(data: deleteTimeSlotDto): Promise<string> {
   const [userInfo, appointmentInfo] = await Promise.all([
     prisma.user.findUnique({
       where: { id: data.userId },
@@ -191,8 +193,12 @@ export async function remove(data: deleteTimeSlotDto) {
         }
       });
     });
-    console.log("cancel lich hen thanh cong");
+    // console.log("cancel lich hen thanh cong");
+    const message = "Xóa lịch thành công";
+    return message;
   } else {
-    throw new AppError(500, "Xóa lịch đặt thât bại");
+    const message = "Xóa lịch thất bại thời gian phải trên 2 tiếng";
+    return message;
   }
+
 }

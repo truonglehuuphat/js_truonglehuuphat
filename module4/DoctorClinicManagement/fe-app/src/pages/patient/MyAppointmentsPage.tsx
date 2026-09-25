@@ -18,10 +18,8 @@ const MyAppointmentsPage = () => {
     const { doctor, setDoctor } = doctorContext();
     const { depart, setDepart } = departContext();
     const { refreshTrigger } = useAppointment();
-    console.log("refreshTrigger", refreshTrigger);
     useEffect(() => {
         const controller = new AbortController();
-        console.log("MyAppointmentsPage");
         // if (!user?.accessToken) {
         //     return;
         // }
@@ -31,7 +29,8 @@ const MyAppointmentsPage = () => {
                 setError("");
                 const result = await getAllAppointmentById(controller.signal);
                 // console.log("2. Kết quả API:", doctorRes.doctors); // KIỂM TRA 2
-                SetAppoint(result.data?.data);
+                SetAppoint(result?.data.data);
+                console.log("SetAppoint",result?.data.data);
             } catch (err: any) {
                 if (err.name === "CanceledError" || err.name === "AbortError" || err.code === "ERR_CANCELED") {
                     console.log("Request đã bị hủy do component unmount hoặc re-render");
@@ -51,7 +50,12 @@ const MyAppointmentsPage = () => {
             controller.abort();
         };
     }, [user?.accessToken, refreshTrigger]);
+
     const appointmentData: MeAppointment = {
+        userId: 0,
+        appointmentId: 0,
+        timeSlotId: 0,
+        startTime: new Date(),
         doctorName: " ",
         department: " ",
         description: " ",
@@ -81,6 +85,10 @@ const MyAppointmentsPage = () => {
 
             // 3. Trả về object đúng chuẩn interface MeAppointment
             return {
+                userId: user.id,
+                appointmentId: appointment.id,
+                timeSlotId: appointment.timeSlotId,
+                startTime: appointment.timeSlot.startTime,
                 doctorName: foundDoctor ? foundDoctor.name : "Chưa xác định",
                 department: foundDepartment ? foundDepartment.name : "Chưa xác định",
                 description: appointment.description || "",
@@ -127,7 +135,7 @@ const MyAppointmentsPage = () => {
                                 <MyAppointmetRowPage key={m.id || index} meAppointment={m} />
                             ))
                         ) : (
-                                <></>
+                            <></>
                         )
                     }
                 </TableBody>

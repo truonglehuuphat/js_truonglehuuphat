@@ -58,6 +58,10 @@ export interface TimeSlot {
 }
 
 export interface MeAppointment {
+    userId: number,
+    appointmentId: number,
+    timeSlotId: number,
+    startTime: Date,
     doctorName: string;
     department: string;
     description: string;
