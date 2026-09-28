@@ -1,6 +1,7 @@
 import axios from "axios";
 import axiosClient from "../api/axiosClient";
 import type { DoctorInfo } from "../types/doctor";
+import type { UserInfo } from "../types/user";
 
 
 export interface User {
@@ -47,6 +48,7 @@ const normalizeDoctor = (item: RawDoctor): Doctor => ({
   description: item.description,
   thumbnail: item.image,
 });
+
 
 // Define interface parameters
 export interface GetDoctorsParams {
@@ -133,9 +135,41 @@ export const getAllDoctors = async (
   };
 };
 
-export const getTimeSlotByDoctorId = async(doctorId: number) => {
+export const getTimeSlotByDoctorId = async (doctorId: number) => {
   // console.log("getTimeSlotByDoctorId", doctorId);
   const response = await axiosClient.get(`/api/v1/doctor/${doctorId}/timeSlot`);
   // console.log(response.data?.data);
   return response.data?.data;
+}
+
+export const getDoctorByUserId = async (userId: number) => {
+  const rawUser = sessionStorage.getItem('User');
+  let token = "";
+  if (rawUser) {
+    try {
+      // 2. Parse từ chuỗi JSON sang Object với kiểu UserInfo
+      const user = JSON.parse(rawUser) as UserInfo;
+      token = user.accessToken;
+
+    } catch (e) {
+      console.error("Lỗi parse dữ liệu User từ sessionStorage", e);
+      return;
+    }
+  } else {
+    console.log("Không tìm thấy thông tin User trong sessionStorage");
+    return;
+  }
+
+  try {
+    const response = await axiosClient.get(`/api/v1/doctor/${userId}/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    console.log("response", response);
+    return response.data?.data;
+  } catch (error: any) {
+
+  }
+
 }

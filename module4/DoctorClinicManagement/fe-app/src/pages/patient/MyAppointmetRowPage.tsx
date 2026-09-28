@@ -1,4 +1,4 @@
-import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
+import { Button, IconButton, TableCell, TableRow, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import React from "react";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -8,8 +8,24 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { deleteAppointment, type deleteTimeSlotDto } from "../../services/appointmentService";
 import { useAppointment } from "../../context/Appointment";
 
+export const isCancelable = (appointmentDate: string | Date): boolean => {
+    const now = dayjs(); // Thời gian hiện tại
+    const appDate = dayjs(appointmentDate); // Thời gian khám
+
+    // Tính khoảng cách theo đơn vị giờ (dạng số thực)
+    const hoursDiff = appDate.diff(now, 'hour', true);
+
+    // Phải lớn hơn hoặc bằng 2 tiếng mới cho phép hủy/xóa
+    return hoursDiff >= 2;
+};
+
 const MyAppointmetRowPage = React.memo(({ meAppointment }: { meAppointment: MeAppointment }) => {
     const { triggerRefresh } = useAppointment();
+    const canDelete = isCancelable(meAppointment.date);
+    // 2. Tùy chỉnh thông báo hiển thị khi hover chuột
+    const tooltipTitle = canDelete
+        ? "Hủy lịch hẹn"
+        : "Không thể xóa: Lịch hẹn cách thời gian khám dưới 2 tiếng";
 
     const handleDeleteAppoint = async () => {
         console.log("delete appointment")
@@ -24,14 +40,15 @@ const MyAppointmetRowPage = React.memo(({ meAppointment }: { meAppointment: MeAp
             // console.log("data", data)
             const res = await deleteAppointment(data);
             // 2. Lấy message thành công từ BE
-            alert(res.message); // Hiển thị: "Xóa lịch thành công"
+            // alert(res.message); // Hiển thị: "Xóa lịch thành công"
             triggerRefresh();
-            
+
             console.log("Xóa lịch thành công");
         } catch (error: any) {
             console.log(error);
             const errorMessage = error.response?.data?.message || "Hủy lịch thất bại. thời gian hủy trước 2 tiếng";
-            alert(errorMessage);
+            // alert(errorMessage);
+            console.log(errorMessage);
         }
 
     }
@@ -48,12 +65,11 @@ const MyAppointmetRowPage = React.memo(({ meAppointment }: { meAppointment: MeAp
             </TableCell>
             <TableCell align="right">
                 <Tooltip
-                    title="Xóa lịch phải trước 2 tiếng"
-                    arrow
-                    followCursor // 👈 Giúp dòng chữ xuất hiện ngay tại vị trí con trỏ chuột
-                    placement="top"
+                    title={tooltipTitle} arrow followCursor
                 >
-                    <DeleteIcon onClick={handleDeleteAppoint} > xóa </DeleteIcon>
+                    <IconButton disabled={!canDelete} onClick={handleDeleteAppoint} >
+                        <DeleteIcon > xóa </DeleteIcon>
+                    </IconButton>
                 </Tooltip>
 
             </TableCell>

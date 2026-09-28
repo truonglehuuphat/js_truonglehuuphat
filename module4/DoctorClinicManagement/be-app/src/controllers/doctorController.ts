@@ -28,10 +28,22 @@ export async function getDoctors(req: Request, res: Response, next: NextFunction
         next(error);
     }
 }
-
 export async function getDoctorById(req: Request, res: Response, next: NextFunction) {
     try {
+        console.log(res.locals.id);
         const user = await svc.findById(res.locals.id);
+        res.json({ success: true, data: user });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export async function getDoctorByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+        // console.log(res.locals.id);
+        const user = await svc.findByUserId(res.locals.id);
+         console.log(user);
         res.json({ success: true, data: user });
     } catch (error) {
         next(error);

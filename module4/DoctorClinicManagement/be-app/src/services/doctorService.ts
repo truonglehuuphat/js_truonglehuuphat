@@ -8,8 +8,25 @@ const USER_SELECT = {
     name: true,
     email: true,
     role: true,
-    createdAt: true,
-    updatedAt: true,
+} as const;
+
+const DOCTOR_SELECT = {
+    id: true,
+    title: true,
+    position: true,
+    description: true,
+    yearsExp: true,
+    userId: true,
+    appointments: true,
+    departmentId: true,
+} as const;
+
+const TIMESLOT_SELECT = {
+    id: true,
+    dayOfWeek: true,
+    date: true,
+    startTime: true,
+    isBlocked: true,
 } as const;
 
 interface UpdateDoctorDto {
@@ -85,13 +102,29 @@ export async function findAll(query: {
     return { data, total };
 
 }
-
 export async function findById(id: number) {
     const doctor = await prisma.doctor.findUnique({
         where: { id },
         include: {
-            user: {
-                select: USER_SELECT,
+            department: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+        },
+    });
+    if (!doctor) throw new AppError(404, 'Bác sĩ không tồn tại');
+    return doctor;
+}
+
+
+export async function findByUserId(id: number) {
+    const doctor = await prisma.doctor.findFirst({
+        where: { userId: id },
+        include: {
+            timeSlots: {
+                select: TIMESLOT_SELECT,
             },
             department: {
                 select: {

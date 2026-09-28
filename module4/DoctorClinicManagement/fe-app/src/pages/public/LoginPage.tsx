@@ -27,8 +27,9 @@ const LoginPage = () => {
             if (result !== null) {
                 sessionStorage.setItem("User", JSON.stringify(result));
             }
-            // console.log("result.user?.role:", result.user?.role);
+            console.log("result", result);
             setUser(result)
+
             if (result.role === "patient") {
                 navigate('/patient');
             } else if (result.role === "admin") {

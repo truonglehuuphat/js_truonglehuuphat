@@ -3,6 +3,7 @@ import { Prisma, Role, StatusAppointment, TimeType } from "../generated/prisma/c
 import { AppError } from "../types/api";
 import { buildSkip } from '../utils/pagination';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
 
 enum DayOfWeek {
   monday = "monday",
@@ -136,18 +137,17 @@ function IsValidTimeToCancel(timeNow: Date, TimeInSlot: Date): boolean {
   }
   console.log("timeNow",timeNow)
   console.log("TimeInSlot",TimeInSlot)
-  if(timeNow.getDate() < TimeInSlot.getDate()){
-    return true;
-  }
-  // Extract hours, minutes, seconds
-  const time1 = timeNow.getHours() * 3600 + timeNow.getMinutes() * 60;
-  const time2 = TimeInSlot.getHours() * 3600 + TimeInSlot.getMinutes() * 60;
-  console.log("time1",time1)
-  console.log("time2",time2)
-  if (Math.abs(time2 - time1) > 7200) {
-    return true;
-  }
+  const appDate = dayjs(TimeInSlot); // Thời gian khám  
+  const dayDiff = appDate.diff(timeNow, 'day', true);
+  const hoursDiff = appDate.diff(timeNow, 'hour', true);
 
+  if(dayDiff >= 1){
+    return true;
+  }
+  if(hoursDiff >= 2){
+    return true;
+  }
+  
   return false;
 }
 

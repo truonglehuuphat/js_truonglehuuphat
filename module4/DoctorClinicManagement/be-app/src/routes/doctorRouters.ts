@@ -16,13 +16,13 @@ const doctorRouters = Router();
 // GET /users
 doctorRouters.get('/', validateQuery(userQuerySchema), controller.getDoctors);
 // GET /user:id
-doctorRouters.get('/:id', validatedId, controller.getDoctorById);
+// doctorRouters.get('/:id', validatedId, controller.getDoctorById);
 doctorRouters.get('/:id/timeSlot', controller.getTimeSlotsByDoctor);
 
 doctorRouters.use(authenticate, authorize('doctor'));
 //timeSlot
 // GET timeSlot
-
+doctorRouters.get('/:id', authenticate, controller.getDoctorByUserId);
 // post timeSlot
 doctorRouters.post('/:id/timeslots', validatedId, controller.createTimeSlots);
 // patch timeSlot
