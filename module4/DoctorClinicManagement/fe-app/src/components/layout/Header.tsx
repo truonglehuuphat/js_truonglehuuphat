@@ -6,6 +6,10 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import { useUser } from "../../context/UserProvider";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 type Props = {
   search: string;
@@ -16,9 +20,10 @@ const Header = () => {
   const { user, logout } = useUser();
   // Kiểm tra người dùng đã đăng nhập chưa
   const isAuthenticated = Boolean(user && user.name && user.name.trim().length > 0);
-
+  const isRoleDoctor = user.role === "doctor";
+  const isAdmin = user.role === "admin"
   const navigate = useNavigate(); // 👈 2. Khởi tạo hàm navigate
-  const handleLogout = ()=> {
+  const handleLogout = () => {
     logout();
     navigate("/");
   }
@@ -47,9 +52,42 @@ const Header = () => {
             <h2>CSC Hopital</h2>
           </Typography>
 
-          <IconButton component={Link} to="#" color="inherit">
-            <HeadsetMicOutlinedIcon /> Tư vấn khám bệnh
-          </IconButton>
+          {isRoleDoctor ? (
+            <Box>
+              <IconButton component={Link} to="#" color="inherit">
+                <CalendarMonthIcon /> Lịch làm việc của tôi
+              </IconButton>
+              <IconButton component={Link} to="#" color="inherit">
+                <BusinessCenterIcon /> Lịch hẹn của tôi
+              </IconButton>
+            </Box>
+          ) : isAdmin ? (
+            <Box>
+              <IconButton component={Link} to="#" color="inherit">
+                <BarChartIcon /> DashBoard
+              </IconButton>
+              <IconButton component={Link} to="#" color="inherit">
+                <PeopleAltIcon /> Bác sĩ
+              </IconButton>    
+              <IconButton component={Link} to="#" color="inherit">
+                <DashboardIcon /> Phòng ban
+              </IconButton>          
+              <IconButton component={Link} to="#" color="inherit">
+                <CalendarMonthIcon /> Quản lý lịch hẹn
+              </IconButton>                
+            </Box>
+          ) : (
+            <Box>
+              <IconButton component={Link} to="#" color="inherit">
+                <HeadsetMicOutlinedIcon /> Tư vấn khám bệnh
+              </IconButton>
+              <IconButton component={Link} to="#" color="inherit">
+                <BusinessCenterIcon /> Đặt lịch khám
+              </IconButton>
+            </Box>
+          )}
+
+
           {/* RIGHT - ACTIONS (FIX HERE) */}
           <Box
             sx={{
@@ -59,7 +97,6 @@ const Header = () => {
               marginLeft: "auto", // 🔥 KEY FIX
             }}
           >
-
             {isAuthenticated ? (
               /* Đã đăng nhập -> Hiển thị tên & nút Đăng xuất */
               <>
@@ -106,11 +143,10 @@ const Header = () => {
                 </Button>
               </>
             )}
-
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   )
 };
 
