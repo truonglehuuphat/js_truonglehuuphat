@@ -30,7 +30,6 @@ export async function getAllAppointmentsById(req: AuthenticatedRequest, res: Res
             return res.status(400).json({ message: 'Không tìm thấy thông tin User' });
         }
         const response = await appointmentSvc.getAllAppointmentsById(userId);
-        // console.log("response" ,response);
         return res.status(200).json({
             success: true,
             data: response

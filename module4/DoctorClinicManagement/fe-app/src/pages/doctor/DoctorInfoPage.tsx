@@ -5,6 +5,7 @@ import type { DoctorInfo } from "./DoctorInfo";
 import DoctorCard from "./DoctorCard";
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import type { TimeSlot } from "../../types/appointment";
+import DoctorAppointmentPage from "./DoctorAppointmentPage";
 
 interface DataShow {
     title: string;
@@ -126,6 +127,7 @@ const DoctorInfoPage = () => {
                 > {doctorData.description}</Typography>
             </CardContent>
         </Card>
+        <DoctorAppointmentPage />
     </>
 }
 

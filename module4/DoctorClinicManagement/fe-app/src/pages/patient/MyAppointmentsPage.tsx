@@ -142,8 +142,6 @@ const MyAppointmentsPage = () => {
             </Table>
 
         </Box>
-
-
     )
 }
 
