@@ -1,38 +1,60 @@
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DoctorAppointmentRowPage, { type DoctorAppointment } from "./DoctorAppointmentRowPage";
 import { useUser } from "../../context/UserProvider";
-import { doctorContext } from "../../context/DoctorProvider";
-import { departContext } from "../../context/DepartmentProvider";
+import { getAllAppointmentByDoctor } from "../../services/doctorService";
 
 
-const DoctorAppointmentPage = () => {
+const DoctorAppointmentPage = ({ userId }: { userId: number }) => {
     const [search, setSearch] = useState("");
-    const { user, setUser, logout } = useUser();
-    const { doctor, setDoctor } = doctorContext();
-    const { depart, setDepart } = departContext();
+    const { user } = useUser();
+    const [error, setError] = useState("");
+    const [appoint, SetAppoint] = useState<DoctorAppointment[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // const mapAppointments = (
-    //     appointments: any[],
-    //     doctors: any[],
-    //     user: any[]
-    // ): DoctorAppointment[] => {
-    //     return <></>
-    // };
+    useEffect(() => {
+        const controller = new AbortController();
+        // if (!user?.accessToken) {
+        //     return;
+        // }
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                setError("");
+                console.log("user", user)
+                const result = await getAllAppointmentByDoctor(userId);
+                // console.log("2. Kết quả API:", doctorRes.doctors); // KIỂM TRA 2
+                SetAppoint(result?.data.data);
+                console.log("appoint", appoint);
+            } catch (err: any) {
+                if (err.name === "CanceledError" || err.name === "AbortError" || err.code === "ERR_CANCELED") {
+                    console.log("Request đã bị hủy do component unmount hoặc re-render");
+                    return;
+                }
+                console.log("3. Lỗi gặp phải:", err); // KIỂM TRA 3
+                setError("Cannot load your Appointment right now. Please try again.");
+            }
+            finally {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
+            }
+        };
+        fetchData();
+        return () => {
+            controller.abort();
+        };
+    }, [userId, user?.accessToken]);
 
-    // const mappedAppointments: DoctorAppointment[] = useMemo(() => {
-    //     return mapAppointments(appoint, doctor, user);
-    // }, []);
+    const filteredAppointments = useMemo(() => {
+        if (!appoint || appoint.length === 0) return [];
 
-    const mappedAppointments: DoctorAppointment[] = [{
-        paitentName: "Nguyễn Văn A",
-        startTime: new Date(),
-        description: "Khám bệnh ",
-        date: new Date(),
-        status: "Đang chờ",
-        comment: ""
-    },
-    ];
+        // Đã tích hợp sẵn lọc theo ô Tìm kiếm (search)
+        return appoint.filter((item: any) =>
+            item?.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+            item?.description?.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [appoint, search]);
 
     return <>
         <Box sx={{ p: 3 }}>
@@ -60,8 +82,8 @@ const DoctorAppointmentPage = () => {
                 </TableHead>
                 <TableBody>
                     {
-                        mappedAppointments.length > 0 ? (
-                            mappedAppointments.map((m: any, index: number) => (
+                        filteredAppointments.length > 0 ? (
+                            filteredAppointments.map((m: any, index: number) => (
                                 <DoctorAppointmentRowPage key={m.id || index} doctorAppointment={m} />
                             ))) : (
                             <></>

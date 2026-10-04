@@ -135,6 +135,46 @@ export const getAllDoctors = async (
   };
 };
 
+export const getAllAppointmentByDoctor = async (userId: number) => {
+  // 1. Lấy chuỗi thô từ sessionStorage
+  const rawUser = sessionStorage.getItem('User');
+  let token = "";
+  if (rawUser) {
+    try {
+      // 2. Parse từ chuỗi JSON sang Object với kiểu UserInfo
+      const user = JSON.parse(rawUser) as UserInfo;
+      token = user.accessToken;
+
+    } catch (e) {
+      console.error("Lỗi parse dữ liệu User từ sessionStorage", e);
+      return;
+    }
+  } else {
+    console.log("Không tìm thấy thông tin User trong sessionStorage");
+    return;
+  }
+
+  try {
+    console.log("goi api ID", userId);
+    const response = await axiosClient.get(`/api/v1/doctor/${userId}/appointment`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    // console.log("response", response.data?.data);
+    return response;
+  } catch (error: any) {
+    // Nếu request bị hủy bởi AbortController thì throw tiếp để useEffect bắt
+    if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
+      throw error;
+    }
+    console.log("Đã có lỗi xảy ra khi tạo appointment");
+    if (error.response?.status === 401) {
+      console.error('Lỗi 401: Vui lòng đăng nhập lại.');
+    }
+  }
+}
+
 export const getTimeSlotByDoctorId = async (doctorId: number) => {
   // console.log("getTimeSlotByDoctorId", doctorId);
   const response = await axiosClient.get(`/api/v1/doctor/${doctorId}/timeSlot`);
@@ -166,7 +206,7 @@ export const getDoctorByUserId = async (userId: number) => {
         Authorization: `Bearer ${token}`,
       }
     });
-    console.log("response", response);
+    // console.log("response", response);
     return response.data?.data;
   } catch (error: any) {
 

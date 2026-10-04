@@ -49,7 +49,12 @@ export async function updateAppointmentStatus(req: Request, res: Response, next:
 
 export async function getMyAppointments(req: Request, res: Response, next: NextFunction) {
     try {
-
+        const data = req.body;
+        const response = await appointmentSvc.getAllAppointmentsById(data.id);
+        return res.status(200).json({
+            success: true,
+             data: response
+        });
     } catch (error) {
         next(error);
     }

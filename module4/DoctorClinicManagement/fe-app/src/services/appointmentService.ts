@@ -78,7 +78,6 @@ export const getAllAppointmentById = async (signal?: AbortSignal) => {
   }
 }
 
-
 export const createAppointment = async (data: createTimeSlotDto) => {
   // 1. Lấy chuỗi thô từ sessionStorage
   const rawUser = sessionStorage.getItem('User');

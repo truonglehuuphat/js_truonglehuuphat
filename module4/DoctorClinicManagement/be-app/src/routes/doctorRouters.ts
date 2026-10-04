@@ -34,7 +34,7 @@ doctorRouters.get('/:id/reviews', validatedId, reviewController.getReviews);
 
 //appointments
 //GET 
-doctorRouters.get('/:id/reviews', validatedId, appointmentController.getMyAppointments);
+doctorRouters.get('/:id/appointment', authenticate, controller.getMyAppointments);
 // doctorRouters.get('/:id/reviews', validatedId, appointmentController.getReviews);
 //patch
 doctorRouters.patch('/:id/appointments/:id/status', validatedId, appointmentController.updateAppointmentStatus);

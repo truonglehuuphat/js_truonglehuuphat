@@ -20,7 +20,7 @@ interface AccessTokenPayload {
 export function authenticate(req: Request, res: Response, next: NextFunction): void {
     // take token from header
     const autheHeader = req.headers.authorization;
-    console.log(autheHeader)
+    // console.log(autheHeader)
     if (!autheHeader || !autheHeader.startsWith("Bearer ")) {
         res.status(401).json({ success: false, message: "Chưa đăng nhập" });
         return;
@@ -35,7 +35,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
         // console.log("req.user", req.user);
         next();
     } catch (error: any) {
-         console.log("error",error)
+        //  console.log("error",error)
         if (error.name === "TokenExpiredError") { 
             res.status(401).json({ success: false, message: "Token is expired" });
             return;

@@ -406,3 +406,32 @@ export async function updateTimeSlotStatus(slotId: number, isBlocked: boolean) {
         },
     });
 }
+
+export async function getAllAppointmentDoctor(doctorId: number) {
+    if (!doctorId || isNaN(doctorId)) {
+        throw new Error("doctorId không hợp lệ");
+    }
+    const doctorData = await prisma.doctor.findUnique({
+        where: {
+            userId: doctorId
+        }
+    })
+    console.log("doctorData", doctorData)
+    if(!doctorData){
+        throw new AppError(500, "Bác sĩ không tồn tại")
+    }
+    const data = await prisma.appointment.findMany({
+        where: {
+            doctorId: Number(doctorData.id) // Đảm bảo luôn là kiêu number
+        },
+        include: {
+            user: true,      // Lấy toàn bộ thông tin User
+            timeSlot: true,  // Lấy toàn bộ thông tin TimeSlot
+        },
+        orderBy: {
+            createdAt: 'desc'     // Sắp xếp lịch mới nhất lên đầu
+        }
+    });
+    console.log(data);
+    return data;
+}

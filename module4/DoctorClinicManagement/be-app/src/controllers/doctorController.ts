@@ -43,7 +43,7 @@ export async function getDoctorByUserId(req: Request, res: Response, next: NextF
     try {
         // console.log(res.locals.id);
         const user = await svc.findByUserId(res.locals.id);
-         console.log(user);
+        //  console.log(user);
         res.json({ success: true, data: user });
     } catch (error) {
         next(error);
@@ -90,6 +90,24 @@ export async function getAvailableTimeSlots(req: Request, res: Response, next: N
         next(error);
     }
 }
+
+export async function getMyAppointments(req: Request, res: Response, next: NextFunction) {
+    try {
+        // console.log("getMyAppointments - req.user",  req.user?.id);
+        // const data = res.body;
+        const id = Number(req.user?.id);
+        console.log("getMyAppointments id", id);
+        const response = await svc.getAllAppointmentDoctor(id);
+        console.log(" getMyAppointments response",response);
+        return res.status(200).json({
+            success: true,
+             data: response
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 export async function createDoctor(req: Request, res: Response, next: NextFunction) {
     try {

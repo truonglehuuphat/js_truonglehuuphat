@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserProvider";
 import { getDoctorByUserId } from "../../services/doctorService";
-import type { DoctorInfo } from "./DoctorInfo";
-import DoctorCard from "./DoctorCard";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import {  Card, CardContent, Typography } from "@mui/material";
 import type { TimeSlot } from "../../types/appointment";
 import DoctorAppointmentPage from "./DoctorAppointmentPage";
 
@@ -45,11 +43,13 @@ const DoctorInfoPage = () => {
             try {
                 setIsLoadingDoctor(true);
                 setError("");
+                console.log("user.id", user.id);
                 const result = await getDoctorByUserId(user.id);
                 console.log("result", result);
 
                 // Nếu result trả về có cấu hình Axios (result.data.data) hoặc dữ liệu trực tiếp:
                 const data = result?.data?.data || result?.data || result;
+                console.log("data", data);
                 setDoctorInfo(data);
 
             } catch (error: any) {
@@ -61,7 +61,7 @@ const DoctorInfoPage = () => {
         return () => {
             controller.abort();
         };
-    }, [user])
+    }, [user, isLoadingDoctor])
 
     if (!isLoadingDoctor) {
         return <Typography>Loading...</Typography>
@@ -127,7 +127,7 @@ const DoctorInfoPage = () => {
                 > {doctorData.description}</Typography>
             </CardContent>
         </Card>
-        <DoctorAppointmentPage />
+        <DoctorAppointmentPage userId={doctorInfo.id} />
     </>
 }
 
