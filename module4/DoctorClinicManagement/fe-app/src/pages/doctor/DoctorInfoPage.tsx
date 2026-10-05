@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserProvider";
 import { getDoctorByUserId } from "../../services/doctorService";
-import {  Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import type { TimeSlot } from "../../types/appointment";
 import DoctorAppointmentPage from "./DoctorAppointmentPage";
+import { AppointmentProvider } from "../../context/Appointment";
 
 interface DataShow {
     title: string;
@@ -127,7 +128,10 @@ const DoctorInfoPage = () => {
                 > {doctorData.description}</Typography>
             </CardContent>
         </Card>
-        <DoctorAppointmentPage userId={doctorInfo.id} />
+        <AppointmentProvider>
+            <DoctorAppointmentPage userId={doctorInfo.id} />
+        </AppointmentProvider>
+
     </>
 }
 
